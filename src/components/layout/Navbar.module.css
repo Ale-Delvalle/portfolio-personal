@@ -1,0 +1,81 @@
+.navbarWrapper {
+  position: fixed;
+  top: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.75rem 2rem;
+  width: fit-content;
+}
+
+.brand {
+  font-family: var(--font-headline);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  color: var(--color-primary);
+}
+
+.links {
+  display: none;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .links {
+    display: flex;
+  }
+}
+
+.link {
+  font-family: var(--font-headline);
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-on-surface-variant);
+  text-decoration: none;
+  transition: color 0.3s ease;
+  letter-spacing: 0.05em;
+}
+
+.link:hover, .activeLink {
+  color: var(--color-primary);
+}
+
+.activeLink {
+  border-bottom: 1px solid rgba(105, 218, 255, 0.3);
+  padding-bottom: 0.25rem;
+}
+
+.icons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--color-on-surface-variant);
+  margin-left: 1rem;
+}
+
+.iconBtn {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.iconBtn:hover {
+  color: var(--color-primary);
+  transform: scale(0.95);
+}
+
+.iconBtn:active {
+  transform: scale(0.90);
+}

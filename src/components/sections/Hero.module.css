@@ -10,32 +10,23 @@
 }
 
 .grid {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
   max-width: 2120px;
   margin: 0 auto;
   padding: 0 1.5rem;
   align-items: center;
+  justify-content: center;
   gap: 3rem;
 }
 
 @media (min-width: 768px) {
   .grid {
-    /* 4 columns: spacer | text | img | spacer */
-    grid-template-columns: 1fr minmax(400px, 600px) minmax(350px, 550px) 1fr;
+    flex-direction: row;
     padding: 0 3rem;
-  }
-}
-
-.spacer {
-  display: none;
-}
-
-@media (min-width: 768px) {
-  .spacer {
-    display: block;
+    gap: 2rem;
   }
 }
 

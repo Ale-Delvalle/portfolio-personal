@@ -3,6 +3,7 @@
   flex-direction: column;
   gap: 2rem;
   padding: 5rem 0;
+  max-width: 500px;
 }
 
 @media (min-width: 768px) {

@@ -14,16 +14,14 @@ export function Hero({ introDone }: HeroProps) {
   const heroRef = useRef<HTMLDivElement>(null);
   
   useGSAP(() => {
-    if (introDone) {
-      gsap.from(heroRef.current, {
-        opacity: 0,
-        y: 50,
-        duration: 1,
-        ease: "power3.out",
-        delay: 0.5 // 👈 clave para sincronizar con la intro
-      });
-    }
-  }, { dependencies: [introDone] });
+    gsap.from(heroRef.current, {
+      opacity: 0,
+      y: 50,
+      duration: 1.5,
+      delay: introDone ? 0 : 2.5,
+      ease: "power3.out"
+    });
+  }, []);
 
   return (
     <main ref={heroRef} className={`${styles.main} hero-mesh-gradient`}>

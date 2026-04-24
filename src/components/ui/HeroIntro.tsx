@@ -12,22 +12,12 @@ export default function HeroIntro({ onFinish }: HeroIntroProps) {
   const container = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLImageElement>(null);
   const textRef = useRef<HTMLHeadingElement>(null);
-  const heroRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
     // 1. Creamos la línea de tiempo
     const tl = gsap.timeline({
       onComplete: onFinish,
     });
-
-    gsap.from(heroRef.current, {
-      opacity: 0,
-      y: 50,
-      duration: 1,
-      ease: "power3.out",
-      delay: 0.5 // 👈 clave para sincronizar con la intro
-    });
-
     // 2. Animamos el logo DESDE grande e invisible HACIA su estado normal
     tl.from(logoRef.current, {
       scale: 1.5,
@@ -48,7 +38,12 @@ export default function HeroIntro({ onFinish }: HeroIntroProps) {
       x: 50,
       duration: 1,
       ease: "power3.out"
-    }, "<");
+    }, "<")
+    .to(container.current, {
+      opacity: 0,
+      duration: 0.8,
+      ease: "power2.out"
+  });
 
   }, { scope: container }); // El scope limita las animaciones a este componente
 

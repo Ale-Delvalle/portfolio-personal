@@ -1,15 +1,23 @@
 import { useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import logo from '../../assets/logo.png';
 
-export default function HeroIntro() {
+interface HeroIntroProps {
+  onFinish: () => void;
+}
+
+export default function HeroIntro({ onFinish }: HeroIntroProps) {
   const container = useRef<HTMLDivElement>(null);
-  const logoRef = useRef<HTMLDivElement>(null);
+  const logoRef = useRef<HTMLImageElement>(null);
   const textRef = useRef<HTMLHeadingElement>(null);
+
 
   useGSAP(() => {
     // 1. Creamos la línea de tiempo
-    const tl = gsap.timeline();
+    const tl = gsap.timeline({
+      onComplete: onFinish,
+    });
 
     // 2. Animamos el logo DESDE grande e invisible HACIA su estado normal
     tl.from(logoRef.current, {
@@ -37,7 +45,7 @@ export default function HeroIntro() {
 
   return (
     <div ref={container} className="h-screen flex items-center justify-center bg-black text-white">
-      <div ref={logoRef} className="w-20 h-20 bg-blue-500 rounded-lg" />
+      <img ref={logoRef} className="w-20 h-20 bg-blue-500 rounded-lg" src={logo} alt="Logo" />
       <h1 ref={textRef} className="text-4xl font-bold ml-4">Jhon Doe</h1>
     </div>
   );

@@ -12,14 +12,11 @@ function App() {
 
   return (
     <>
-      {!introDone ? (
+      <Navbar theme={theme} toggleTheme={toggleTheme} />
+      <Hero introDone={introDone} />
+      <Footer />
+      {!introDone && (
         <HeroIntro onFinish={() => setIntroDone(true)} />
-      ) : (
-        <>
-          <Navbar theme={theme} toggleTheme={toggleTheme} />
-          <Hero />
-          <Footer />
-        </>
       )}
     </>
   );

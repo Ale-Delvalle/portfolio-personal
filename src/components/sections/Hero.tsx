@@ -17,12 +17,21 @@ export function Hero({ introDone }: HeroProps) {
   useGSAP(() => {
     const tl = gsap.timeline({ delay: introDone ? 0 : 2.5 });
 
-    tl.from(textRef.current, {
-      opacity: 0,
-      y: 50,
-      duration: 1,
+    tl.from('[data-gsap="title"]', {
+      autoAlpha: 0,
+      duration: 0.8,
       ease: "power3.out",
-    }).from(
+    })
+    .from(
+      ['[data-gsap="description"]', '[data-gsap="action"]'],
+      {
+        autoAlpha: 0,
+        duration: 0.8,
+        ease: "power3.out",
+      },
+      "+=0.15"
+    )
+    .from(
       portraitRef.current,
       {
         opacity: 0,

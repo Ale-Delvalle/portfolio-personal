@@ -11,25 +11,36 @@ interface HeroProps {
 }
 
 export function Hero({ introDone }: HeroProps) {
-  const heroRef = useRef<HTMLDivElement>(null);
-  
+  const textRef = useRef<HTMLDivElement>(null);
+  const portraitRef = useRef<HTMLDivElement>(null);
+
   useGSAP(() => {
-    gsap.from(heroRef.current, {
+    const tl = gsap.timeline({ delay: introDone ? 0 : 2.5 });
+
+    tl.from(textRef.current, {
       opacity: 0,
       y: 50,
-      duration: 1.5,
-      delay: introDone ? 0 : 2.5,
-      ease: "power3.out"
-    });
+      duration: 1,
+      ease: "power3.out",
+    }).from(
+      portraitRef.current,
+      {
+        opacity: 0,
+        y: -80,
+        duration: 1,
+        ease: "power3.out",
+      },
+      "+=0.2"
+    );
   }, []);
 
   return (
-    <main ref={heroRef} className={`${styles.main} hero-mesh-gradient`}>
+    <main className={`${styles.main} hero-mesh-gradient`}>
       <div className={styles.grid}>
-        <div className={styles.col2}>
+        <div ref={textRef} className={styles.col2}>
           <HeroText />
         </div>
-        <div className={styles.col3}>
+        <div ref={portraitRef} className={styles.col3}>
           <HeroPortrait />
         </div>
       </div>

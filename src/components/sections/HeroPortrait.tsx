@@ -3,7 +3,7 @@ import styles from './HeroPortrait.module.css';
 
 export function HeroPortrait() {
   return (
-    <div className={`${styles.container} animate-fade-up delay-300`}>
+    <div className={styles.container}>
       <div className={styles.glow}></div>
       <div className={styles.portraitCard}>
         <img 

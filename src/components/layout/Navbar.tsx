@@ -1,6 +1,5 @@
 
-import { Code, Terminal, Moon, Sun } from 'lucide-react';
-import { GlassContainer } from '../ui/GlassContainer';
+import { Moon, Sun } from 'lucide-react';
 import styles from './Navbar.module.css';
 
 interface NavbarProps {
@@ -10,27 +9,30 @@ interface NavbarProps {
 
 export function Navbar({ theme, toggleTheme }: NavbarProps) {
   return (
-    <GlassContainer className={styles.navbarWrapper}>
-      <div className={styles.brand}>Architect</div>
-      
-      <div className={styles.links}>
-        <a href="#work" className={`${styles.link} ${styles.activeLink}`}>Work</a>
-        <a href="#expertise" className={styles.link}>Expertise</a>
-        <a href="#experience" className={styles.link}>Experience</a>
-        <a href="#inquiry" className={styles.link}>Inquiry</a>
+    <nav className={styles.navbar}>
+      <div className={styles.brand}>Alexis</div>
+
+      <div className={styles.navContainer}>
+        <div className={styles.bracket} aria-hidden="true" />
+        <ul className={styles.navList}>
+          <li>
+            <a href="#work" className={`${styles.link} ${styles.activeLink}`}>Work</a>
+          </li>
+          <li>
+            <a href="#expertise" className={styles.link}>Expertise</a>
+          </li>
+          <li>
+            <a href="#experience" className={styles.link}>Experience</a>
+          </li>
+          <li>
+            <a href="#inquiry" className={styles.link}>Inquiry</a>
+          </li>
+        </ul>
       </div>
 
-      <div className={styles.icons}>
-        <button className={styles.iconBtn} aria-label="Code">
-          <Code size={20} />
-        </button>
-        <button className={styles.iconBtn} aria-label="Terminal">
-          <Terminal size={20} />
-        </button>
-        <button className={styles.iconBtn} onClick={toggleTheme} aria-label="Toggle Theme">
-          {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-        </button>
-      </div>
-    </GlassContainer>
+      <button className={styles.themeBtn} onClick={toggleTheme} aria-label="Toggle Theme">
+        {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+      </button>
+    </nav>
   );
 }

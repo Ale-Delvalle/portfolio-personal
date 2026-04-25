@@ -1,13 +1,24 @@
+/*
+ * CSS variables que controlan toda la geometría de las líneas.
+ * Modificar aquí afecta de forma consistente a todos los conectores.
+ */
 .navbar {
+  --lw:   1px;                         /* grosor de línea               */
+  --lr:   7px;                         /* radio de la curva en esquinas  */
+  --lc:   #000000;                     /* color de línea (modo claro)    */
+  --conn: 14px;                        /* longitud del conector horiz.   */
+  --gap:  2.75rem;                     /* separación entre ítems         */
+
   position: fixed;
   left: 2rem;
   top: 50%;
   transform: translateY(-50%);
   z-index: 50;
+
   display: none;
   flex-direction: column;
   align-items: flex-start;
-  gap: 1.75rem;
+  gap: 1.25rem;
 }
 
 @media (min-width: 1024px) {
@@ -16,49 +27,122 @@
   }
 }
 
+/* Líneas blancas en modo oscuro */
+:global(:root[data-theme="dark"]) .navbar {
+  --lc: #ffffff;
+}
+
+/* ── Brand ──────────────────────────────────────── */
 .brand {
   font-family: var(--font-headline);
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--color-on-background);
-  padding-left: 1.25rem;
+  padding-left: calc(var(--conn) + 0.625rem);
 }
 
-/* ── Nav list with bracket ───────────────────── */
-
-.navContainer {
-  display: flex;
-  align-items: stretch;
-  gap: 0;
-}
-
-.bracket {
-  width: 0.625rem;
-  flex-shrink: 0;
-  margin-right: 0.625rem;
-  border-left: 1.5px solid var(--color-on-surface-variant);
-  border-top: 1.5px solid var(--color-on-surface-variant);
-  border-bottom: 1.5px solid var(--color-on-surface-variant);
-  opacity: 0.25;
-}
-
+/* ── Lista de navegación ────────────────────────── */
 .navList {
   list-style: none;
   margin: 0;
-  padding: 0.25rem 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: var(--gap);
 }
 
-/* ── Links ───────────────────────────────────── */
+.navList li {
+  position: relative;
+  padding-left: calc(var(--conn) + 0.625rem);
+}
 
+/*
+ * ┌ PRIMER ÍTEM
+ * ::before → esquina (border+radius solo en los --lr px del giro) + línea vertical
+ * ::after  → tramo recto horizontal al texto (background, sin anti-aliasing)
+ */
+.navList li:first-child::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: var(--lr);
+  height: calc(50% + var(--gap));
+  border-top:  var(--lw) solid var(--lc);
+  border-left: var(--lw) solid var(--lc);
+  border-top-left-radius: var(--lr);
+}
+
+.navList li:first-child::after {
+  content: '';
+  position: absolute;
+  left: var(--lr);
+  top: 50%;
+  transform: translateY(-50%);
+  width: calc(var(--conn) - var(--lr));
+  height: var(--lw);
+  background: var(--lc);
+}
+
+/*
+ * ├ ÍTEMS DEL MEDIO
+ * ::before → barra vertical continua que cubre el li + ambos gaps adyacentes
+ * ::after  → conector horizontal en el punto medio del ítem
+ */
+.navList li:not(:first-child):not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: calc(-1 * var(--gap));
+  width: var(--lw);
+  height: calc(100% + 2 * var(--gap));
+  background: var(--lc);
+}
+
+.navList li:not(:first-child):not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--conn);
+  height: var(--lw);
+  background: var(--lc);
+}
+
+/*
+ * └ ÚLTIMO ÍTEM
+ * ::before → línea vertical + esquina (border+radius solo en los --lr px del giro)
+ * ::after  → tramo recto horizontal al texto (background, sin anti-aliasing)
+ */
+.navList li:last-child::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: calc(-1 * var(--gap));
+  width: var(--lr);
+  height: calc(50% + var(--gap));
+  border-bottom: var(--lw) solid var(--lc);
+  border-left:   var(--lw) solid var(--lc);
+  border-bottom-left-radius: var(--lr);
+}
+
+.navList li:last-child::after {
+  content: '';
+  position: absolute;
+  left: var(--lr);
+  top: 50%;
+  transform: translateY(-50%);
+  width: calc(var(--conn) - var(--lr));
+  height: var(--lw);
+  background: var(--lc);
+}
+
+/* ── Links ──────────────────────────────────────── */
 .link {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  display: block;
   font-family: var(--font-headline);
   font-size: 0.7rem;
   font-weight: 700;
@@ -66,16 +150,9 @@
   text-transform: uppercase;
   text-decoration: none;
   color: var(--color-on-surface-variant);
-  opacity: 0.45;
-  padding: 0.3rem 0;
+  opacity: 0.5;
+  white-space: nowrap;
   transition: opacity 0.2s ease, color 0.2s ease;
-}
-
-.link::before {
-  content: '—';
-  font-size: 0.6rem;
-  opacity: 0.6;
-  flex-shrink: 0;
 }
 
 .link:hover {
@@ -86,23 +163,24 @@
 .activeLink {
   opacity: 1;
   color: var(--color-on-background);
-  border-bottom: 1px solid var(--color-primary);
-  padding-bottom: 2px;
+  text-decoration: underline;
+  text-decoration-color: var(--color-primary);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
 }
 
-/* ── Theme toggle ─────────────────────────────── */
-
+/* ── Botón de tema ──────────────────────────────── */
 .themeBtn {
   background: none;
   border: none;
   color: var(--color-on-surface-variant);
   cursor: pointer;
   padding: 0;
+  padding-left: calc(var(--conn) + 0.625rem);
   display: flex;
   align-items: center;
   opacity: 0.35;
   transition: opacity 0.2s ease;
-  margin-left: 1.25rem;
 }
 
 .themeBtn:hover {

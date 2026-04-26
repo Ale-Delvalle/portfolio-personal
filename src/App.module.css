@@ -1,0 +1,39 @@
+/* Layout raíz de la app: 1 columna en mobile, 2 columnas en desktop (sidebar + main) */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas: 'main';
+  min-height: 100vh;
+}
+
+/* En pantallas ≥1024px aparece la columna lateral de 200px para la navbar vertical */
+@media (min-width: 1024px) {
+  .layout {
+    grid-template-columns: 200px 1fr;
+    grid-template-areas: 'side main';
+  }
+}
+
+/* Columna del sidebar: oculta en mobile */
+.sideCol {
+  display: none;
+  grid-area: side;
+}
+
+/* En desktop: sidebar sticky centrado que ocupa toda la altura visible */
+@media (min-width: 1024px) {
+  .sideCol {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    align-self: start; /* necesario para que sticky funcione dentro de un grid */
+  }
+}
+
+/* Columna principal: ocupa el área 'main' del grid */
+.mainCol {
+  grid-area: main;
+}

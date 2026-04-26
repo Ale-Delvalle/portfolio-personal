@@ -9,18 +9,22 @@
   --conn: 14px;                        /* longitud del conector horiz.   */
   --gap:  2.75rem;                     /* separación entre ítems         */
 
+  /* Fija la navbar al centro-izquierda de la pantalla, fuera del flujo normal */
   position: fixed;
   left: 2rem;
   top: 50%;
-  transform: translateY(-50%);
+  padding-left: 100px;
+  transform: translateY(-50%); /* centra verticalmente respecto a su propio alto */
   z-index: 50;
 
+  /* Oculta en mobile; se muestra como columna en desktop */
   display: none;
   flex-direction: column;
   align-items: flex-start;
   gap: 1.25rem;
 }
 
+/* La navbar vertical solo aparece en pantallas ≥1024px */
 @media (min-width: 1024px) {
   .navbar {
     display: flex;
@@ -33,6 +37,7 @@
 }
 
 /* ── Brand ──────────────────────────────────────── */
+/* Nombre/marca en mayúsculas con mucho letter-spacing, alineado con los links */
 .brand {
   font-family: var(--font-headline);
   font-size: 0.75rem;
@@ -40,10 +45,11 @@
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--color-on-background);
-  padding-left: calc(var(--conn) + 0.625rem);
+  padding-left: calc(var(--conn) + 0.625rem); /* se alinea con el texto de los nav items */
 }
 
 /* ── Lista de navegación ────────────────────────── */
+/* Lista sin estilo por defecto, ítems en columna separados por --gap */
 .navList {
   list-style: none;
   margin: 0;
@@ -53,9 +59,10 @@
   gap: var(--gap);
 }
 
+/* Cada ítem tiene posición relative para anclar los pseudo-elementos de línea */
 .navList li {
   position: relative;
-  padding-left: calc(var(--conn) + 0.625rem);
+  padding-left: calc(var(--conn) + 0.625rem); /* espacio para las líneas conectoras */
 }
 
 /*
@@ -63,22 +70,24 @@
  * ::before → esquina (border+radius solo en los --lr px del giro) + línea vertical
  * ::after  → tramo recto horizontal al texto (background, sin anti-aliasing)
  */
+/* Línea vertical descendente + giro redondeado hacia la derecha en el primer ítem */
 .navList li:first-child::before {
   content: '';
   position: absolute;
   left: 0;
   top: 50%;
   width: var(--lr);
-  height: calc(50% + var(--gap));
+  height: calc(50% + var(--gap)); /* llega hasta el ítem siguiente */
   border-top:  var(--lw) solid var(--lc);
   border-left: var(--lw) solid var(--lc);
   border-top-left-radius: var(--lr);
 }
 
+/* Segmento horizontal que conecta la esquina con el texto del primer ítem */
 .navList li:first-child::after {
   content: '';
   position: absolute;
-  left: var(--lr);
+  left: var(--lr); /* arranca después de la curva */
   top: 50%;
   transform: translateY(-50%);
   width: calc(var(--conn) - var(--lr));
@@ -91,6 +100,7 @@
  * ::before → barra vertical continua que cubre el li + ambos gaps adyacentes
  * ::after  → conector horizontal en el punto medio del ítem
  */
+/* Barra vertical que atraviesa el ítem y sus gaps superior/inferior */
 .navList li:not(:first-child):not(:last-child)::before {
   content: '';
   position: absolute;
@@ -101,6 +111,7 @@
   background: var(--lc);
 }
 
+/* Rama horizontal que sale de la barra vertical hacia el texto */
 .navList li:not(:first-child):not(:last-child)::after {
   content: '';
   position: absolute;
@@ -117,11 +128,12 @@
  * ::before → línea vertical + esquina (border+radius solo en los --lr px del giro)
  * ::after  → tramo recto horizontal al texto (background, sin anti-aliasing)
  */
+/* Línea vertical ascendente + giro redondeado hacia la derecha en el último ítem */
 .navList li:last-child::before {
   content: '';
   position: absolute;
   left: 0;
-  top: calc(-1 * var(--gap));
+  top: calc(-1 * var(--gap)); /* sube hasta el ítem anterior */
   width: var(--lr);
   height: calc(50% + var(--gap));
   border-bottom: var(--lw) solid var(--lc);
@@ -129,6 +141,7 @@
   border-bottom-left-radius: var(--lr);
 }
 
+/* Segmento horizontal que conecta la esquina con el texto del último ítem */
 .navList li:last-child::after {
   content: '';
   position: absolute;
@@ -141,6 +154,7 @@
 }
 
 /* ── Links ──────────────────────────────────────── */
+/* Link en mayúsculas, compacto, semitransparente hasta el hover */
 .link {
   display: block;
   font-family: var(--font-headline);
@@ -155,11 +169,13 @@
   transition: opacity 0.2s ease, color 0.2s ease;
 }
 
+/* Al hacer hover: opaco y con el color principal del texto */
 .link:hover {
   opacity: 1;
   color: var(--color-on-background);
 }
 
+/* Link activo: opaco con subrayado cian delgado y elevado */
 .activeLink {
   opacity: 1;
   color: var(--color-on-background);
@@ -170,6 +186,7 @@
 }
 
 /* ── Botón de tema ──────────────────────────────── */
+/* Botón sin estilos nativos, alineado con los links, muy transparente por defecto */
 .themeBtn {
   background: none;
   border: none;

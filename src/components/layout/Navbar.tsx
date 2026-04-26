@@ -10,8 +10,6 @@ interface NavbarProps {
 export function Navbar({ theme, toggleTheme }: NavbarProps) {
   return (
     <nav className={styles.navbar}>
-      <div className={styles.brand}>Alexis</div>
-
       <ul className={styles.navList}>
         <li>
           <a href="#work" className={`${styles.link} ${styles.activeLink}`}>Work</a>

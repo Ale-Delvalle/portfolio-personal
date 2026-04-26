@@ -1,17 +1,20 @@
+/* Bloque de texto del Hero: columna con separación entre elementos, ancho máximo legible */
 .container {
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  padding: 5rem 0;
+  padding: 5rem 0;     /* padding vertical en mobile para separar del retrato */
   max-width: 500px;
 }
 
+/* En tablet+: sin padding vertical (el layout Hero ya centra la sección) */
 @media (min-width: 768px) {
   .container {
     padding: 0;
   }
 }
 
+/* Etiqueta superior pequeña: ej. "Desarrollador Frontend" en mayúsculas tenues */
 .label {
   font-family: var(--font-label);
   font-size: 0.75rem;
@@ -21,21 +24,24 @@
   opacity: 0.6;
 }
 
+/* Envuelve el nombre principal con su variante degradado */
 .titleWrapper {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
+/* Nombre principal: tamaño fluido entre 3rem y 6rem según el viewport */
 .title {
   font-family: var(--font-headline);
   font-size: clamp(3rem, 8vw, 6rem);
   font-weight: 800;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.05em; /* tracking negativo para títulos grandes tipográficos */
   line-height: 1.05;
   color: var(--color-on-background);
 }
 
+/* Texto con degradado cian: recorta el gradiente al contorno del texto */
 .gradientText {
   color: transparent;
   background-clip: text;
@@ -43,6 +49,7 @@
   background-image: linear-gradient(135deg, var(--color-primary), var(--color-primary-container));
 }
 
+/* Descripción/bio: texto secundario con buena legibilidad (line-height 1.7) */
 .description {
   color: var(--color-on-surface-variant);
   font-family: var(--font-body);
@@ -51,6 +58,7 @@
   max-width: 28rem;
 }
 
+/* Fila de acciones: botón CTA + enlace secundario en horizontal */
 .actionRow {
   display: flex;
   align-items: center;
@@ -58,6 +66,7 @@
   padding-top: 1rem;
 }
 
+/* Botón CTA principal con degradado cian y sombra de color */
 .button {
   background-image: linear-gradient(135deg, var(--color-primary), var(--color-primary-container));
   color: var(--color-on-primary-fixed);
@@ -67,16 +76,18 @@
   padding: 1.25rem 2.5rem;
   border: none;
   border-radius: 0.75rem;
-  box-shadow: 0 20px 40px rgba(105, 218, 255, 0.15);
+  box-shadow: 0 20px 40px rgba(105, 218, 255, 0.15); /* halo cian difuso */
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
+/* Hover: escala leve hacia arriba con sombra más pronunciada */
 .button:hover {
   transform: scale(1.05);
   box-shadow: 0 25px 50px rgba(105, 218, 255, 0.2);
 }
 
+/* Click: escala hacia abajo para efecto de presión */
 .button:active {
   transform: scale(0.95);
 }

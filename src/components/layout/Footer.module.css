@@ -1,11 +1,13 @@
+/* Footer: fondo del tema, padding generoso, borde superior glass sutil */
 .footer {
   background-color: var(--color-background);
   padding: 4rem 3rem;
-  border-top: 1px solid var(--glass-border);
+  border-top: 1px solid var(--glass-border); /* separa el footer del contenido superior */
   position: relative;
-  z-index: 20;
+  z-index: 20; /* sobre el meshBottom gradient del Hero */
 }
 
+/* Contenedor interno: columna centrada en mobile, fila en tablet+ */
 .container {
   max-width: 1280px;
   margin: 0 auto;
@@ -18,10 +20,11 @@
 
 @media (min-width: 768px) {
   .container {
-    flex-direction: row;
+    flex-direction: row; /* brand izq | links centro | copyright der */
   }
 }
 
+/* Nombre de marca: cian, en mayúsculas, tracking negativo estilo editorial */
 .brand {
   font-family: var(--font-headline);
   font-size: 0.875rem;
@@ -31,11 +34,13 @@
   text-transform: uppercase;
 }
 
+/* Fila de links de redes/secciones */
 .links {
   display: flex;
   gap: 3rem;
 }
 
+/* Links del footer: pequeños, en mayúsculas, semitransparentes */
 .link {
   font-family: var(--font-body);
   font-size: 0.75rem;
@@ -47,11 +52,13 @@
   opacity: 0.8;
 }
 
+/* Hover: color primario y opacidad completa */
 .link:hover {
   color: var(--color-primary);
   opacity: 1;
 }
 
+/* Texto de copyright: misma tipografía que los links, más tenue */
 .copyright {
   font-family: var(--font-body);
   font-size: 0.75rem;

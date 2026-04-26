@@ -1,3 +1,4 @@
+/* Contenedor del retrato: 600px de alto, centra la card con glow de fondo */
 .container {
   position: relative;
   height: 600px;
@@ -7,49 +8,56 @@
   justify-content: center;
 }
 
+/* Blob de luz difusa detrás de la foto: círculo con blur extremo y muy baja opacidad */
 .glow {
   position: absolute;
   inset: 0;
   background-color: var(--color-primary);
   opacity: 0.05;
-  filter: blur(120px);
+  filter: blur(120px);  /* blur alto para que sea un halo suave, no una forma definida */
   border-radius: 50%;
-  transform: scale(0.75);
+  transform: scale(0.75); /* más pequeño que el contenedor para concentrar la luz */
   transition: background-color 0.7s ease, opacity 0.7s ease;
 }
 
+/* Al hacer hover sobre el contenedor: el glow se intensifica */
 .container:hover .glow {
   opacity: 0.1;
 }
 
+/* Card de la foto: borde redondeado, sombra profunda, borde glass sutil */
 .portraitCard {
   position: relative;
   height: 600px;
   width: 350px;
-  overflow: hidden;
+  overflow: hidden;         /* recorta la imagen a los bordes redondeados */
   border-radius: 0.75rem;
-  background-color: var(--color-surface-container-low);
+  background-color: var(--color-surface-container-low); /* visible si la imagen carga lento */
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   border: 1px solid var(--glass-border);
   transition: box-shadow 0.5s ease;
 }
 
+/* Hover: sombra cambia a tono cian sutil */
 .container:hover .portraitCard {
   box-shadow: 0 25px 50px -12px rgba(105, 218, 255, 0.1);
 }
 
+/* Foto: cubre toda la card, en estado normal es gris oscuro de alto contraste */
 .image {
   height: 100%;
   width: 100%;
   object-fit: cover;
-  filter: grayscale(1) brightness(0.75) contrast(1.25);
+  filter: grayscale(1) brightness(0.75) contrast(1.25); /* blanco y negro dramático */
   transition: filter 1s ease-in-out;
 }
 
+/* Hover: la imagen recupera sus colores originales con transición lenta */
 .container:hover .image {
   filter: grayscale(0) brightness(1) contrast(1);
 }
 
+/* Overlay de fade inferior: disuelve la foto hacia el fondo de la página */
 .overlayTopToBottom {
   position: absolute;
   inset: 0;
@@ -57,14 +65,16 @@
   opacity: 0.6;
 }
 
+/* Overlay de color cian: tinte sutil en la esquina superior izquierda (muy bajo) */
 .overlayColor {
   position: absolute;
   inset: 0;
   background: linear-gradient(to bottom right, var(--color-primary), transparent);
   opacity: 0.1;
-  mix-blend-mode: overlay;
+  mix-blend-mode: overlay; /* se mezcla con la foto sin opacarla */
 }
 
+/* Caption flotante en la esquina inferior izquierda de la card */
 .caption {
   position: absolute;
   bottom: 2rem;
@@ -74,6 +84,7 @@
   gap: 0.25rem;
 }
 
+/* Badge: texto cian pequeño, ej. "Disponible" */
 .badge {
   font-size: 0.75rem;
   font-family: var(--font-label);
@@ -82,6 +93,7 @@
   color: var(--color-primary);
 }
 
+/* Role: subtítulo de la caption en color muted */
 .role {
   font-size: 0.875rem;
   font-family: var(--font-label);

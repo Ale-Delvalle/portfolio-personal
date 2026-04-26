@@ -1,68 +1,80 @@
 /* src/index.css */
+/* Fuentes: Manrope (titulares) e Inter (cuerpo/etiquetas) desde Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Manrope:wght@200;400;600;800&display=swap');
 
 :root {
   /* =========================================
      LIGHT MODE TOKENS (Auto-generated MD3 logic)
      ========================================= */
+
+  /* Color de acento principal (azul cian) y su contenedor más claro */
   --color-primary: #006688;
   --color-primary-container: #c4e7ff;
+  /* Texto sobre elementos con color primary-fixed (contraste oscuro) */
   --color-on-primary-fixed: #001e2c;
-  
+
+  /* Escala de superficies: de más oscura (lowest) a más clara (highest) */
   --color-surface: #f9f9fd;
   --color-surface-container-lowest: #ffffff;
   --color-surface-container-low: #f3f3f7;
   --color-surface-container: #edeef3;
   --color-surface-container-high: #e7e8ed;
   --color-surface-container-highest: #e2e2e7;
-  
+
+  /* Colores de texto sobre fondo y superficies */
   --color-on-background: #1a1c1e;
   --color-on-surface: #1a1c1e;
-  --color-on-surface-variant: #42474e;
-  --color-outline-variant: #c3c7cf;
-  
+  --color-on-surface-variant: #42474e;   /* texto secundario/muted */
+  --color-outline-variant: #c3c7cf;      /* bordes sutiles */
+
+  /* Fondo global y texto sobre primary */
   --color-background: #f9f9fd;
   --color-on-primary: #ffffff;
-  
+
   /* Font Families */
   --font-headline: 'Manrope', sans-serif;
   --font-body: 'Inter', sans-serif;
   --font-label: 'Inter', sans-serif;
-  
+
   /* Glassmorphism Settings */
-  --glass-bg: rgba(249, 249, 253, 0.6);
-  --glass-border: rgba(0, 0, 0, 0.05);
+  --glass-bg: rgba(249, 249, 253, 0.6);    /* fondo semitransparente para glass cards */
+  --glass-border: rgba(0, 0, 0, 0.05);     /* borde sutil en componentes glass */
 }
 
 :root[data-theme="dark"] {
   /* =========================================
      DARK MODE TOKENS (From the original file)
      ========================================= */
+
+  /* Cian brillante como acento en oscuro */
   --color-primary: #69daff;
   --color-primary-container: #00cffc;
   --color-on-primary-fixed: #002a35;
-  
+
+  /* Superficies muy oscuras, casi negras */
   --color-surface: #0c0e11;
   --color-surface-container-lowest: #000000;
   --color-surface-container-low: #111417;
   --color-surface-container: #171a1d;
   --color-surface-container-high: #1d2024;
   --color-surface-container-highest: #23262a;
-  
+
+  /* Texto claro sobre fondos oscuros */
   --color-on-background: #f9f9fd;
   --color-on-surface: #f9f9fd;
-  --color-on-surface-variant: #aaabaf;
-  --color-outline-variant: #46484b;
-  
+  --color-on-surface-variant: #aaabaf;   /* texto secundario en oscuro */
+  --color-outline-variant: #46484b;     /* bordes en oscuro */
+
   --color-background: #0c0e11;
   --color-on-primary: #004a5d;
-  
-  /* Glassmorphism Settings */
+
+  /* Glassmorphism en oscuro: fondo oscuro semitransparente con borde blanco */
   --glass-bg: rgba(12, 14, 17, 0.6);
   --glass-border: rgba(255, 255, 255, 0.1);
 }
 
 /* Base Styles */
+/* Reset de body: fondo/texto del tema activo, sin márgenes, transición suave entre temas */
 body {
   background-color: var(--color-background);
   color: var(--color-on-background);
@@ -70,18 +82,21 @@ body {
   margin: 0;
   padding: 0;
   transition: background-color 0.3s ease, color 0.3s ease;
-  overflow-x: hidden;
+  overflow-x: hidden; /* evita scroll horizontal por animaciones que salen del viewport */
 }
 
+/* Color de selección de texto: cian semitransparente (ambos prefijos para compatibilidad) */
 ::-moz-selection { background: rgba(105, 218, 255, 0.3); }
 ::selection { background: rgba(105, 218, 255, 0.3); }
 
 /* Typography Resets */
+/* Todos los títulos usan Manrope sin márgenes por defecto */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-headline);
   margin: 0;
 }
 
+/* Texto genérico usa Inter */
 p, span, div {
   font-family: var(--font-body);
 }
@@ -91,10 +106,12 @@ p, span, div {
 }
 
 /* Utilities */
+/* Degradado radial centrado muy sutil: toque de cian apenas visible en el fondo del hero */
 .hero-mesh-gradient {
   background: radial-gradient(circle at 50% 50%, rgba(0, 209, 255, 0.03) 0%, transparent 50%);
 }
 
+/* Línea decorativa horizontal: desvanece en los extremos, 50% opacidad */
 .editorial-line {
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--color-outline-variant), transparent);
@@ -102,15 +119,18 @@ p, span, div {
 }
 
 /* Custom Animations */
+/* Aparece desde abajo (20px) hacia su posición natural con fade-in */
 @keyframes fadeUp {
   0% { opacity: 0; transform: translateY(20px); }
   100% { opacity: 1; transform: translateY(0); }
 }
 
+/* Clase utilitaria que aplica la animación; forwards conserva el estado final */
 .animate-fade-up {
   animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* Delays escalonados para animar elementos en secuencia */
 .delay-100 { animation-delay: 100ms; }
 .delay-200 { animation-delay: 200ms; }
 .delay-300 { animation-delay: 300ms; }

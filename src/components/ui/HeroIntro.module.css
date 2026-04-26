@@ -1,8 +1,10 @@
+/* Pantalla de intro/splash: cubre toda la pantalla, fondo negro, texto blanco */
+/* Se muestra fija sobre todo el contenido (z-index 9999) mientras carga */
 .container {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 9999;
+  z-index: 9999;    /* por encima de todo el resto de la UI */
   height: 100vh;
   width: 100%;
   display: flex;
@@ -12,18 +14,21 @@
   color: #fff;
 }
 
+/* Fila horizontal: logo + nombre del sitio centrados */
 .content {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
 
+/* Logo cuadrado contenido en su bounding box */
 .logo {
   width: 5rem;
   height: 5rem;
   object-fit: contain;
 }
 
+/* Nombre/título de la intro en tipografía grande y negrita */
 .title {
   font-size: 2.25rem;
   font-weight: 700;

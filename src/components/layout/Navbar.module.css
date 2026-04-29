@@ -31,9 +31,9 @@
   }
 }
 
-/* Líneas blancas en modo oscuro */
+/* Líneas color salmón en modo oscuro */
 :global(:root[data-theme="dark"]) .navbar {
-  --lc: #ffffff;
+  --lc: var(--color-on-background);
 }
 
 /* ── Brand ──────────────────────────────────────── */

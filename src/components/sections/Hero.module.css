@@ -1,13 +1,12 @@
-/* Sección Hero: ocupa al menos toda la pantalla, centra su contenido verticalmente */
+/* Sección Hero: ocupa exactamente el viewport disponible y centra su contenido verticalmente */
 .main {
   position: relative;
-  min-height: 100vh;
+  height: 100vh;
+  height: 100svh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-top: 6rem;    /* espacio para evitar que el contenido quede bajo la navbar top */
-  padding-bottom: 3rem;
-  overflow: hidden;     /* recorta decoraciones que salen del borde */
+  overflow: hidden;
 }
 
 /* Contenedor interno: columna en mobile, fila en tablet+ */
@@ -29,6 +28,13 @@
     flex-direction: row;  /* texto a la izquierda, retrato a la derecha */
     padding: 0 3rem;
     gap: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    /* desplaza el contenido a la derecha para no solapar la navbar lateral fija */
+    padding-left: calc(14rem - 200px);
   }
 }
 

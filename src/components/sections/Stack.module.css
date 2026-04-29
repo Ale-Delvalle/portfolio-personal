@@ -8,3 +8,9 @@
     align-items: center;
     justify-content: center;
 }
+
+.stackRow {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}

@@ -52,12 +52,5 @@
 
 /* Degradado inferior fijo que crea un efecto de fade-out hacia el fondo de la página */
 .meshBottom {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 8rem;
-  pointer-events: none;  /* no interfiere con clics */
-  background: linear-gradient(to top, var(--color-background), transparent);
-  z-index: 10;
+  display: none;
 }

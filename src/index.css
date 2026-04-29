@@ -76,12 +76,14 @@
 /* Base Styles */
 /* Reset de body: fondo/texto del tema activo, sin márgenes, transición suave entre temas */
 body {
-  background-color: var(--color-background);
-  color: var(--color-on-background);
+  background: linear-gradient(45deg, #ff7e5f, #feb47b);
+  background-attachment: fixed;
+  color: #000000;
   font-family: "Inter", sans-serif;
   margin: 0;
   padding: 0;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
+  transition: background 0.3s ease, color 0.3s ease;
   overflow-x: hidden; /* evita scroll horizontal por animaciones que salen del viewport */
 }
 

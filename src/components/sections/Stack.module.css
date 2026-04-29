@@ -1,16 +1,36 @@
 .container{
-    background-color: #000;
-    color: #fff;
     height: 100vh;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+}
+
+.title {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 40px;
+    font-size: 200px;
+    font-weight: 700;
 }
 
 .stackRow {
     display: flex;
     flex-direction: row;
     gap: 1rem;
+}
+
+.secondaryStack{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.secondaryTitle{
+    margin-top: 80px;
+}
+
+.blur-bg {
+  backdrop-filter: blur(10px);
 }

@@ -39,13 +39,7 @@
 /* ── Brand ──────────────────────────────────────── */
 /* Nombre/marca en mayúsculas con mucho letter-spacing, alineado con los links */
 .brand {
-  font-family: var(--font-headline);
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--color-on-background);
-  padding-left: calc(var(--conn) + 0.625rem); /* se alinea con el texto de los nav items */
+  font-family: "Inter", sans-serif;
 }
 
 /* ── Lista de navegación ────────────────────────── */
@@ -157,11 +151,10 @@
 /* Link en mayúsculas, compacto, semitransparente hasta el hover */
 .link {
   display: block;
-  font-family: var(--font-headline);
+  font-family: "Inter", sans-serif;
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.18em;
-  text-transform: uppercase;
   text-decoration: none;
   color: var(--color-on-surface-variant);
   opacity: 0.5;

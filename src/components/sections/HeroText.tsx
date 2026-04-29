@@ -5,14 +5,14 @@ export function HeroText() {
   return (
     <div className={styles.container}>
       <div data-gsap="title" className={styles.titleWrapper}>
-        <span className={styles.label}>Creative Engineer</span>
         <h1 className={styles.title}>
-          Building <span className={styles.gradientText}>Digital Solutions</span>
+          Alexis <span className={styles.gradientText}>Delvalle</span>
         </h1>
+        <span className={styles.label}>Fullstack Developer</span>
       </div>
 
       <p data-gsap="description" className={styles.description}>
-        Synthesizing rigid structural logic with fluid creative expression. Architecting scalable interfaces that bridge the gap between human intuition and machine precision.
+        Me apasiona construir experiencias de usuario intuitivas, eficientes y escalables.
       </p>
 
       <div data-gsap="action" className={styles.actionRow}>

@@ -4,7 +4,7 @@
   flex-direction: column;
   gap: 2rem;
   padding: 5rem 0;     /* padding vertical en mobile para separar del retrato */
-  max-width: 500px;
+  max-width: 800px;
 }
 
 /* En tablet+: sin padding vertical (el layout Hero ya centra la sección) */
@@ -31,22 +31,22 @@
   gap: 0.5rem;
 }
 
-/* Nombre principal: tamaño fluido entre 3rem y 6rem según el viewport */
+/* Nombre principal con degradado granate a salmón */
 .title {
   font-family: var(--font-headline);
   font-size: clamp(3rem, 8vw, 6rem);
   font-weight: 800;
-  letter-spacing: -0.05em; /* tracking negativo para títulos grandes tipográficos */
+  letter-spacing: -0.05em;
   line-height: 1.05;
-  color: var(--color-on-background);
-}
-
-/* Texto con degradado cian: recorta el gradiente al contorno del texto */
-.gradientText {
   color: transparent;
   background-clip: text;
   -webkit-background-clip: text;
-  background-image: linear-gradient(135deg, var(--color-primary), var(--color-primary-container));
+  background-image: linear-gradient(135deg, #800000, #ff704c);
+}
+
+/* El span hereda el degradado del padre para mantener la continuidad */
+.gradientText {
+  color: inherit;
 }
 
 /* Descripción/bio: texto secundario con buena legibilidad (line-height 1.7) */
@@ -66,7 +66,7 @@
   padding-top: 1rem;
 }
 
-/* Botón CTA principal con degradado cian y sombra de color */
+/* Botón CTA principal con degradado salmón y sombra de color */
 .button {
   background-image: linear-gradient(135deg, var(--color-primary), var(--color-primary-container));
   color: var(--color-on-primary-fixed);
@@ -76,7 +76,7 @@
   padding: 1.25rem 2.5rem;
   border: none;
   border-radius: 0.75rem;
-  box-shadow: 0 20px 40px rgba(105, 218, 255, 0.15); /* halo cian difuso */
+  box-shadow: 0 20px 40px rgba(255, 126, 95, 0.15); /* halo salmón difuso */
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
 }
@@ -84,7 +84,7 @@
 /* Hover: escala leve hacia arriba con sombra más pronunciada */
 .button:hover {
   transform: scale(1.05);
-  box-shadow: 0 25px 50px rgba(105, 218, 255, 0.2);
+  box-shadow: 0 25px 50px rgba(255, 126, 95, 0.2);
 }
 
 /* Click: escala hacia abajo para efecto de presión */

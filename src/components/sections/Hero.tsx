@@ -17,9 +17,6 @@ export function Hero() {
   const mainRef = useRef<HTMLElement>(null);
   
   // Parallax refs
-  const xToPortrait = useRef<any>(null);
-  const yToPortrait = useRef<any>(null);
-
   const xToName = useRef<any>(null);
   const yToName = useRef<any>(null);
   const rotXName = useRef<any>(null);
@@ -29,6 +26,11 @@ export function Hero() {
 
   useGSAP(() => {
     const tl = gsap.timeline();
+
+    const nameLayers = gsap.utils.toArray(`.${styles.nameLayer}`, nameContainerRef.current);
+    
+    // Las capas 3D inician ocultas
+    gsap.set(nameLayers, { autoAlpha: 0 });
 
     // 1) Nombre y Rol aparecen en el centro a escala 2x
     // Suavizamos la entrada
@@ -44,6 +46,12 @@ export function Hero() {
       ease: "power3.inOut",
       delay: 0.3
     })
+    // 2.5) Aparece el contorno 3D justo cuando llega a su lugar
+    .to(nameLayers, {
+      autoAlpha: 1,
+      duration: 0.4,
+      ease: "power2.out"
+    }, "-=0.2")
     // 3) Aparece la foto
     .from(portraitRef.current, {
       autoAlpha: 0,
@@ -62,10 +70,8 @@ export function Hero() {
       onComplete: () => setIntroDone(true)
     }, "-=0.4");
 
-    // --- MOUSE PARALLAX (Solo foto y nombre/rol) ---
+    // --- MOUSE PARALLAX (Solo nombre/rol) ---
     // Movimiento posicional
-    xToPortrait.current = gsap.quickTo(portraitRef.current, "x", { duration: 0.8, ease: "power3" });
-    yToPortrait.current = gsap.quickTo(portraitRef.current, "y", { duration: 0.8, ease: "power3" });
     xToName.current = gsap.quickTo(nameContainerRef.current, "x", { duration: 0.8, ease: "power3" });
     yToName.current = gsap.quickTo(nameContainerRef.current, "y", { duration: 0.8, ease: "power3" });
 
@@ -73,17 +79,7 @@ export function Hero() {
     rotXName.current = gsap.quickTo(nameContainerRef.current, "rotationX", { duration: 0.8, ease: "power3" });
     rotYName.current = gsap.quickTo(nameContainerRef.current, "rotationY", { duration: 0.8, ease: "power3" });
 
-    // --- SCROLL PARALLAX (Solo foto y nombre/rol) ---
-    gsap.to(portraitRef.current, {
-      yPercent: 15,
-      ease: "none",
-      scrollTrigger: {
-        trigger: mainRef.current,
-        start: "top top",
-        end: "bottom top",
-        scrub: true
-      }
-    });
+    // --- SCROLL PARALLAX (Solo nombre/rol) ---
 
     gsap.to(nameContainerRef.current, {
       yPercent: -10,
@@ -108,11 +104,7 @@ export function Hero() {
     const nX = (clientX - centerX) / centerX;
     const nY = (clientY - centerY) / centerY;
 
-    if (xToPortrait.current) {
-      // Foto se mueve sutilmente opuesto (solo movimiento posicional 2D)
-      xToPortrait.current(nX * -10);
-      yToPortrait.current(nY * -10);
-      
+    if (xToName.current) {
       // Nombre y rol siguen ligeramente al cursor
       xToName.current(nX * 15);
       yToName.current(nY * 15);

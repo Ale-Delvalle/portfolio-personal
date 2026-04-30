@@ -10,40 +10,41 @@ export function Hero() {
   const portraitRef = useRef<HTMLDivElement>(null);
   const leftTextRef = useRef<HTMLDivElement>(null);
   const rightTextRef = useRef<HTMLDivElement>(null);
+  const nameContainerRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
     const tl = gsap.timeline();
 
-    // 1) Foto
-    tl.from(portraitRef.current, {
-      opacity: 0,
+    // 1) Nombre y Rol aparecen en el centro a escala 2x
+    // Suavizamos la entrada
+    tl.fromTo(nameContainerRef.current, 
+      { autoAlpha: 0, y: -180, scale: 2 },
+      { autoAlpha: 1, duration: 1, ease: "power3.out" }
+    )
+    // 2) Disminuyen de tamaño y bajan a su posición actual
+    .to(nameContainerRef.current, {
+      y: 0,
+      scale: 1,
+      duration: 1.2,
+      ease: "power3.inOut",
+      delay: 0.3
+    })
+    // 3) Aparece la foto
+    .from(portraitRef.current, {
+      autoAlpha: 0,
       y: -30,
       scale: 0.95,
-      duration: 0.7,
+      duration: 0.8,
       ease: "power3.out",
-    })
-    // 2) Nombre
-    .from(nameRef.current, {
-      autoAlpha: 0,
-      y: -15,
-      duration: 0.5,
-      ease: "power3.out",
-    }, "-=0.3")
-    // 3) Fullstack and backend specialist (rol)
-    .from(roleRef.current, {
-      autoAlpha: 0,
-      y: -10,
-      duration: 0.4,
-      ease: "power3.out",
-    }, "-=0.2")
-    // 4) Textos izquierdo y derecho (al mismo tiempo)
+    }, "-=0.4")
+    // 4) Textos izquierdo y derecho
     .from([leftTextRef.current, rightTextRef.current], {
       autoAlpha: 0,
       y: 20,
-      duration: 0.6,
+      duration: 0.8,
       stagger: 0,
       ease: "power3.out",
-    }, "-=0.1");
+    }, "-=0.4");
 
   }, []);
 
@@ -67,7 +68,7 @@ export function Hero() {
             <div ref={portraitRef} className={styles.portraitWrapper}>
               <HeroPortrait />
             </div>
-            <div className={styles.nameContainer}>
+            <div ref={nameContainerRef} className={styles.nameContainer}>
               <div ref={nameRef} className={styles.name}>Alexis Delvalle</div>
               <div ref={roleRef} className={styles.role}>Fullstack and backend specialist</div>
             </div>

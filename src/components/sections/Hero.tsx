@@ -59,8 +59,14 @@ export function Hero() {
         </div>
 
         <div className={styles.centerCol}>
-          <div ref={portraitRef} className={styles.portraitWrapper}>
-            <HeroPortrait />
+          <div className={styles.portraitAnchor}>
+            <div ref={portraitRef} className={styles.portraitWrapper}>
+              <HeroPortrait />
+            </div>
+            <div className={styles.nameContainer}>
+              <div ref={nameRef} className={styles.name}>Alexis Delvalle</div>
+              <div ref={roleRef} className={styles.role}>Fullstack and backend specialist</div>
+            </div>
           </div>
         </div>
 
@@ -74,12 +80,6 @@ export function Hero() {
             <button className={styles.secondaryBtn}>Contáctame</button>
           </div>
         </div>
-
-        <div className={styles.nameContainer}>
-          <div ref={nameRef} className={styles.name}>Alexis Delvalle</div>
-          <div ref={roleRef} className={styles.role}>Fullstack and backend specialist</div>
-        </div>
-
       </div>
       <div className={styles.meshBottom}></div>
     </main>

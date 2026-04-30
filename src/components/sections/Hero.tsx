@@ -52,10 +52,14 @@ export function Hero() {
       <div className={styles.content}>
         
         <div ref={leftTextRef} className={styles.leftSide}>
-          <h2 className={styles.sideTitle}>Un poco de mi</h2>
+          <h2 className={styles.sideTitleLarge}>Mi perfil profesional</h2>
           <p className={styles.sideDesc}>
-            Disfruto crear aplicaciones pero mucho más formar lazos humanos y profesionales, una buena comunicacion y un ambiente laboral ameno en pro de crecer y conseguir nuestros objetivos.
+            Soy un full stack developer impulsado por la curiosidad y al aprendizaje. Aunque tengo un gusto especial por el backend he trabajado en el front end, tanto en PC y mobile.
           </p>
+          <div className={styles.buttonGroup}>
+            <button className={styles.primaryBtn}>Revisar proyectos</button>
+            <button className={styles.secondaryBtn}>Contáctame</button>
+          </div>
         </div>
 
         <div className={styles.centerCol}>
@@ -71,14 +75,10 @@ export function Hero() {
         </div>
 
         <div ref={rightTextRef} className={styles.rightSide}>
-          <h2 className={styles.sideTitleLarge}>Mi perfil profesional</h2>
+          <h2 className={styles.sideTitle}>Un poco de mi</h2>
           <p className={styles.sideDesc}>
-            Soy un full stack developer impulsado por la curiosidad y al aprendizaje. Aunque tengo un gusto especial por el backend he trabajado en el front end, tanto en PC y mobile.
+            Disfruto crear aplicaciones pero mucho más formar lazos humanos y profesionales, una buena comunicacion y un ambiente laboral ameno en pro de crecer y conseguir nuestros objetivos.
           </p>
-          <div className={styles.buttonGroup}>
-            <button className={styles.primaryBtn}>Revisar proyectos</button>
-            <button className={styles.secondaryBtn}>Contáctame</button>
-          </div>
         </div>
       </div>
       <div className={styles.meshBottom}></div>

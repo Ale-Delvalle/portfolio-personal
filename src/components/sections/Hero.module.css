@@ -68,9 +68,9 @@
 
 @media (min-width: 1024px) {
   .leftSide {
-    align-items: center;
+    align-items: flex-start;
     max-width: 320px;
-    text-align: center;
+    text-align: left;
     order: unset;
     margin-top: -10vh; /* Elevate text slightly */
   }
@@ -79,9 +79,9 @@
     max-width: 500px; /* Constrain center portrait width if needed */
   }
   .rightSide {
-    align-items: center;
+    align-items: flex-end;
     max-width: 320px;
-    text-align: center;
+    text-align: right;
     order: unset;
     margin-top: -10vh; /* Elevate text slightly */
   }
@@ -188,7 +188,7 @@
 
 @media (min-width: 1024px) {
   .buttonGroup {
-    justify-content: flex-end;
+    justify-content: flex-start;
   }
 }
 

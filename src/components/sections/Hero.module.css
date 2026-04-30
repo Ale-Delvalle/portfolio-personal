@@ -84,6 +84,7 @@
     text-align: right;
     order: unset;
     margin-top: -10vh; /* Elevate text slightly */
+    padding-bottom: 4rem; /* Compensate for leftSide button height to align titles */
   }
 }
 
@@ -155,6 +156,7 @@
 :global(:root[data-theme="dark"]) .name {
   background: none;
   filter: none;
+  color: var(--color-primary);
 }
 
 .role {
@@ -166,6 +168,14 @@
   text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   letter-spacing: normal;
   text-transform: none;
+}
+
+/* Dark Mode Text Colors */
+:global(:root[data-theme="dark"]) .sideTitle,
+:global(:root[data-theme="dark"]) .sideTitleLarge,
+:global(:root[data-theme="dark"]) .sideDesc,
+:global(:root[data-theme="dark"]) .role {
+  color: var(--color-primary);
 }
 
 .portraitWrapper {
@@ -204,26 +214,49 @@
   outline: none;
 }
 
+/* Light Mode / Base Buttons */
 .primaryBtn {
-  background: var(--color-primary);
-  color: var(--color-on-primary-fixed);
-  box-shadow: 0 4px 15px rgba(255, 126, 95, 0.3);
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  box-shadow: none;
 }
 
 .primaryBtn:hover {
+  background: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 126, 95, 0.4);
 }
 
 .secondaryBtn {
-  background: transparent;
-  color: var(--color-on-background);
-  border: 1px solid var(--color-outline-variant);
+  background: #800000;
+  color: #ffffff;
+  border: 1px solid #ffffff;
 }
 
 .secondaryBtn:hover {
-  background: var(--color-surface-container);
+  background: #b30000;
   transform: translateY(-2px);
+}
+
+/* Dark Mode Overrides */
+:global(:root[data-theme="dark"]) .primaryBtn {
+  background: #000000;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+
+:global(:root[data-theme="dark"]) .primaryBtn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+:global(:root[data-theme="dark"]) .secondaryBtn {
+  background: var(--color-primary);
+  color: #ffffff;
+  border: 1px solid var(--color-primary);
+}
+
+:global(:root[data-theme="dark"]) .secondaryBtn:hover {
+  background: var(--color-primary-container);
 }
 
 .meshBottom {

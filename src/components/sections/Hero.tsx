@@ -19,27 +19,27 @@ export function Hero({ introDone }: HeroProps) {
 
     tl.from('[data-gsap="title"]', {
       autoAlpha: 0,
-      duration: 0.8,
+      duration: 0.4,
       ease: "power3.out",
     })
     .from(
       ['[data-gsap="description"]', '[data-gsap="action"]'],
       {
         autoAlpha: 0,
-        duration: 0.8,
+        duration: 0.4,
         ease: "power3.out",
       },
-      "+=0.15"
+      "-=0.1"
     )
     .from(
       portraitRef.current,
       {
         opacity: 0,
         y: -80,
-        duration: 1,
+        duration: 0.5,
         ease: "power3.out",
       },
-      "+=0.2"
+      "-=0.2"
     );
   }, []);
 

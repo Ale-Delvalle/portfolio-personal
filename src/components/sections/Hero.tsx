@@ -15,22 +15,16 @@ export function Hero() {
   const rightTextRef = useRef<HTMLDivElement>(null);
   const nameContainerRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLElement>(null);
+  const contactBtnRef = useRef<HTMLButtonElement>(null);
   
   // Parallax refs
-  const xToName = useRef<any>(null);
-  const yToName = useRef<any>(null);
-  const rotXName = useRef<any>(null);
-  const rotYName = useRef<any>(null);
+  const xToBtn = useRef<any>(null);
+  const yToBtn = useRef<any>(null);
 
   const [introDone, setIntroDone] = useState(false);
 
   useGSAP(() => {
     const tl = gsap.timeline();
-
-    const nameLayers = gsap.utils.toArray(`.${styles.nameLayer}`, nameContainerRef.current);
-    
-    // Las capas 3D inician ocultas
-    gsap.set(nameLayers, { autoAlpha: 0 });
 
     // 1) Nombre y Rol aparecen en el centro a escala 2x
     // Suavizamos la entrada
@@ -46,12 +40,6 @@ export function Hero() {
       ease: "power3.inOut",
       delay: 0.3
     })
-    // 2.5) Aparece el contorno 3D justo cuando llega a su lugar
-    .to(nameLayers, {
-      autoAlpha: 1,
-      duration: 0.4,
-      ease: "power2.out"
-    }, "-=0.2")
     // 3) Aparece la foto
     .from(portraitRef.current, {
       autoAlpha: 0,
@@ -70,14 +58,10 @@ export function Hero() {
       onComplete: () => setIntroDone(true)
     }, "-=0.4");
 
-    // --- MOUSE PARALLAX (Solo nombre/rol) ---
+    // --- MOUSE PARALLAX (Botón Contactame) ---
     // Movimiento posicional
-    xToName.current = gsap.quickTo(nameContainerRef.current, "x", { duration: 0.8, ease: "power3" });
-    yToName.current = gsap.quickTo(nameContainerRef.current, "y", { duration: 0.8, ease: "power3" });
-
-    // Movimiento rotacional (Tilt 3D solo para el nombre)
-    rotXName.current = gsap.quickTo(nameContainerRef.current, "rotationX", { duration: 0.8, ease: "power3" });
-    rotYName.current = gsap.quickTo(nameContainerRef.current, "rotationY", { duration: 0.8, ease: "power3" });
+    xToBtn.current = gsap.quickTo(contactBtnRef.current, "x", { duration: 0.8, ease: "power3" });
+    yToBtn.current = gsap.quickTo(contactBtnRef.current, "y", { duration: 0.8, ease: "power3" });
 
     // --- SCROLL PARALLAX (Solo nombre/rol) ---
 
@@ -104,14 +88,10 @@ export function Hero() {
     const nX = (clientX - centerX) / centerX;
     const nY = (clientY - centerY) / centerY;
 
-    if (xToName.current) {
-      // Nombre y rol siguen ligeramente al cursor
-      xToName.current(nX * 15);
-      yToName.current(nY * 15);
-
-      // Efecto Tilt 3D (Solo para el nombre)
-      rotXName.current(nY * -15);
-      rotYName.current(nX * 15);
+    if (xToBtn.current) {
+      // El botón sigue ligeramente al cursor
+      xToBtn.current(nX * 25);
+      yToBtn.current(nY * 25);
     }
   };
 
@@ -126,7 +106,7 @@ export function Hero() {
           </p>
           <div className={styles.buttonGroup}>
             <button className={styles.primaryBtn}>Revisar proyectos</button>
-            <button className={styles.secondaryBtn}>Contáctame</button>
+            <button ref={contactBtnRef} className={styles.secondaryBtn}>Contáctame</button>
           </div>
         </div>
 
@@ -136,14 +116,7 @@ export function Hero() {
               <HeroPortrait />
             </div>
             <div ref={nameContainerRef} className={styles.nameContainer}>
-              <div className={styles.name3dWrapper}>
-                {Array.from({ length: 15 }).map((_, i) => (
-                  <div key={i} className={styles.nameLayer} style={{ transform: `translateZ(${-i * 2}px)` }}>
-                    Alexis Delvalle
-                  </div>
-                ))}
-                <div ref={nameRef} className={styles.name}>Alexis Delvalle</div>
-              </div>
+              <div ref={nameRef} className={styles.name}>Alexis Delvalle</div>
               <div ref={roleRef} className={styles.role}>Fullstack and backend specialist</div>
             </div>
           </div>

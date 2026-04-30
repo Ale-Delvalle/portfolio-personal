@@ -139,12 +139,7 @@
   transform-style: preserve-3d;
 }
 
-.name3dWrapper {
-  position: relative;
-  transform-style: preserve-3d;
-}
-
-.name, .nameLayer {
+.name {
   font-size: clamp(3rem, 8vw, 6.5rem);
   font-weight: 800;
   font-family: var(--font-headline);
@@ -152,31 +147,26 @@
   line-height: 1.1;
   letter-spacing: -0.02em;
   white-space: nowrap;
-}
-.name {
   color: #ffffff;
-  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+  /* Sombra gris platinado (#E5E4E2) para volumen suave */
+  text-shadow: 
+    0 4px 15px rgba(0, 0, 0, 0.25),
+    3px 3px 0 #E5E4E2;
   background: none;
   -webkit-text-fill-color: initial;
   filter: none;
-  transform: translateZ(1px);
-}
-
-.nameLayer {
-  position: absolute;
-  top: 0; left: 0;
-  color: #4a0000; /* Granate oscuro para dar volumen */
 }
 
 :global(:root[data-theme="dark"]) .name {
   background: none;
   filter: none;
   color: var(--color-primary);
+  text-shadow: 
+    0 4px 15px rgba(0, 0, 0, 0.5),
+    3px 3px 0 #b0c4de; /* Platinado más suave/azulado en dark mode */
 }
 
-:global(:root[data-theme="dark"]) .nameLayer {
-  color: #4a1f1f; /* Tono oscuro adaptado al modo oscuro */
-}
+
 
 .role {
   font-size: clamp(1rem, 2.5vw, 1.8rem);
@@ -250,6 +240,31 @@
   background: #800000;
   color: #ffffff;
   border: 1px solid #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+.secondaryBtn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+  animation: shimmer 5s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -150%; }
+  40% { left: 200%; }
+  100% { left: 200%; }
 }
 
 .secondaryBtn:hover {

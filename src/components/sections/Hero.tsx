@@ -18,7 +18,7 @@ export function Hero() {
     // 1) Nombre y Rol aparecen en el centro a escala 2x
     // Suavizamos la entrada
     tl.fromTo(nameContainerRef.current, 
-      { autoAlpha: 0, y: -180, scale: 2 },
+      { autoAlpha: 0, y: -180, scale: 1.3 },
       { autoAlpha: 1, duration: 1, ease: "power3.out" }
     )
     // 2) Disminuyen de tamaño y bajan a su posición actual

@@ -1,5 +1,4 @@
 
-import { HeroText } from './HeroText';
 import { HeroPortrait } from './HeroPortrait';
 import styles from './Hero.module.css';
 import { useRef } from 'react';
@@ -11,45 +10,39 @@ interface HeroProps {
 }
 
 export function Hero({ introDone }: HeroProps) {
-  const textRef = useRef<HTMLDivElement>(null);
+  const nameRef = useRef<HTMLDivElement>(null);
   const portraitRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
-    const tl = gsap.timeline({ delay: introDone ? 0 : 2.5 });
+    // La nueva intro tarda aprox 3.7s antes de empezar a desaparecer
+    const tl = gsap.timeline({ delay: introDone ? 0 : 3.7 });
 
-    tl.from('[data-gsap="title"]', {
-      autoAlpha: 0,
-      duration: 0.4,
-      ease: "power3.out",
-    })
-    .from(
-      ['[data-gsap="description"]', '[data-gsap="action"]'],
-      {
-        autoAlpha: 0,
-        duration: 0.4,
-        ease: "power3.out",
-      },
-      "-=0.1"
-    )
-    .from(
+    tl.from(
       portraitRef.current,
       {
         opacity: 0,
-        y: -80,
-        duration: 0.5,
+        y: -30,
+        scale: 0.95,
+        duration: 0.7,
         ease: "power3.out",
-      },
-      "-=0.2"
-    );
+      }
+    )
+    .from(nameRef.current, {
+      autoAlpha: 0,
+      x: -20,
+      duration: 0.5,
+      ease: "power3.out",
+    }, "-=0.3");
   }, []);
 
   return (
     <main className={`${styles.main} hero-mesh-gradient`}>
-      <div className={styles.grid}>
-        <div ref={textRef} className={styles.col2}>
-          <HeroText />
+      <div className={styles.content}>
+        <div ref={nameRef} className={styles.nameTopLeft}>
+          Alexis Delvalle
         </div>
-        <div ref={portraitRef} className={styles.col3}>
+
+        <div ref={portraitRef} className={styles.portraitWrapper}>
           <HeroPortrait />
         </div>
       </div>

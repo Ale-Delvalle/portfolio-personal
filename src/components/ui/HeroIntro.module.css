@@ -1,36 +1,37 @@
 /* Pantalla de intro/splash: cubre toda la pantalla, fondo negro, texto blanco */
-/* Se muestra fija sobre todo el contenido (z-index 9999) mientras carga */
 .container {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 9999;    /* por encima de todo el resto de la UI */
+  z-index: 9999;
   height: 100vh;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #000;
-  color: #fff;
+  background-color: var(--color-background);
 }
 
-/* Fila horizontal: logo + nombre del sitio centrados */
+/* Contenedor vertical de los textos */
 .content {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 1rem;
 }
 
-/* Logo cuadrado contenido en su bounding box */
-.logo {
-  width: 5rem;
-  height: 5rem;
-  object-fit: contain;
-}
-
-/* Nombre/título de la intro en tipografía grande y negrita */
-.title {
-  font-size: 2.25rem;
+/* Tipografía a 70px */
+.textLine {
+  font-size: 70px;
   font-weight: 700;
   margin: 0;
+  text-align: center;
+  font-family: var(--font-headline);
+  color: var(--color-on-surface);
+}
+
+@media (max-width: 768px) {
+  .textLine {
+    font-size: 40px;
+  }
 }

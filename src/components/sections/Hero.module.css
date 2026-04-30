@@ -1,56 +1,65 @@
-/* Sección Hero: ocupa exactamente el viewport disponible y centra su contenido verticalmente */
+/* Sección Hero: ocupa exactamente el viewport disponible */
 .main {
   position: relative;
   height: 100vh;
   height: 100svh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   overflow: hidden;
+  background-color: transparent;
 }
 
-/* Contenedor interno: columna en mobile, fila en tablet+ */
-.grid {
-  display: flex;
-  flex-direction: column;
+/* Contenedor interno para alinear todo */
+.content {
+  position: relative;
   width: 100%;
   height: 100%;
-  max-width: 2120px;   /* limita el ancho en pantallas ultra-wide */
-  margin: 0 auto;
-  padding: 0 1.5rem;
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 3rem;
-}
-
-@media (min-width: 768px) {
-  .grid {
-    flex-direction: row;  /* texto a la izquierda, retrato a la derecha */
-    padding: 0 3rem;
-    gap: 2rem;
-  }
 }
 
 @media (min-width: 1024px) {
-  .grid {
-    /* desplaza el contenido a la derecha para no solapar la navbar lateral fija */
-    padding-left: calc(14rem - 200px);
+  /* No padding left needed anymore; photo perfectly centered */
+  .content {
+    padding-left: 0;
   }
 }
 
-/* Columna de texto (HeroText) */
-.col2 {
-  display: flex;
-  flex-direction: column;
+.nameTopLeft {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  font-size: 20px;
+  font-weight: 800;
+  z-index: 10;
+  font-family: var(--font-headline);
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  background-image: linear-gradient(135deg, #800000 0%, #800000 65%, #ff704c 100%);
+  filter: drop-shadow(0px 0px 25px rgba(255, 255, 255, 0.85));
 }
 
-/* Columna del retrato (HeroPortrait): centrada horizontalmente */
-.col3 {
+@media (min-width: 1024px) {
+  .nameTopLeft {
+    left: calc(3rem + 14rem - 200px);
+  }
+}
+
+:global(:root[data-theme="dark"]) .nameTopLeft {
+  background-image: linear-gradient(135deg, #800000, #ff704c);
+  filter: none;
+}
+
+
+/* Contenedor del retrato centrado */
+.portraitWrapper {
+  position: relative;
+  z-index: 5;
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
-/* Degradado inferior fijo que crea un efecto de fade-out hacia el fondo de la página */
 .meshBottom {
   display: none;
 }

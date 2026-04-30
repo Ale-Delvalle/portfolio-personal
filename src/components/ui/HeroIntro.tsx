@@ -1,7 +1,6 @@
 import { useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-import logo from '../../assets/logo.png';
 import styles from './HeroIntro.module.css';
 
 interface HeroIntroProps {
@@ -10,59 +9,44 @@ interface HeroIntroProps {
 
 export default function HeroIntro({ onFinish }: HeroIntroProps) {
   const container = useRef<HTMLDivElement>(null);
-  const logoRef = useRef<HTMLImageElement>(null);
-  const textRef = useRef<HTMLHeadingElement>(null);
+  const textRefs = useRef<(HTMLHeadingElement | null)[]>([]);
 
   useGSAP(() => {
-    // 1. Creamos la línea de tiempo
     const tl = gsap.timeline({
       onComplete: onFinish,
     });
-    // 2. Animamos el logo DESDE grande e invisible HACIA su estado normal
-    tl.from(logoRef.current, {
-      scale: 1.5,
+
+    tl.from(textRefs.current, {
+      y: -50,
       opacity: 0,
-      duration: 1.5,
-      ease: "expo.out" // Easing cinematográfico
-    })
-    // 3. Achicamos el logo y lo movemos a la izquierda
-    .to(logoRef.current, {
-      scale: 0.8,
-      x: -50,
-      duration: 1,
-      ease: "power3.inOut"
-    })
-    // 4. Hacemos aparecer el texto. El "<" significa: "Arranca AL MISMO TIEMPO que la animación anterior"
-    .from(textRef.current, {
-      opacity: 0,
-      x: 50,
+      stagger: 0.4,
       duration: 1,
       ease: "power3.out"
-    }, "<")
+    })
+    .to(textRefs.current, {
+      opacity: 0,
+      filter: "blur(12px)",
+      scale: 1.05,
+      stagger: 0.3,
+      duration: 0.8,
+      ease: "power2.inOut",
+      delay: 0.5
+    })
     .to(container.current, {
       opacity: 0,
-      duration: 0.8,
+      duration: 0.5,
       ease: "power2.out"
-  });
+    });
 
-  }, { scope: container }); // El scope limita las animaciones a este componente
+  }, { scope: container });
 
-return (
-  <div
-    ref={container}
-    className={styles.container}
-  >
-    <div className={styles.content}>
-      <img
-        ref={logoRef}
-        className={styles.logo}
-        src={logo}
-        alt="Logo"
-      />
-      <h1 ref={textRef} className={styles.title}>
-        Jhon Doe
-      </h1>
+  return (
+    <div ref={container} className={styles.container}>
+      <div className={styles.content}>
+        <h1 ref={el => { textRefs.current[0] = el; }} className={styles.textLine}>Welcome to my portfolio</h1>
+        <h1 ref={el => { textRefs.current[1] = el; }} className={styles.textLine}>Im a fullstack developer</h1>
+        <h1 ref={el => { textRefs.current[2] = el; }} className={styles.textLine}>and backend specialist</h1>
+      </div>
     </div>
-  </div>
-);
+  );
 }

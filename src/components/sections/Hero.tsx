@@ -1,8 +1,11 @@
 import { HeroPortrait } from './HeroPortrait';
 import styles from './Hero.module.css';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export function Hero() {
   const nameRef = useRef<HTMLDivElement>(null);
@@ -11,6 +14,18 @@ export function Hero() {
   const leftTextRef = useRef<HTMLDivElement>(null);
   const rightTextRef = useRef<HTMLDivElement>(null);
   const nameContainerRef = useRef<HTMLDivElement>(null);
+  const mainRef = useRef<HTMLElement>(null);
+  
+  // Parallax refs
+  const xToPortrait = useRef<any>(null);
+  const yToPortrait = useRef<any>(null);
+
+  const xToName = useRef<any>(null);
+  const yToName = useRef<any>(null);
+  const rotXName = useRef<any>(null);
+  const rotYName = useRef<any>(null);
+
+  const [introDone, setIntroDone] = useState(false);
 
   useGSAP(() => {
     const tl = gsap.timeline();
@@ -44,12 +59,72 @@ export function Hero() {
       duration: 0.8,
       stagger: 0,
       ease: "power3.out",
+      onComplete: () => setIntroDone(true)
     }, "-=0.4");
 
-  }, []);
+    // --- MOUSE PARALLAX (Solo foto y nombre/rol) ---
+    // Movimiento posicional
+    xToPortrait.current = gsap.quickTo(portraitRef.current, "x", { duration: 0.8, ease: "power3" });
+    yToPortrait.current = gsap.quickTo(portraitRef.current, "y", { duration: 0.8, ease: "power3" });
+    xToName.current = gsap.quickTo(nameContainerRef.current, "x", { duration: 0.8, ease: "power3" });
+    yToName.current = gsap.quickTo(nameContainerRef.current, "y", { duration: 0.8, ease: "power3" });
+
+    // Movimiento rotacional (Tilt 3D solo para el nombre)
+    rotXName.current = gsap.quickTo(nameContainerRef.current, "rotationX", { duration: 0.8, ease: "power3" });
+    rotYName.current = gsap.quickTo(nameContainerRef.current, "rotationY", { duration: 0.8, ease: "power3" });
+
+    // --- SCROLL PARALLAX (Solo foto y nombre/rol) ---
+    gsap.to(portraitRef.current, {
+      yPercent: 15,
+      ease: "none",
+      scrollTrigger: {
+        trigger: mainRef.current,
+        start: "top top",
+        end: "bottom top",
+        scrub: true
+      }
+    });
+
+    gsap.to(nameContainerRef.current, {
+      yPercent: -10,
+      ease: "none",
+      scrollTrigger: {
+        trigger: mainRef.current,
+        start: "top top",
+        end: "bottom top",
+        scrub: true
+      }
+    });
+
+  }, { scope: mainRef });
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!introDone || window.innerWidth < 1024) return;
+
+    const { clientX, clientY } = e;
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    
+    const nX = (clientX - centerX) / centerX;
+    const nY = (clientY - centerY) / centerY;
+
+    if (xToPortrait.current) {
+      // Foto se mueve sutilmente opuesto (solo movimiento posicional 2D)
+      xToPortrait.current(nX * -10);
+      yToPortrait.current(nY * -10);
+      
+      // Nombre y rol siguen ligeramente al cursor
+      xToName.current(nX * 15);
+      yToName.current(nY * 15);
+
+      // Efecto Tilt 3D (Solo para el nombre)
+      rotXName.current(nY * -15);
+      rotYName.current(nX * 15);
+    }
+  };
 
   return (
-    <main className={`${styles.main} hero-mesh-gradient`}>
+    <main ref={mainRef} className={`${styles.main} hero-mesh-gradient`} onMouseMove={handleMouseMove} style={{ perspective: "1000px" }}>
       <div className={styles.content}>
         
         <div ref={leftTextRef} className={styles.leftSide}>
@@ -69,7 +144,14 @@ export function Hero() {
               <HeroPortrait />
             </div>
             <div ref={nameContainerRef} className={styles.nameContainer}>
-              <div ref={nameRef} className={styles.name}>Alexis Delvalle</div>
+              <div className={styles.name3dWrapper}>
+                {Array.from({ length: 15 }).map((_, i) => (
+                  <div key={i} className={styles.nameLayer} style={{ transform: `translateZ(${-i * 2}px)` }}>
+                    Alexis Delvalle
+                  </div>
+                ))}
+                <div ref={nameRef} className={styles.name}>Alexis Delvalle</div>
+              </div>
               <div ref={roleRef} className={styles.role}>Fullstack and backend specialist</div>
             </div>
           </div>

@@ -130,33 +130,52 @@
   flex-direction: column;
   align-items: center;
   position: absolute;
-  bottom: 80px; /* Moved up at least 50px from bottom of portrait */
+  bottom: 80px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
   width: max-content;
   pointer-events: none;
+  transform-style: preserve-3d;
 }
 
-.name {
+.name3dWrapper {
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.name, .nameLayer {
   font-size: clamp(3rem, 8vw, 6.5rem);
   font-weight: 800;
   font-family: var(--font-headline);
-  color: #ffffff;
   text-align: center;
   line-height: 1.1;
   letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+.name {
+  color: #ffffff;
   text-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
   background: none;
   -webkit-text-fill-color: initial;
   filter: none;
-  white-space: nowrap;
+  transform: translateZ(1px);
+}
+
+.nameLayer {
+  position: absolute;
+  top: 0; left: 0;
+  color: #4a0000; /* Granate oscuro para dar volumen */
 }
 
 :global(:root[data-theme="dark"]) .name {
   background: none;
   filter: none;
   color: var(--color-primary);
+}
+
+:global(:root[data-theme="dark"]) .nameLayer {
+  color: #4a1f1f; /* Tono oscuro adaptado al modo oscuro */
 }
 
 .role {

@@ -20,6 +20,8 @@ export function Hero() {
   // Parallax refs
   const xToBtn = useRef<any>(null);
   const yToBtn = useRef<any>(null);
+  const rotXBtn = useRef<any>(null);
+  const rotYBtn = useRef<any>(null);
 
   const [introDone, setIntroDone] = useState(false);
 
@@ -62,6 +64,10 @@ export function Hero() {
     // Movimiento posicional
     xToBtn.current = gsap.quickTo(contactBtnRef.current, "x", { duration: 0.8, ease: "power3" });
     yToBtn.current = gsap.quickTo(contactBtnRef.current, "y", { duration: 0.8, ease: "power3" });
+    
+    // Movimiento rotacional (Tilt 3D)
+    rotXBtn.current = gsap.quickTo(contactBtnRef.current, "rotationX", { duration: 0.8, ease: "power3" });
+    rotYBtn.current = gsap.quickTo(contactBtnRef.current, "rotationY", { duration: 0.8, ease: "power3" });
 
     // --- SCROLL PARALLAX (Solo nombre/rol) ---
 
@@ -89,9 +95,18 @@ export function Hero() {
     const nY = (clientY - centerY) / centerY;
 
     if (xToBtn.current) {
-      // El botón sigue ligeramente al cursor
-      xToBtn.current(nX * 25);
+      // Movimiento posicional con límite izquierdo para no chocar con el otro botón
+      // El gap estático es 40px (2.5rem). Permitimos acercarse un máximo de 10px (quedando a 30px de distancia)
+      const maxLeftTravel = -10;
+      const targetX = Math.max(maxLeftTravel, nX * 25);
+      
+      xToBtn.current(targetX);
       yToBtn.current(nY * 25);
+
+      // Efecto Tilt 3D (Observando al cursor)
+      // Si el mouse va a la derecha (nX > 0), el lado derecho debe ir hacia atrás (rotY positivo)
+      rotXBtn.current(nY * -25);
+      rotYBtn.current(nX * 25);
     }
   };
 
@@ -106,7 +121,12 @@ export function Hero() {
           </p>
           <div className={styles.buttonGroup}>
             <button className={styles.primaryBtn}>Revisar proyectos</button>
-            <button ref={contactBtnRef} className={styles.secondaryBtn}>Contáctame</button>
+            <div ref={contactBtnRef} className={styles.btn3dContainer}>
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className={styles.btnLayer} style={{ transform: `translateZ(${-i * 2}px)` }}></div>
+              ))}
+              <button className={styles.secondaryBtn}>Contáctame 👁️👁️</button>
+            </div>
           </div>
         </div>
 

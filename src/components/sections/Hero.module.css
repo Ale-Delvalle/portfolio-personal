@@ -199,7 +199,7 @@
 /* Buttons */
 .buttonGroup {
   display: flex;
-  gap: 1rem;
+  gap: 2.5rem; /* 40px gap for parallax boundary limit */
   margin-top: 1.5rem;
   flex-wrap: wrap;
   justify-content: center;
@@ -236,6 +236,24 @@
   transform: translateY(-2px);
 }
 
+.btn3dContainer {
+  position: relative;
+  transform-style: preserve-3d;
+  display: inline-block;
+}
+
+.btnLayer {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  border-radius: 999px;
+  background: #4a0000;
+  pointer-events: none;
+}
+
+:global(:root[data-theme="dark"]) .btnLayer {
+  background: #4a1f1f;
+}
+
 .secondaryBtn {
   background: #800000;
   color: #ffffff;
@@ -258,7 +276,7 @@
     rgba(255, 255, 255, 0) 100%
   );
   transform: skewX(-25deg);
-  animation: shimmer 5s infinite;
+  animation: shimmer 8s infinite;
 }
 
 @keyframes shimmer {

@@ -93,27 +93,24 @@
   font-family: var(--font-headline);
   font-size: 1.8rem;
   font-weight: 800;
-  color: #ffffff;
+  color: #4a0000;
   margin-bottom: 0.5rem;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .sideTitleLarge {
   font-family: var(--font-headline);
   font-size: 1.8rem;
   font-weight: 800;
-  color: #ffffff;
+  color: #4a0000;
   margin-bottom: 0.5rem;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .sideDesc {
   font-family: var(--font-body);
   font-size: 1.05rem;
-  color: #ffffff;
-  font-weight: 700;
+  color: #4a0000;
+  font-weight: 300;
   line-height: 1.5;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .portraitAnchor {
@@ -194,11 +191,11 @@
   line-height: 1.1;
   letter-spacing: -0.02em;
   white-space: nowrap;
-  color: #ffffff;
-  /* Sombra gris platinado (#E5E4E2) para volumen suave */
+  color: #4a0000;
+  /* Sombra para volumen que contraste con el fondo casi blanco */
   text-shadow: 
-    0 4px 15px rgba(0, 0, 0, 0.25),
-    3px 3px 0 #E5E4E2;
+    0 4px 15px rgba(0, 0, 0, 0.1),
+    3px 3px 0 #ffd0c4;
   background: none;
   -webkit-text-fill-color: initial;
   filter: none;
@@ -207,7 +204,7 @@
 :global(:root[data-theme="dark"]) .name {
   background: none;
   filter: none;
-  color: var(--color-primary);
+  color: #ffc2b3; /* Color pastel con más tonalidad */
   text-shadow: 
     0 4px 15px rgba(0, 0, 0, 0.5),
     3px 3px 0 #b0c4de; /* Platinado más suave/azulado en dark mode */
@@ -218,10 +215,9 @@
 .role {
   font-size: clamp(1rem, 2.5vw, 1.8rem);
   font-weight: 800;
-  color: #ffffff;
+  color: #4a0000;
   margin-top: 0.25rem;
   text-align: center;
-  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   letter-spacing: normal;
   text-transform: none;
 }
@@ -231,7 +227,7 @@
 :global(:root[data-theme="dark"]) .sideTitleLarge,
 :global(:root[data-theme="dark"]) .sideDesc,
 :global(:root[data-theme="dark"]) .role {
-  color: var(--color-primary);
+  color: #ffc2b3; /* Color pastel con más tonalidad */
 }
 
 .portraitWrapper {
@@ -273,13 +269,13 @@
 /* Light Mode / Base Buttons */
 .primaryBtn {
   background: transparent;
-  color: #ffffff;
-  border: 1px solid #ffffff;
+  color: #4a0000;
+  border: 1px solid #4a0000;
   box-shadow: none;
 }
 
 .primaryBtn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(74, 0, 0, 0.05);
   transform: translateY(-2px);
 }
 
@@ -340,8 +336,8 @@
 /* Dark Mode Overrides */
 :global(:root[data-theme="dark"]) .primaryBtn {
   background: #000000;
-  color: var(--color-primary);
-  border: 1px solid var(--color-primary);
+  color: #ffc2b3;
+  border: 1px solid #ffc2b3;
 }
 
 :global(:root[data-theme="dark"]) .primaryBtn:hover {

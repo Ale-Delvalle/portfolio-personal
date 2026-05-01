@@ -28,7 +28,7 @@
   --color-outline-variant: #c3c7cf;      /* bordes sutiles */
 
   /* Fondo global y texto sobre primary */
-  --color-background: linear-gradient(45deg, #ff7e5f, #feb47b);
+  --color-background: #ffe0d6; /* Salmón claro con un 30% más de tonalidad */
   --color-on-primary: #ffffff;
 
   /* Font Families */

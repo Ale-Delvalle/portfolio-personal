@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import pleaseImg from '../../assets/please.png';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -15,7 +16,7 @@ export function Hero() {
   const rightTextRef = useRef<HTMLDivElement>(null);
   const nameContainerRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLElement>(null);
-  const contactBtnRef = useRef<HTMLButtonElement>(null);
+  const contactBtnRef = useRef<HTMLDivElement>(null);
   
   // Parallax refs
   const xToBtn = useRef<any>(null);
@@ -125,7 +126,13 @@ export function Hero() {
               {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className={styles.btnLayer} style={{ transform: `translateZ(${-i * 2}px)` }}></div>
               ))}
-              <button className={styles.secondaryBtn}>Contáctame 👁️👁️</button>
+              <button className={styles.secondaryBtn}>
+                Contáctame 
+                <span className={styles.emojiWrapper}>
+                  <span className={styles.emojis}>👁️👁️</span>
+                  <img src={pleaseImg} alt="Please" className={styles.pleaseImg} />
+                </span>
+              </button>
             </div>
           </div>
         </div>

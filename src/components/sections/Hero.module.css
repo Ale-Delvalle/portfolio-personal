@@ -311,6 +311,47 @@
   background: var(--color-primary-container);
 }
 
+/* --- Emoji Hover Effect --- */
+.emojiWrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 1.8em; 
+  height: 1.2em;
+  vertical-align: middle;
+  margin-left: 0.6rem;
+}
+
+.emojis, .pleaseImg {
+  position: absolute;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Animación con un ligero rebote */
+}
+
+.emojis {
+  white-space: nowrap;
+}
+
+.pleaseImg {
+  width: 2.2em; /* Adaptado al tamaño del botón */
+  height: 2.2em;
+  object-fit: contain;
+  opacity: 0;
+  transform: scale(0.2) translateY(10px);
+}
+
+.btn3dContainer:hover .emojis,
+.secondaryBtn:hover .emojis {
+  opacity: 0;
+  transform: scale(0.2) translateY(-10px);
+}
+
+.btn3dContainer:hover .pleaseImg,
+.secondaryBtn:hover .pleaseImg {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
 .meshBottom {
   display: none;
 }

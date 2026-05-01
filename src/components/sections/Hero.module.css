@@ -139,6 +139,53 @@
   transform-style: preserve-3d;
 }
 
+/* --- Welcome Intro Text --- */
+.welcomeContainer {
+  position: absolute;
+  top: -50px; /* Above the name */
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+
+.welcomeText {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  position: absolute; /* They sit on top of each other */
+  white-space: nowrap;
+}
+
+.welcomeCenter {
+  position: relative; /* Defines the size of the container */
+  z-index: 2;
+  color: #ffffff;
+}
+:global(:root[data-theme="dark"]) .welcomeCenter {
+  color: var(--color-primary);
+}
+
+.welcomeTop {
+  color: var(--color-primary);
+  opacity: 0.5;
+  z-index: 1;
+}
+
+.welcomeBottom {
+  color: #4a0000; /* Granate */
+  opacity: 0.5;
+  z-index: 3;
+}
+:global(:root[data-theme="dark"]) .welcomeBottom {
+  color: #ffffff;
+}
+
 .name {
   font-size: clamp(3rem, 8vw, 6.5rem);
   font-weight: 800;

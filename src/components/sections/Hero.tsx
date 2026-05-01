@@ -17,6 +17,11 @@ export function Hero() {
   const nameContainerRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLElement>(null);
   const contactBtnRef = useRef<HTMLDivElement>(null);
+
+  // Welcome Intro Refs
+  const welcomeContainerRef = useRef<HTMLDivElement>(null);
+  const welcomeTopRef = useRef<HTMLDivElement>(null);
+  const welcomeBottomRef = useRef<HTMLDivElement>(null);
   
   // Parallax refs
   const xToBtn = useRef<any>(null);
@@ -28,6 +33,42 @@ export function Hero() {
 
   useGSAP(() => {
     const tl = gsap.timeline();
+
+    // --- SECUENCIA DE INTRODUCCIÓN ---
+    // (Animación Welcome comentada para posible uso futuro)
+    /*
+    gsap.set(nameContainerRef.current, { autoAlpha: 0, y: -180, scale: 1.3 });
+    gsap.set(welcomeContainerRef.current, { autoAlpha: 0 });
+
+    // 0s: Aparece Nombre (escalado) y Welcome text
+    tl.to([nameContainerRef.current, welcomeContainerRef.current], {
+      autoAlpha: 1,
+      duration: 0.5,
+      ease: "power2.out"
+    }, 0)
+    // 0s a 1s: Welcome text se triplica
+    .to(welcomeTopRef.current, { x: 35, y: -15, duration: 1, ease: "power3.out" }, 0)
+    .to(welcomeBottomRef.current, { x: -35, y: 15, duration: 1, ease: "power3.out" }, 0)
+    
+    // 1s a 2s: Welcome text se une
+    .to([welcomeTopRef.current, welcomeBottomRef.current], {
+      x: 0, y: 0, duration: 1, ease: "power3.inOut"
+    }, 1)
+
+    // 2s: Welcome desaparece y el nombre baja
+    .to(welcomeContainerRef.current, {
+      autoAlpha: 0,
+      y: -20,
+      duration: 0.5,
+      ease: "power2.out"
+    }, 2)
+    .to(nameContainerRef.current, {
+      y: 0,
+      scale: 1,
+      duration: 1.2,
+      ease: "power3.inOut"
+    }, 2)
+    */
 
     // 1) Nombre y Rol aparecen en el centro a escala 2x
     // Suavizamos la entrada
@@ -143,6 +184,14 @@ export function Hero() {
               <HeroPortrait />
             </div>
             <div ref={nameContainerRef} className={styles.nameContainer}>
+              {/* Animación "Welcome to my portfolio" guardada para uso futuro */}
+              {/*
+              <div ref={welcomeContainerRef} className={styles.welcomeContainer}>
+                <div ref={welcomeTopRef} className={`${styles.welcomeText} ${styles.welcomeTop}`}>Welcome to my portfolio</div>
+                <div className={`${styles.welcomeText} ${styles.welcomeCenter}`}>Welcome to my portfolio</div>
+                <div ref={welcomeBottomRef} className={`${styles.welcomeText} ${styles.welcomeBottom}`}>Welcome to my portfolio</div>
+              </div>
+              */}
               <div ref={nameRef} className={styles.name}>Alexis Delvalle</div>
               <div ref={roleRef} className={styles.role}>Fullstack developer and backend specialist</div>
             </div>

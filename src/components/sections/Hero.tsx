@@ -144,7 +144,7 @@ export function Hero() {
             </div>
             <div ref={nameContainerRef} className={styles.nameContainer}>
               <div ref={nameRef} className={styles.name}>Alexis Delvalle</div>
-              <div ref={roleRef} className={styles.role}>Fullstack and backend specialist</div>
+              <div ref={roleRef} className={styles.role}>Fullstack developer and backend specialist</div>
             </div>
           </div>
         </div>

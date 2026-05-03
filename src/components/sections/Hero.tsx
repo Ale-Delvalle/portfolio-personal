@@ -28,12 +28,12 @@ export function Hero() {
   useGSAP(() => {
     const tl = gsap.timeline();
 
-    // 1) Nombre y Rol aparecen a escala 1.3
+    // 1) Nombre y Rol aparecen en el centro de la pantalla a escala 1.5
     tl.fromTo(nameContainerRef.current, 
-      { autoAlpha: 0, y: -100, scale: 1.5 },
-      { autoAlpha: 1, duration: 1, ease: "power3.out" }
+      { autoAlpha: 0, y: "20vh", scale: 1.5 },
+      { autoAlpha: 1, y: "20vh", duration: 1, ease: "power3.out" }
     )
-    // 2) Disminuyen de tamaño y bajan a su posición actual
+    // 2) Se desplazan hacia su posición final (arriba)
     .to(nameContainerRef.current, {
       y: 0,
       scale: 1.3,

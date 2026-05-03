@@ -19,9 +19,9 @@ export function Hero() {
   const contactBtnRef = useRef<HTMLDivElement>(null);
 
   // Welcome Intro Refs
-  const welcomeContainerRef = useRef<HTMLDivElement>(null);
-  const welcomeTopRef = useRef<HTMLDivElement>(null);
-  const welcomeBottomRef = useRef<HTMLDivElement>(null);
+  // const welcomeContainerRef = useRef<HTMLDivElement>(null);
+  // const welcomeTopRef = useRef<HTMLDivElement>(null);
+  // const welcomeBottomRef = useRef<HTMLDivElement>(null);
   
   // Parallax refs
   const xToBtn = useRef<any>(null);

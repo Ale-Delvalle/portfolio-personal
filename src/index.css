@@ -108,9 +108,15 @@ p, span, div {
 }
 
 /* Utilities */
-/* Degradado radial centrado muy sutil: toque de salmón apenas visible en el fondo del hero */
+/* Degradado de fondo para el hero: entre naranja claro y salmón */
 .hero-mesh-gradient {
-  background: radial-gradient(circle at 50% 50%, rgba(255, 126, 95, 0.03) 0%, transparent 50%);
+  background: linear-gradient(135deg, #feb47b 0%, #ff7e5f 100%);
+  background-attachment: fixed;
+}
+
+/* Mantener el modo oscuro en negro puro */
+:root[data-theme="dark"] .hero-mesh-gradient {
+  background: transparent;
 }
 
 /* Línea decorativa horizontal: desvanece en los extremos, 50% opacidad */

@@ -2,7 +2,7 @@ import styles from "./Stack.module.css";
 
 export function Stack() {
     return (
-        <section className={styles.container}>
+        <section className={`${styles.container} hero-mesh-gradient`}>
             <h1 className={styles.title}>Stack</h1>
             <section className={styles.stackRow}>
                 <p>TypeScript</p>

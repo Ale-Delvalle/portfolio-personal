@@ -26,7 +26,7 @@ export function Stack() {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: sectionRef.current,
-        start: "top 20%", // Se activa cuando el 60% de la sección está visible (top llega al 40% del viewport)
+        start: "top top", // Se activa justo cuando el Hero desaparece por completo (y el top de Stack toca el top de la pantalla)
       }
     });
 

@@ -42,30 +42,35 @@ export function Stack() {
     const titleCenter = titleContainer?.querySelector(`.${styles.titleCenter}`);
     const titleBottom = titleContainer?.querySelector(`.${styles.titleBottom}`);
 
-    // 1) Animación del título (Glitch / Layer Split style)
+    // 1) Animación del título (Glitch / Layer Split style) - Duración ~3s
     if (titleCenter && titleTop && titleBottom) {
       tl.fromTo(titleCenter, 
         { autoAlpha: 0, scale: 0.8 },
-        { autoAlpha: 1, scale: 1, duration: 0.6, ease: "back.out(1.5)" }
+        { autoAlpha: 1, scale: 1, duration: 1.0, ease: "back.out(1.5)" }
       )
+      .addLabel("splitStart", "-=0.2") // Se superpone un poco con la entrada
       .fromTo([titleTop, titleBottom], 
         { autoAlpha: 0, x: 0, y: 0 },
         { 
           autoAlpha: 0.5, 
-          x: (i) => i === 0 ? 20 : -20, // i=0 (Top) hacia la derecha, i=1 (Bottom) hacia la izquierda
-          y: (i) => i === 0 ? -20 : 20, // i=0 (Top) hacia arriba, i=1 (Bottom) hacia abajo
-          duration: 0.4, 
+          x: (i) => i === 0 ? 80 : -80, // i=0 (Top) hacia la derecha, i=1 (Bottom) hacia la izquierda
+          y: (i) => i === 0 ? -60 : 60, // i=0 (Top) hacia arriba, i=1 (Bottom) hacia abajo
+          duration: 0.8, 
           ease: "power2.out" 
         },
-        "-=0.2"
+        "splitStart"
       )
+      .to(titleCenter, { autoAlpha: 0.2, duration: 0.8, ease: "power2.out" }, "splitStart") // El texto central se opaca
+      
+      .addLabel("mergeStart", "+=0.6") // Mantiene el efecto abierto 0.6s
       .to([titleTop, titleBottom], {
         x: 0,
         y: 0,
         autoAlpha: 0,
-        duration: 0.4,
+        duration: 0.8,
         ease: "power2.inOut"
-      });
+      }, "mergeStart")
+      .to(titleCenter, { autoAlpha: 1, duration: 0.8, ease: "power2.inOut" }, "mergeStart"); // El texto central vuelve a la normalidad
     }
 
     // Animación de expansión de las píldoras de texto formando un óvalo

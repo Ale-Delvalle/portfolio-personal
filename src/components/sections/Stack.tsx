@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import styles from './Stack.module.css';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
@@ -26,7 +26,7 @@ export function Stack() {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: sectionRef.current,
-        start: "top 60%",
+        start: "top 20%", // Se activa cuando el 60% de la sección está visible (top llega al 40% del viewport)
       }
     });
 
@@ -118,10 +118,15 @@ export function Stack() {
     }, "-=0.5");
 
     // Animación de los elementos secundarios
-    if (secondaryStackRef.current) {
-      tl.fromTo(secondaryStackRef.current, 
+    const secTitle = sectionRef.current?.querySelector(`.${styles.secondaryTitle}`);
+    if (secTitle) {
+      gsap.set(secTitle, { autoAlpha: 0 }); // Ocultarlo inicialmente
+    }
+
+    if (secondaryStackRef.current && secTitle) {
+      tl.fromTo([secTitle, secondaryStackRef.current], 
         { y: 30, autoAlpha: 0 }, 
-        { y: 0, autoAlpha: 1, duration: 0.6, ease: "power2.out" },
+        { y: 0, autoAlpha: 1, duration: 0.6, stagger: 0.2, ease: "power2.out" },
         "-=0.5"
       );
     }

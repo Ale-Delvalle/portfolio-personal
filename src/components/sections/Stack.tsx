@@ -147,12 +147,12 @@ export function Stack() {
             }}
             onMouseEnter={() => {
               if (cardsRef.current[index]) {
-                gsap.to(cardsRef.current[index], { scale: 1.2, duration: 0.5, ease: "power2.out" });
+                gsap.to(cardsRef.current[index], { scale: 1.2, duration: 2.0, ease: "power2.out" });
               }
             }}
             onMouseLeave={() => {
               if (cardsRef.current[index]) {
-                gsap.to(cardsRef.current[index], { scale: 1, duration: 0.5, ease: "power2.out" });
+                gsap.to(cardsRef.current[index], { scale: 1, duration: 2.0, ease: "power2.out" });
               }
             }}
           >

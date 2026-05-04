@@ -31,7 +31,15 @@ export function Stack() {
     });
 
     // Configuración inicial de las píldoras en el centro
-    tl.set(cardsRef.current, { xPercent: -50, yPercent: -50, x: 0, y: 0, scale: 0, autoAlpha: 0 });
+    tl.set(cardsRef.current, { 
+      xPercent: -50, 
+      yPercent: -50, 
+      x: 0, 
+      y: 0, 
+      scale: 0.01, 
+      autoAlpha: 0, 
+      force3D: true 
+    });
 
     const isMobile = window.innerWidth < 768;
     const radiusX = isMobile ? window.innerWidth * 0.38 : 320;
@@ -87,7 +95,26 @@ export function Stack() {
       autoAlpha: 1,
       duration: 1.2,
       stagger: 0.1,
-      ease: "expo.out"
+      ease: "expo.out",
+      onComplete: () => {
+        // Al terminar la expansión, inicializamos la animación de flotación para cada pastilla
+        cardsRef.current.forEach((card, index) => {
+          const animateFloat = () => {
+            if (!card) return;
+            const angle = (index / techStack.length) * 2 * Math.PI - Math.PI / 2;
+            const baseY = Math.sin(angle) * radiusY;
+            
+            gsap.to(card, {
+              y: baseY + gsap.utils.random(-10, 10), // Movimiento estrictamente vertical (arriba/abajo)
+              duration: gsap.utils.random(2.6, 5.2), // 30% más lento
+              ease: "sine.inOut",
+              onComplete: animateFloat
+            });
+          };
+          // Iniciar la animación con un pequeño delay aleatorio para que se desincronicen
+          setTimeout(animateFloat, gsap.utils.random(0, 1000));
+        });
+      }
     }, "-=0.5");
 
     // Animación de los elementos secundarios
@@ -117,10 +144,6 @@ export function Stack() {
             className={styles.techPill}
             ref={(el) => {
               cardsRef.current[index] = el;
-            }}
-            style={{ 
-              boxShadow: `0 8px 24px ${tech.color}40`,
-              border: `1px solid ${tech.color}40` 
             }}
           >
             {tech.name}

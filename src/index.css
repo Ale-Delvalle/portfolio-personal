@@ -28,7 +28,7 @@
   --color-outline-variant: #c3c7cf;      /* bordes sutiles */
 
   /* Fondo global y texto sobre primary */
-  --color-background: #ffe0d6; /* Salmón claro con un 30% más de tonalidad */
+  --color-background: #f2f2f7; /* Base platinada clara */
   --color-on-primary: #ffffff;
 
   /* Font Families */
@@ -108,15 +108,24 @@ p, span, div {
 }
 
 /* Utilities */
-/* Degradado de fondo para el hero: entre naranja claro y salmón */
+/* Fondo Platinado animado para la app en modo claro */
 .hero-mesh-gradient {
-  background: linear-gradient(135deg, #feb47b 0%, #ff7e5f 100%);
+  background: linear-gradient(-45deg, #e5e5ea, #ffffff, #d1d1d6, #f2f2f7);
+  background-size: 400% 400%;
+  animation: platinumShimmer 15s ease infinite;
   background-attachment: fixed;
+}
+
+@keyframes platinumShimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 /* Mantener el modo oscuro en negro puro */
 :root[data-theme="dark"] .hero-mesh-gradient {
   background: transparent;
+  animation: none;
 }
 
 /* Línea decorativa horizontal: desvanece en los extremos, 50% opacidad */

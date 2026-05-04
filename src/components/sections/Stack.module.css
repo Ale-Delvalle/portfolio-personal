@@ -43,63 +43,39 @@
 }
 
 .cardWrapper {
-  width: 130px;
-  height: 130px;
-  perspective: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
   opacity: 0; /* Inicialmente oculto para animación de GSAP */
 }
 
-.cardInner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transform-style: preserve-3d;
-  border-radius: 1.2rem;
+.cardWrapper img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
   transition: transform 0.3s ease;
 }
 
-.cardWrapper:hover .cardInner {
+.cardWrapper:hover img {
   transform: scale(1.1); /* Ligeramente más grande al pasar el mouse */
 }
 
-.cardFace {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden; /* Safari */
+.textContainer {
   display: flex;
-  align-items: center;
   justify-content: center;
-  background: transparent;
+  gap: 1px; /* Espacio mínimo entre letras si es necesario */
 }
 
-.cardFront {
-  /* Cara frontal normal */
-}
-
-.cardFront img {
-  width: 55%;
-  height: 55%;
-  object-fit: contain;
-  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
-}
-
-.cardBack {
-  transform: rotateY(180deg);
+.char {
   font-family: var(--font-headline);
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: 800;
-  color: #4a0000;
-  text-align: center;
-  padding: 0.5rem;
-  background: transparent;
-}
-
-:global(:root[data-theme="dark"]) .cardBack {
-  color: #ffc2b3;
-  text-shadow: 0 0 12px rgba(255, 194, 179, 0.6);
-  background: transparent;
+  color: #000000;
+  opacity: 0; /* Animado por GSAP */
+  display: inline-block;
+  min-width: 4px; /* Para asegurar que los espacios tengan anchura */
 }
 
 /* Conservando estilos originales secundarios si se necesitan */

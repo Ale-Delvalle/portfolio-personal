@@ -40,33 +40,43 @@ export function Stack() {
       }
     });
 
-    // Fase 1: Entrada desde la izquierda con fade-in y stagger
+    // Fase 1: Entrada de los iconos de izquierda a derecha (uno a uno)
     tl.fromTo(cardsRef.current,
-      { x: -100, autoAlpha: 0 },
+      { y: 30, autoAlpha: 0 },
       { 
-        x: 0, 
+        y: 0, 
         autoAlpha: 1, 
-        duration: 0.8, 
+        duration: 0.6, 
         stagger: 0.1, 
         ease: "back.out(1.7)" 
       }
     );
 
-    // Fase 2: Inmediatamente después del último elemento de la fase 1,
-    // se inicia el volteo de cada tarjeta con stagger
-    tl.to(cardsRef.current.map(el => el?.querySelector(`.${styles.cardInner}`)), {
-      rotateY: 180,
-      duration: 0.8,
-      stagger: 0.1,
-      ease: "power2.inOut",
-    }, "+=0.2"); // Pequeña pausa después de que entren todos para que se vea el flip
+    // Fase 2: Inmediatamente después, se animan las letras de todos los textos a la vez
+    tl.addLabel("textReveal", "+=0.1");
+    cardsRef.current.forEach(card => {
+      const chars = card?.querySelectorAll(`.${styles.char}`);
+      if (chars && chars.length > 0) {
+        tl.fromTo(chars,
+          { autoAlpha: 0, x: -10 },
+          {
+            autoAlpha: 1,
+            x: 0,
+            duration: 0.2,
+            stagger: 0.05,
+            ease: "power2.out",
+          },
+          "textReveal"
+        );
+      }
+    });
 
     // Animación de los elementos secundarios
     if (secondaryStackRef.current) {
       tl.fromTo(secondaryStackRef.current, 
         { y: 30, autoAlpha: 0 }, 
         { y: 0, autoAlpha: 1, duration: 0.6, ease: "power2.out" },
-        "-=0.5"
+        "textReveal+=0.5"
       );
     }
 
@@ -85,23 +95,17 @@ export function Stack() {
               cardsRef.current[index] = el;
             }}
           >
-            <div className={styles.cardInner}>
-              <div className={`${styles.cardFace} ${styles.cardFront}`}>
-                <img 
-                  src={tech.icon} 
-                  alt={tech.name} 
-                  style={{ filter: `drop-shadow(0 0 12px ${tech.color}99)` }}
-                />
-              </div>
-              <div 
-                className={`${styles.cardFace} ${styles.cardBack}`}
-                style={{ 
-                  color: tech.color, 
-                  textShadow: `0 0 15px ${tech.color}80` 
-                }}
-              >
-                {tech.name}
-              </div>
+            <img 
+              src={tech.icon} 
+              alt={tech.name} 
+              style={{ filter: `drop-shadow(0 0 12px ${tech.color}99)` }}
+            />
+            <div className={styles.textContainer}>
+              {tech.name.split('').map((char, charIndex) => (
+                <span key={charIndex} className={styles.char}>
+                  {char === ' ' ? '\u00A0' : char}
+                </span>
+              ))}
             </div>
           </div>
         ))}

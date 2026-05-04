@@ -37,13 +37,35 @@ export function Stack() {
     const radiusX = isMobile ? window.innerWidth * 0.38 : 320;
     const radiusY = isMobile ? 220 : 160;
 
-    // Entrada del título central
-    const title = sectionRef.current?.querySelector(`.${styles.centerTitle}`);
-    if (title) {
-      tl.fromTo(title, 
-        { autoAlpha: 0, scale: 0.5 },
-        { autoAlpha: 1, scale: 1, duration: 1, ease: "back.out(1.5)" }
-      );
+    const titleContainer = sectionRef.current?.querySelector(`.${styles.titleContainer}`);
+    const titleTop = titleContainer?.querySelector(`.${styles.titleTop}`);
+    const titleCenter = titleContainer?.querySelector(`.${styles.titleCenter}`);
+    const titleBottom = titleContainer?.querySelector(`.${styles.titleBottom}`);
+
+    // 1) Animación del título (Glitch / Layer Split style)
+    if (titleCenter && titleTop && titleBottom) {
+      tl.fromTo(titleCenter, 
+        { autoAlpha: 0, scale: 0.8 },
+        { autoAlpha: 1, scale: 1, duration: 0.6, ease: "back.out(1.5)" }
+      )
+      .fromTo([titleTop, titleBottom], 
+        { autoAlpha: 0, x: 0, y: 0 },
+        { 
+          autoAlpha: 0.5, 
+          x: (i) => i === 0 ? 20 : -20, // i=0 (Top) hacia la derecha, i=1 (Bottom) hacia la izquierda
+          y: (i) => i === 0 ? -20 : 20, // i=0 (Top) hacia arriba, i=1 (Bottom) hacia abajo
+          duration: 0.4, 
+          ease: "power2.out" 
+        },
+        "-=0.2"
+      )
+      .to([titleTop, titleBottom], {
+        x: 0,
+        y: 0,
+        autoAlpha: 0,
+        duration: 0.4,
+        ease: "power2.inOut"
+      });
     }
 
     // Animación de expansión de las píldoras de texto formando un óvalo
@@ -78,7 +100,11 @@ export function Stack() {
     <section ref={sectionRef} className={`${styles.stackSection} hero-mesh-gradient`}>
       
       <div className={styles.circleContainer}>
-        <h2 className={styles.centerTitle}>Stack</h2>
+        <div className={styles.titleContainer}>
+          <div className={`${styles.titleLayer} ${styles.titleTop}`}>Stack</div>
+          <div className={`${styles.titleLayer} ${styles.titleCenter}`}>Stack</div>
+          <div className={`${styles.titleLayer} ${styles.titleBottom}`}>Stack</div>
+        </div>
         
         {techStack.map((tech, index) => (
           <div 

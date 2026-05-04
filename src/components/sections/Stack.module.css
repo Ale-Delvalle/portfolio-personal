@@ -20,21 +20,50 @@
   margin: 0 auto;
 }
 
-.centerTitle {
+.titleContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: max-content;
+  z-index: 10;
+}
+
+.titleLayer {
   font-family: var(--font-headline);
   font-size: 4.5rem;
   font-weight: 800;
-  color: #4a0000;
-  text-align: center;
-  z-index: 10;
-  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  margin: 0;
-  opacity: 0; /* GSAP animes it */
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  position: absolute;
+  white-space: nowrap;
 }
 
-:global(:root[data-theme="dark"]) .centerTitle {
+.titleCenter {
+  position: relative; /* Define el tamaño del contenedor */
+  z-index: 2;
+  color: #4a0000;
+  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+}
+:global(:root[data-theme="dark"]) .titleCenter {
   color: #ffc2b3;
   text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 194, 179, 0.3);
+}
+
+.titleTop {
+  color: var(--color-primary, #b30000);
+  opacity: 0;
+  z-index: 1;
+}
+
+.titleBottom {
+  color: #111111;
+  opacity: 0;
+  z-index: 3;
+}
+:global(:root[data-theme="dark"]) .titleBottom {
+  color: #ffffff;
 }
 
 .techPill {

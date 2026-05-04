@@ -11,7 +11,7 @@ gsap.registerPlugin(ScrollTrigger);
 export function Hero() {
   const nameRef = useRef<HTMLDivElement>(null);
   const roleRef = useRef<HTMLDivElement>(null);
-  const leftTextRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
   const rightTextRef = useRef<HTMLDivElement>(null);
   const nameContainerRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLElement>(null);
@@ -27,7 +27,7 @@ export function Hero() {
   const [introDone, setIntroDone] = useState(false);
 
   useGSAP(() => {
-    const tl = gsap.timeline();
+    const tl = gsap.timeline({ onComplete: () => setIntroDone(true) });
 
     // 1) Nombre y Rol aparecen en el centro de la pantalla a escala 1.5
     tl.fromTo(nameContainerRef.current, 
@@ -37,20 +37,25 @@ export function Hero() {
     // 2) Se desplazan hacia su posición final (arriba)
     .to(nameContainerRef.current, {
       y: 0,
-      scale: 1.3,
+      scale: 1,
       duration: 1.2,
       ease: "power3.inOut",
       delay: 0.3
     })
-    // 3) Textos y botones
-    .from([leftTextRef.current, rightTextRef.current, buttonsRef.current], {
+    // 3) Imagen aparece con desplazamiento suave (Fade + Slide)
+    .fromTo(imageRef.current, 
+      { autoAlpha: 0, y: 50 },
+      { autoAlpha: 1, y: 0, duration: 1, ease: "power3.out" },
+      "-=0.5"
+    )
+    // 4) Textos y botones
+    .from([rightTextRef.current, buttonsRef.current], {
       autoAlpha: 0,
       y: 20,
       duration: 0.8,
-      stagger: 0.1,
-      ease: "power3.out",
-      onComplete: () => setIntroDone(true)
-    }, "-=0.4");
+      stagger: 0.15,
+      ease: "power3.out"
+    }, "-=1");
 
     // --- MOUSE PARALLAX (Botón Contactame) ---
     xToBtn.current = gsap.quickTo(contactBtnRef.current, "x", { duration: 0.8, ease: "power3" });
@@ -103,8 +108,8 @@ export function Hero() {
         </div>
 
         <div className={styles.textsContainer}>
-          <div ref={leftTextRef} className={styles.leftColumn}>
-            <div className={styles.imageWrapper}>
+          <div className={styles.leftColumn}>
+            <div ref={imageRef} className={styles.imageWrapper}>
               <img src={profileImg} alt="Alexis Delvalle" className={styles.profileImage} />
             </div>
             <div ref={buttonsRef} className={styles.buttonGroup}>

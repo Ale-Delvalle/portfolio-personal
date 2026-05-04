@@ -42,8 +42,8 @@ export function Stack() {
     });
 
     const isMobile = window.innerWidth < 768;
-    const radiusX = isMobile ? window.innerWidth * 0.38 : 320;
-    const radiusY = isMobile ? 220 : 160;
+    const radiusX = isMobile ? window.innerWidth * 0.45 : 416; // 30% más lejos
+    const radiusY = isMobile ? 286 : 208; // 30% más lejos
 
     const titleContainer = sectionRef.current?.querySelector(`.${styles.titleContainer}`);
     const titleTop = titleContainer?.querySelector(`.${styles.titleTop}`);
@@ -61,8 +61,8 @@ export function Stack() {
         { autoAlpha: 0, x: 0, y: 0 },
         { 
           autoAlpha: 0.5, 
-          x: (i) => i === 0 ? 80 : -80, // i=0 (Top) hacia la derecha, i=1 (Bottom) hacia la izquierda
-          y: (i) => i === 0 ? -60 : 60, // i=0 (Top) hacia arriba, i=1 (Bottom) hacia abajo
+          x: (i) => i === 0 ? 85 : -85, // Ajustado al nuevo tamaño
+          y: (i) => i === 0 ? -65 : 65, // Ajustado al nuevo tamaño
           duration: 0.8, 
           ease: "power2.out" 
         },
@@ -144,6 +144,16 @@ export function Stack() {
             className={styles.techPill}
             ref={(el) => {
               cardsRef.current[index] = el;
+            }}
+            onMouseEnter={() => {
+              if (cardsRef.current[index]) {
+                gsap.to(cardsRef.current[index], { scale: 1.2, duration: 0.5, ease: "power2.out" });
+              }
+            }}
+            onMouseLeave={() => {
+              if (cardsRef.current[index]) {
+                gsap.to(cardsRef.current[index], { scale: 1, duration: 0.5, ease: "power2.out" });
+              }
             }}
           >
             {tech.name}

@@ -4,27 +4,17 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-import cssIcon from '../../assets/stack-icons/css.svg';
-import gitIcon from '../../assets/stack-icons/git.svg';
-import githubIcon from '../../assets/stack-icons/github.svg';
-import mongodbIcon from '../../assets/stack-icons/mongodb.svg';
-import nestjsIcon from '../../assets/stack-icons/nestjs.svg';
-import nodejsIcon from '../../assets/stack-icons/nodedotjs.svg';
-import postgresqlIcon from '../../assets/stack-icons/postgresql.svg';
-import reactIcon from '../../assets/stack-icons/react.svg';
-import typescriptIcon from '../../assets/stack-icons/typescript.svg';
-
 gsap.registerPlugin(ScrollTrigger);
 
 const techStack = [
-  { id: 'typescript', name: 'TypeScript', icon: typescriptIcon, color: '#3178C6' },
-  { id: 'react', name: 'React', icon: reactIcon, color: '#61DAFB' },
-  { id: 'nodejs', name: 'NodeJS', icon: nodejsIcon, color: '#339933' },
-  { id: 'nestjs', name: 'NestJS', icon: nestjsIcon, color: '#E0234E' },
-  { id: 'postgresql', name: 'PostgreSQL', icon: postgresqlIcon, color: '#336791' },
-  { id: 'mongodb', name: 'MongoDB', icon: mongodbIcon, color: '#47A248' },
-  { id: 'css', name: 'CSS', icon: cssIcon, color: '#1572B6' },
-  { id: 'github', name: 'GitHub', icon: githubIcon, color: '#000000' },
+  { id: 'typescript', name: 'TypeScript', color: '#3178C6' },
+  { id: 'react', name: 'React', color: '#61DAFB' },
+  { id: 'nodejs', name: 'NodeJS', color: '#339933' },
+  { id: 'nestjs', name: 'NestJS', color: '#E0234E' },
+  { id: 'postgresql', name: 'PostgreSQL', color: '#336791' },
+  { id: 'mongodb', name: 'MongoDB', color: '#47A248' },
+  { id: 'css', name: 'CSS', color: '#1572B6' },
+  { id: 'github', name: 'GitHub', color: '#000000' },
 ];
 
 export function Stack() {
@@ -36,47 +26,49 @@ export function Stack() {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: sectionRef.current,
-        start: "top 70%",
+        start: "top 60%",
       }
     });
 
-    // Fase 1: Entrada de los iconos de izquierda a derecha (uno a uno)
-    tl.fromTo(cardsRef.current,
-      { y: 30, autoAlpha: 0 },
-      { 
-        y: 0, 
-        autoAlpha: 1, 
-        duration: 0.6, 
-        stagger: 0.1, 
-        ease: "back.out(1.7)" 
-      }
-    );
+    // Configuración inicial de las píldoras en el centro
+    tl.set(cardsRef.current, { xPercent: -50, yPercent: -50, x: 0, y: 0, scale: 0, autoAlpha: 0 });
 
-    // Fase 2: Inmediatamente después, se animan las letras de todos los textos a la vez
-    tl.addLabel("textReveal", "+=0.1");
-    cardsRef.current.forEach(card => {
-      const chars = card?.querySelectorAll(`.${styles.char}`);
-      if (chars && chars.length > 0) {
-        tl.fromTo(chars,
-          { autoAlpha: 0, x: -10 },
-          {
-            autoAlpha: 1,
-            x: 0,
-            duration: 0.2,
-            stagger: 0.05,
-            ease: "power2.out",
-          },
-          "textReveal"
-        );
-      }
-    });
+    const isMobile = window.innerWidth < 768;
+    const radiusX = isMobile ? window.innerWidth * 0.38 : 320;
+    const radiusY = isMobile ? 220 : 160;
+
+    // Entrada del título central
+    const title = sectionRef.current?.querySelector(`.${styles.centerTitle}`);
+    if (title) {
+      tl.fromTo(title, 
+        { autoAlpha: 0, scale: 0.5 },
+        { autoAlpha: 1, scale: 1, duration: 1, ease: "back.out(1.5)" }
+      );
+    }
+
+    // Animación de expansión de las píldoras de texto formando un óvalo
+    tl.to(cardsRef.current, {
+      x: (index) => {
+        const angle = (index / techStack.length) * 2 * Math.PI - Math.PI / 2;
+        return Math.cos(angle) * radiusX;
+      },
+      y: (index) => {
+        const angle = (index / techStack.length) * 2 * Math.PI - Math.PI / 2;
+        return Math.sin(angle) * radiusY;
+      },
+      scale: 1,
+      autoAlpha: 1,
+      duration: 1.2,
+      stagger: 0.1,
+      ease: "expo.out"
+    }, "-=0.5");
 
     // Animación de los elementos secundarios
     if (secondaryStackRef.current) {
       tl.fromTo(secondaryStackRef.current, 
         { y: 30, autoAlpha: 0 }, 
         { y: 0, autoAlpha: 1, duration: 0.6, ease: "power2.out" },
-        "textReveal+=0.5"
+        "-=0.5"
       );
     }
 
@@ -84,29 +76,23 @@ export function Stack() {
 
   return (
     <section ref={sectionRef} className={`${styles.stackSection} hero-mesh-gradient`}>
-      <h2 className={styles.title}>Tecnologías</h2>
       
-      <div className={styles.cardsContainer}>
+      <div className={styles.circleContainer}>
+        <h2 className={styles.centerTitle}>Stack</h2>
+        
         {techStack.map((tech, index) => (
           <div 
             key={tech.id} 
-            className={styles.cardWrapper}
+            className={styles.techPill}
             ref={(el) => {
               cardsRef.current[index] = el;
             }}
+            style={{ 
+              boxShadow: `0 8px 24px ${tech.color}40`,
+              border: `1px solid ${tech.color}40` 
+            }}
           >
-            <img 
-              src={tech.icon} 
-              alt={tech.name} 
-              style={{ filter: `drop-shadow(0 0 12px ${tech.color}99)` }}
-            />
-            <div className={styles.textContainer}>
-              {tech.name.split('').map((char, charIndex) => (
-                <span key={charIndex} className={styles.char}>
-                  {char === ' ' ? '\u00A0' : char}
-                </span>
-              ))}
-            </div>
+            {tech.name}
           </div>
         ))}
       </div>

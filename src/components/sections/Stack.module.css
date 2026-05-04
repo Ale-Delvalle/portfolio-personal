@@ -4,86 +4,75 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 50vh;
+  min-height: 80vh;
   overflow: hidden;
   position: relative;
 }
 
-.title {
-  font-family: var(--font-headline);
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: #4a0000;
-  margin-bottom: 4rem;
-  text-align: center;
-  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+.circleContainer {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
 }
 
-:global(:root[data-theme="dark"]) .title {
+.centerTitle {
+  font-family: var(--font-headline);
+  font-size: 4.5rem;
+  font-weight: 800;
+  color: #4a0000;
+  text-align: center;
+  z-index: 10;
+  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin: 0;
+  opacity: 0; /* GSAP animes it */
+}
+
+:global(:root[data-theme="dark"]) .centerTitle {
   color: #ffc2b3;
   text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 194, 179, 0.3);
 }
 
-.cardsContainer {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2.5rem;
-  justify-content: center;
-  justify-items: center;
-  max-width: 800px;
-  margin: 0 auto;
-  perspective: 1200px;
-}
-
-@media (max-width: 768px) {
-  .cardsContainer {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
-  }
-}
-
-.cardWrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  opacity: 0; /* Inicialmente oculto para animación de GSAP */
-}
-
-.cardWrapper img {
-  width: 60px;
-  height: 60px;
-  object-fit: contain;
-  transition: transform 0.3s ease;
-}
-
-.cardWrapper:hover img {
-  transform: scale(1.1); /* Ligeramente más grande al pasar el mouse */
-}
-
-.textContainer {
-  display: flex;
-  justify-content: center;
-  gap: 1px; /* Espacio mínimo entre letras si es necesario */
-}
-
-.char {
+.techPill {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: #ffffff;
+  padding: 0.8rem 1.8rem;
+  border-radius: 30px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
   font-family: var(--font-headline);
   font-size: 1.1rem;
-  font-weight: 800;
+  font-weight: 700;
   color: #000000;
-  opacity: 0; /* Animado por GSAP */
-  display: inline-block;
-  min-width: 4px; /* Para asegurar que los espacios tengan anchura */
+  z-index: 5;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  border: 1px solid rgba(0,0,0,0.05);
+  cursor: pointer;
 }
 
-/* Conservando estilos originales secundarios si se necesitan */
+.techPill:hover {
+  z-index: 20;
+}
+
+:global(:root[data-theme="dark"]) .techPill {
+  background: rgba(255, 255, 255, 0.95);
+  color: #000000;
+}
+
 .secondaryTitle {
   font-family: var(--font-body);
   font-size: 1.2rem;
   color: #4a0000;
-  margin-top: 4rem;
+  margin-top: 2rem;
   margin-bottom: 2rem;
   text-align: center;
 }

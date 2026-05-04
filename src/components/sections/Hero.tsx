@@ -4,6 +4,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import pleaseImg from '../../assets/please.png';
+import profileImg from '../../assets/foto-transparente.png';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -102,33 +103,40 @@ export function Hero() {
         </div>
 
         <div className={styles.textsContainer}>
-          <div ref={leftTextRef} className={styles.textBlock}>
-            <h2 className={styles.sideTitle}>Mi perfil profesional</h2>
-            <p className={styles.sideDesc}>
-              Soy un full stack developer impulsado por la curiosidad y al aprendizaje. Aunque tengo un gusto especial por el backend he trabajado en el front end, tanto en PC y mobile.
-            </p>
+          <div ref={leftTextRef} className={styles.leftColumn}>
+            <div className={styles.imageWrapper}>
+              <img src={profileImg} alt="Alexis Delvalle" className={styles.profileImage} />
+            </div>
+            <div ref={buttonsRef} className={styles.buttonGroup}>
+              <button className={styles.primaryBtn}>Revisar proyectos</button>
+              <div ref={contactBtnRef} className={styles.btn3dContainer}>
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className={styles.btnLayer} style={{ transform: `translateZ(${-i * 2}px)` }}></div>
+                ))}
+                <button className={styles.secondaryBtn}>
+                  Contáctame 
+                  <span className={styles.emojiWrapper}>
+                    <span className={styles.emojis}>👁️👁️</span>
+                    <img src={pleaseImg} alt="Please" className={styles.pleaseImg} />
+                  </span>
+                </button>
+              </div>
+            </div>
           </div>
-          <div ref={rightTextRef} className={styles.textBlock}>
-            <h2 className={styles.sideTitle}>Un poco de mi</h2>
-            <p className={styles.sideDesc}>
-              Disfruto crear aplicaciones pero mucho más formar lazos humanos y profesionales, una buena comunicacion y un ambiente laboral ameno en pro de crecer y conseguir nuestros objetivos.
-            </p>
-          </div>
-        </div>
 
-        <div ref={buttonsRef} className={styles.buttonGroup}>
-          <button className={styles.primaryBtn}>Revisar proyectos</button>
-          <div ref={contactBtnRef} className={styles.btn3dContainer}>
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className={styles.btnLayer} style={{ transform: `translateZ(${-i * 2}px)` }}></div>
-            ))}
-            <button className={styles.secondaryBtn}>
-              Contáctame 
-              <span className={styles.emojiWrapper}>
-                <span className={styles.emojis}>👁️👁️</span>
-                <img src={pleaseImg} alt="Please" className={styles.pleaseImg} />
-              </span>
-            </button>
+          <div ref={rightTextRef} className={styles.rightColumn}>
+            <div className={styles.textBlock}>
+              <h2 className={styles.sideTitle}>Mi perfil profesional</h2>
+              <p className={styles.sideDesc}>
+                Soy un full stack developer impulsado por la curiosidad y al aprendizaje. Aunque tengo un gusto especial por el backend he trabajado en el front end, tanto en PC y mobile.
+              </p>
+            </div>
+            <div className={styles.textBlock}>
+              <h2 className={styles.sideTitle}>Un poco de mi</h2>
+              <p className={styles.sideDesc}>
+                Disfruto crear aplicaciones pero mucho más formar lazos humanos y profesionales, una buena comunicacion y un ambiente laboral ameno en pro de crecer y conseguir nuestros objetivos.
+              </p>
+            </div>
           </div>
         </div>
 

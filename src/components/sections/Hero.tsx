@@ -83,13 +83,31 @@ export function Hero() {
       }
     });
 
-    // --- ANIMACION INFINITA SCROLL TEXT (5 Saltos + Pausa 5s) ---
+    // --- ANIMACION INFINITA SCROLL TEXT (Saltos realistas + Pausa 5s) ---
     const scrollTl = gsap.timeline({ repeat: -1, repeatDelay: 5, delay: 3 });
+    
+    // 5 saltos principales
     scrollTl.to(scrollTextRef.current, {
       y: -12,
-      duration: 0.3, // un poco más rápido para que parezcan saltos cortos
+      duration: 0.3,
       yoyo: true,
-      repeat: 9, // 1 movimiento inicial + 9 repeticiones = 10 movimientos = 5 saltos (arriba y abajo)
+      repeat: 9, // 5 saltos completos
+      ease: "power2.out"
+    })
+    // 6to salto: pierde fuerza (llega a la mitad)
+    .to(scrollTextRef.current, {
+      y: -6,
+      duration: 0.25,
+      yoyo: true,
+      repeat: 1, // 1 salto completo (sube y baja)
+      ease: "power2.out"
+    })
+    // 7mo salto: casi imperceptible, se detiene
+    .to(scrollTextRef.current, {
+      y: -2,
+      duration: 0.15,
+      yoyo: true,
+      repeat: 1, // 1 salto completo
       ease: "power2.out"
     });
 

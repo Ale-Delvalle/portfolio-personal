@@ -43,6 +43,11 @@
   z-index: -1;
 }
 
+/* Modo oscuro: el navbar se vuelve azul marino oscuro en lugar de negro */
+:global(:root[data-theme="dark"]) .navbar::before {
+  background: #000f1d;
+}
+
 /* La navbar vertical solo aparece en pantallas ≥1024px */
 @media (min-width: 1024px) {
   .navbar {

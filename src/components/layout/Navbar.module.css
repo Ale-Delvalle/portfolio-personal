@@ -16,11 +16,7 @@
   bottom: 0;
   width: 10%;
   height: 100%;
-  background: linear-gradient(135deg, #1c1c1c 0%, #000000 100%);
-  box-shadow: 
-    10px 0 20px -5px rgba(0, 0, 0, 0.8),
-    20px 0 40px rgba(0, 0, 0, 0.5),
-    40px 0 80px rgba(0, 0, 0, 0.3);
+  background: transparent;
   padding-left: max(1.5vw, 15px);
   z-index: 50;
 
@@ -30,6 +26,21 @@
   justify-content: center;
   align-items: flex-start;
   gap: 1.25rem;
+}
+
+/* Capa de fondo que difumina físicamente el borde recto */
+.navbar::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  bottom: -50px;
+  left: -50px;
+  /* Hacemos la caja un poco más ancha que el navbar para que el núcleo sea negro sólido */
+  width: calc(100% + 60px); 
+  background: #000000;
+  /* El desenfoque rompe la línea recta y crea un fundido natural */
+  filter: blur(25px);
+  z-index: -1;
 }
 
 /* La navbar vertical solo aparece en pantallas ≥1024px */

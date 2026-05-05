@@ -8,10 +8,10 @@
      ========================================= */
 
   /* Color de acento principal (salmón) y su contenedor más claro */
-  --color-primary: #ff7e5f;
-  --color-primary-container: #ffd0c4;
+  --color-primary: #00509E;
+  --color-primary-container: #b3d4ff;
   /* Texto sobre elementos con color primary-fixed (contraste oscuro) */
-  --color-on-primary-fixed: #3a1005;
+  --color-on-primary-fixed: #001a33;
 
   /* Escala de superficies: de más oscura (lowest) a más clara (highest) */
   --color-surface: #f9f9fd;
@@ -47,9 +47,9 @@
      ========================================= */
 
   /* Salmón brillante como acento en oscuro */
-  --color-primary: #ff7e5f;
-  --color-primary-container: #feb47b;
-  --color-on-primary-fixed: #3a1005;
+  --color-primary: #66a3ff;
+  --color-primary-container: #003366;
+  --color-on-primary-fixed: #001a33;
 
   /* Superficies muy oscuras, casi negras */
   --color-surface: #0c0e11;
@@ -60,10 +60,10 @@
   --color-surface-container-highest: #23262a;
 
   /* Texto claro sobre fondos oscuros (ahora usando el color del degradado) */
-  --color-on-background: #ff7e5f;
-  --color-on-surface: #feb47b;
-  --color-on-surface-variant: #ff7e5f;   /* texto secundario en oscuro */
-  --color-outline-variant: #feb47b;     /* bordes en oscuro */
+  --color-on-background: #66a3ff;
+  --color-on-surface: #99c2ff;
+  --color-on-surface-variant: #66a3ff;   /* texto secundario en oscuro */
+  --color-outline-variant: #99c2ff;     /* bordes en oscuro */
 
   --color-background: #000000;
   --color-on-primary: #000000;
@@ -88,8 +88,8 @@ body {
 }
 
 /* Color de selección de texto: salmón semitransparente (ambos prefijos para compatibilidad) */
-::-moz-selection { background: rgba(255, 126, 95, 0.3); }
-::selection { background: rgba(255, 126, 95, 0.3); }
+::-moz-selection { background: rgba(0, 102, 204, 0.3); }
+::selection { background: rgba(0, 102, 204, 0.3); }
 
 /* Typography Resets */
 /* Todos los títulos usan Manrope sin márgenes por defecto */

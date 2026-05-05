@@ -45,17 +45,17 @@
 .titleCenter {
   position: relative; /* Define el tamaño del contenedor */
   z-index: 2;
-  color: #4a0000;
+  color: #003366;
   text-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   opacity: 0;
 }
 :global(:root[data-theme="dark"]) .titleCenter {
-  color: #ffc2b3;
-  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 194, 179, 0.3);
+  color: #99c2ff;
+  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 15px rgba(153, 194, 255, 0.3);
 }
 
 .titleTop {
-  color: var(--color-primary, #b30000);
+  color: var(--color-primary, #0066CC);
   opacity: 0;
   z-index: 1;
 }
@@ -108,14 +108,14 @@
 .secondaryTitle {
   font-family: var(--font-body);
   font-size: 1.2rem;
-  color: #4a0000;
+  color: #003366;
   margin-top: 2rem;
   margin-bottom: 2rem;
   text-align: center;
 }
 
 :global(:root[data-theme="dark"]) .secondaryTitle {
-  color: #ffc2b3;
+  color: #99c2ff;
 }
 
 .secondaryStack {
@@ -124,16 +124,16 @@
   gap: 1.5rem;
   justify-content: center;
   font-family: var(--font-body);
-  color: #4a0000;
+  color: #003366;
   opacity: 0; /* for animation */
 }
 
 :global(:root[data-theme="dark"]) .secondaryStack {
-  color: #ffc2b3;
+  color: #99c2ff;
 }
 
 .secondaryStack p {
-  background: rgba(74, 0, 0, 0.05);
+  background: rgba(0, 51, 102, 0.05);
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-weight: 600;
@@ -141,13 +141,13 @@
 }
 
 :global(:root[data-theme="dark"]) .secondaryStack p {
-  background: rgba(255, 194, 179, 0.1);
+  background: rgba(153, 194, 255, 0.1);
 }
 
 .secondaryStack p:hover {
-  background: rgba(74, 0, 0, 0.1);
+  background: rgba(0, 51, 102, 0.1);
 }
 
 :global(:root[data-theme="dark"]) .secondaryStack p:hover {
-  background: rgba(255, 194, 179, 0.2);
+  background: rgba(153, 194, 255, 0.2);
 }

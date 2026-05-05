@@ -122,7 +122,7 @@
   font-family: var(--font-headline);
   font-size: 1.8rem;
   font-weight: 800;
-  color: #4a0000;
+  color: #003366;
   margin-top: 0;
   margin-bottom: 0.5rem;
 }
@@ -131,7 +131,7 @@
   font-family: var(--font-headline);
   font-size: 1.8rem;
   font-weight: 800;
-  color: #4a0000;
+  color: #003366;
   margin-top: 0;
   margin-bottom: 0.5rem;
 }
@@ -139,7 +139,7 @@
 .sideDesc {
   font-family: var(--font-body);
   font-size: 1.05rem;
-  color: #4a0000;
+  color: #003366;
   font-weight: 300;
   line-height: 1.5;
   margin-top: 0;
@@ -195,7 +195,7 @@
 }
 
 .welcomeBottom {
-  color: #4a0000; /* Granate */
+  color: #003366; /* Azul Marino/Francia */
   opacity: 0.5;
   z-index: 3;
 }
@@ -211,7 +211,7 @@
   line-height: 1.1;
   letter-spacing: -0.02em;
   white-space: nowrap;
-  color: #4a0000;
+  color: #003366;
   /* Sombra para volumen que contraste con el fondo casi blanco */
   text-shadow: 
     0 4px 15px rgba(0, 0, 0, 0.1),
@@ -224,10 +224,10 @@
 :global(:root[data-theme="dark"]) .name {
   background: none;
   filter: none;
-  color: #ffc2b3; /* Color pastel con más tonalidad */
+  color: #99c2ff; /* Color pastel con más tonalidad */
   text-shadow: 
     0 4px 15px rgba(0, 0, 0, 0.5),
-    3px 3px 0 #b0c4de; /* Platinado más suave/azulado en dark mode */
+    3px 3px 0 #99c2ff; /* Platinado más suave/azulado en dark mode */
 }
 
 
@@ -235,7 +235,7 @@
 .role {
   font-size: clamp(1rem, 2.5vw, 1.8rem);
   font-weight: 800;
-  color: #4a0000;
+  color: #003366;
   margin-top: 0.25rem;
   text-align: center;
   letter-spacing: normal;
@@ -247,7 +247,7 @@
 :global(:root[data-theme="dark"]) .sideTitleLarge,
 :global(:root[data-theme="dark"]) .sideDesc,
 :global(:root[data-theme="dark"]) .role {
-  color: #ffc2b3; /* Color pastel con más tonalidad */
+  color: #99c2ff; /* Color pastel con más tonalidad */
 }
 
 
@@ -276,13 +276,13 @@
 /* Light Mode / Base Buttons */
 .primaryBtn {
   background: transparent;
-  color: #4a0000;
-  border: 1px solid #4a0000;
+  color: #003366;
+  border: 1px solid #003366;
   box-shadow: none;
 }
 
 .primaryBtn:hover {
-  background: rgba(74, 0, 0, 0.05);
+  background: rgba(0, 51, 102, 0.05);
   transform: translateY(-2px);
 }
 
@@ -296,16 +296,16 @@
   position: absolute;
   top: 0; left: 0; width: 100%; height: 100%;
   border-radius: 999px;
-  background: #4a0000;
+  background: #003366;
   pointer-events: none;
 }
 
 :global(:root[data-theme="dark"]) .btnLayer {
-  background: #4a1f1f;
+  background: #001a33;
 }
 
 .secondaryBtn {
-  background: #800000;
+  background: #00509E;
   color: #ffffff;
   border: 1px solid #ffffff;
   position: relative;
@@ -336,15 +336,15 @@
 }
 
 .secondaryBtn:hover {
-  background: #b30000;
+  background: #0066CC;
   transform: translateY(-2px);
 }
 
 /* Dark Mode Overrides */
 :global(:root[data-theme="dark"]) .primaryBtn {
   background: #000000;
-  color: #ffc2b3;
-  border: 1px solid #ffc2b3;
+  color: #99c2ff;
+  border: 1px solid #99c2ff;
 }
 
 :global(:root[data-theme="dark"]) .primaryBtn:hover {
@@ -416,7 +416,7 @@
   flex-direction: column;
   align-items: center;
   gap: 0.3rem;
-  color: #4a0000;
+  color: #003366;
   font-family: var(--font-body);
   font-size: 0.85rem;
   font-weight: 600;
@@ -427,7 +427,7 @@
 }
 
 :global(:root[data-theme="dark"]) .scrollIndicator {
-  color: #ffc2b3;
+  color: #99c2ff;
 }
 
 .scrollChar {

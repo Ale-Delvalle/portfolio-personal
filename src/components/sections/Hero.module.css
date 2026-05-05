@@ -93,12 +93,27 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
+  padding: 1rem 1.25rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+:global(:root[data-theme="dark"]) .textBlock {
+  background: var(--glass-bg, rgba(12, 14, 17, 0.6));
+  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.1));
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
 }
 
 @media (min-width: 768px) {
   .textBlock {
     align-items: flex-start;
     text-align: left;
+    padding: 1.25rem 1.5rem;
   }
 }
 
@@ -108,6 +123,7 @@
   font-size: 1.8rem;
   font-weight: 800;
   color: #4a0000;
+  margin-top: 0;
   margin-bottom: 0.5rem;
 }
 
@@ -116,6 +132,7 @@
   font-size: 1.8rem;
   font-weight: 800;
   color: #4a0000;
+  margin-top: 0;
   margin-bottom: 0.5rem;
 }
 
@@ -125,6 +142,8 @@
   color: #4a0000;
   font-weight: 300;
   line-height: 1.5;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .nameContainer {
@@ -409,5 +428,10 @@
 
 :global(:root[data-theme="dark"]) .scrollIndicator {
   color: #ffc2b3;
+}
+
+.scrollChar {
+  display: inline-block;
+  white-space: pre;
 }
 

@@ -111,14 +111,22 @@ export function Hero() {
       ease: "power2.out"
     });
 
-    // --- FADE OUT INDICADOR SCROLL ---
-    gsap.to(scrollIndicatorRef.current, {
-      autoAlpha: 0,
-      y: 50,
+    // --- FADE OUT INDICADOR SCROLL (Efecto Polvo / Thanos Snap de derecha a izquierda) ---
+    gsap.to(`.${styles.scrollChar}`, {
+      opacity: 0,
+      x: () => (Math.random() - 0.5) * 100, // se esparce horizontalmente
+      y: () => -20 - Math.random() * 80, // vuela hacia arriba
+      rotation: () => (Math.random() - 0.5) * 120, // gira al azar
+      scale: 0, // se hace polvo
+      filter: "blur(8px)", // efecto granulado
+      stagger: {
+        amount: 0.6, // duración de la cascada
+        from: "end" // empieza por la derecha (última letra)
+      },
       scrollTrigger: {
         trigger: mainRef.current,
-        start: "85% top", // Comienza a desaparecer casi al final
-        end: "100% top",  // Termina de desaparecer cuando Hero ya no se ve
+        start: "75% top", // da un poco más de tiempo para apreciar el efecto
+        end: "100% top",
         scrub: true
       }
     });
@@ -197,7 +205,13 @@ export function Hero() {
       <div className={styles.meshBottom}></div>
       
       <div ref={scrollIndicatorRef} className={styles.scrollIndicator}>
-        <span ref={scrollTextRef} style={{ display: "inline-block" }}>Scroll</span>
+        <span ref={scrollTextRef} style={{ display: "inline-block" }}>
+          {"Scroll".split("").map((char, i) => (
+            <span key={i} className={styles.scrollChar} style={{ display: "inline-block", willChange: "transform, opacity, filter" }}>
+              {char}
+            </span>
+          ))}
+        </span>
       </div>
     </main>
   );

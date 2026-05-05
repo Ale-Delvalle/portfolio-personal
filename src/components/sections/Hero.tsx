@@ -71,30 +71,6 @@ export function Hero() {
     rotXBtn.current = gsap.quickTo(contactBtnRef.current, "rotationX", { duration: 0.8, ease: "power3" });
     rotYBtn.current = gsap.quickTo(contactBtnRef.current, "rotationY", { duration: 0.8, ease: "power3" });
 
-    // --- EXIT ANIMATION SEQUENCE (3 Fases) ---
-    const exitTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: ".scroll-wrapper",
-        start: "top top",
-        end: "+=300%", // La transición dura 300vh de scroll (3 Fases de 100vh cada una)
-        scrub: true
-      }
-    });
-
-    // FASE 1 (0 a 1): Contenido del Hero desaparece RÁPIDO, SCROLL sube al centro y crece
-    exitTl.to(nameContainerRef.current, { yPercent: -50, opacity: 0, duration: 0.15 }, 0);
-    exitTl.to(imageRef.current, { x: -100, opacity: 0, duration: 0.15 }, 0);
-    exitTl.to(buttonsRef.current, { x: -100, opacity: 0, duration: 0.15 }, 0);
-    exitTl.to(rightTextRef.current, { x: 100, opacity: 0, duration: 0.15 }, 0);
-
-    // Mover la palabra SCROLL al centro de la pantalla y aumentar font-size para evitar pixelado
-    exitTl.to(scrollIndicatorRef.current, {
-      y: "-40vh", // Sube al centro aproximado desde el bottom
-      fontSize: "3rem", // Crece usando fuente vectorial en lugar de transform: scale
-      duration: 1,
-      ease: "power1.inOut"
-    }, 0);
-
     // --- ANIMACION INFINITA SCROLL TEXT (Saltos realistas + Pausa 5s) ---
     const scrollTl = gsap.timeline({ repeat: -1, repeatDelay: 5, delay: 3 });
     
@@ -122,6 +98,37 @@ export function Hero() {
       repeat: 1, // 1 salto completo
       ease: "power2.out"
     });
+
+    // --- EXIT ANIMATION SEQUENCE (3 Fases) ---
+    const exitTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".scroll-wrapper",
+        start: "top top",
+        end: "+=100%", // La transición dura 100vh de scroll
+        scrub: true,
+        onEnter: () => {
+          scrollTl.pause();
+          gsap.to(scrollTextRef.current, { y: 0, duration: 0.2 }); // Regresa al suelo inmediatamente
+        },
+        onLeaveBack: () => {
+          scrollTl.play();
+        }
+      }
+    });
+
+    // FASE 1 (0 a 1): Contenido del Hero desaparece RÁPIDO, SCROLL sube al centro y crece
+    exitTl.to(nameContainerRef.current, { yPercent: -50, opacity: 0, duration: 0.15 }, 0);
+    exitTl.to(imageRef.current, { x: -100, opacity: 0, duration: 0.15 }, 0);
+    exitTl.to(buttonsRef.current, { x: -100, opacity: 0, duration: 0.15 }, 0);
+    exitTl.to(rightTextRef.current, { x: 100, opacity: 0, duration: 0.15 }, 0);
+
+    // Mover la palabra SCROLL al centro de la pantalla y aumentar font-size para evitar pixelado
+    exitTl.to(scrollIndicatorRef.current, {
+      y: "-40vh", // Sube al centro aproximado desde el bottom
+      fontSize: "2.55rem", // Exactamente 3x su tamaño original de 0.85rem
+      duration: 1,
+      ease: "power1.inOut"
+    }, 0);
 
     // FASE 2 (1 a 2): FADE OUT INDICADOR SCROLL (Efecto Polvo desde el centro)
     exitTl.to(`.${styles.scrollChar}`, {

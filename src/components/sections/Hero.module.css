@@ -214,8 +214,8 @@
   color: #003366;
   /* Sombra para volumen que contraste con el fondo casi blanco */
   text-shadow: 
-    0 4px 15px rgba(0, 0, 0, 0.1),
-    3px 3px 0 #ffd0c4;
+    0 4px 15px rgba(0, 51, 102, 0.3),
+    3px 3px 0 #003366;
   background: none;
   -webkit-text-fill-color: initial;
   filter: none;

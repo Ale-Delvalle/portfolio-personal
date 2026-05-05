@@ -23,25 +23,25 @@ export function Stack() {
   const secondaryStackRef = useRef<HTMLElement>(null);
 
   useGSAP(() => {
-    // 1) Fade in de la sección sincronizado con el scroll global (Fase 3: 200vh a 300vh)
+    // 1) Fade in de la sección sincronizado con el scroll global (Fase 3: a partir de 66.6vh)
     gsap.fromTo(sectionRef.current, 
       { autoAlpha: 0 }, 
       { 
         autoAlpha: 1, 
         scrollTrigger: {
           trigger: ".scroll-wrapper",
-          start: () => `top+=${window.innerHeight * 2} top`, // Inicia cuando el scroll llega a 200vh
-          end: () => `+=${window.innerHeight}`, // Dura 100vh
+          start: () => `top+=${window.innerHeight * 0.66} top`, // Inicia a los 66vh aprox
+          end: () => `+=${window.innerHeight * 0.34}`, // Termina a los 100vh
           scrub: true
         }
       }
     );
 
-    // 2) Animación interna de los elementos (Glitch, expansión de píldoras)
+    // 2) Animación interna de los elementos (expansión de píldoras)
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: ".scroll-wrapper",
-        start: () => `top+=${window.innerHeight * 2.5} top`, // Dispara la animación interna a los 250vh
+        start: () => `top+=${window.innerHeight * 0.8} top`, // Dispara la animación interna a los 80vh
       }
     });
 
@@ -60,40 +60,14 @@ export function Stack() {
     const radiusX = isMobile ? window.innerWidth * 0.45 : 416; // 30% más lejos
     const radiusY = isMobile ? 286 : 208; // 30% más lejos
 
-    const titleContainer = sectionRef.current?.querySelector(`.${styles.titleContainer}`);
-    const titleTop = titleContainer?.querySelector(`.${styles.titleTop}`);
-    const titleCenter = titleContainer?.querySelector(`.${styles.titleCenter}`);
-    const titleBottom = titleContainer?.querySelector(`.${styles.titleBottom}`);
+    const titleCenter = sectionRef.current?.querySelector(`.${styles.titleCenter}`);
 
-    // 1) Animación del título (Glitch / Layer Split style) - Duración ~3s
-    if (titleCenter && titleTop && titleBottom) {
+    // 1) Animación del título (Simple Fade-in)
+    if (titleCenter) {
       tl.fromTo(titleCenter, 
         { autoAlpha: 0, scale: 0.8 },
         { autoAlpha: 1, scale: 1, duration: 1.0, ease: "back.out(1.5)" }
-      )
-      .addLabel("splitStart", "-=0.2") // Se superpone un poco con la entrada
-      .fromTo([titleTop, titleBottom], 
-        { autoAlpha: 0, x: 0, y: 0 },
-        { 
-          autoAlpha: 0.5, 
-          x: (i) => i === 0 ? 85 : -85, // Ajustado al nuevo tamaño
-          y: (i) => i === 0 ? -65 : 65, // Ajustado al nuevo tamaño
-          duration: 0.8, 
-          ease: "power2.out" 
-        },
-        "splitStart"
-      )
-      .to(titleCenter, { autoAlpha: 0.2, duration: 0.8, ease: "power2.out" }, "splitStart") // El texto central se opaca
-      
-      .addLabel("mergeStart", "+=0.6") // Mantiene el efecto abierto 0.6s
-      .to([titleTop, titleBottom], {
-        x: 0,
-        y: 0,
-        autoAlpha: 0,
-        duration: 0.8,
-        ease: "power2.inOut"
-      }, "mergeStart")
-      .to(titleCenter, { autoAlpha: 1, duration: 0.8, ease: "power2.inOut" }, "mergeStart"); // El texto central vuelve a la normalidad
+      );
     }
 
     // Animación de expansión de las píldoras de texto formando un óvalo
@@ -153,9 +127,7 @@ export function Stack() {
       
       <div className={styles.circleContainer}>
         <div className={styles.titleContainer}>
-          <div className={`${styles.titleLayer} ${styles.titleTop}`}>Stack</div>
           <div className={`${styles.titleLayer} ${styles.titleCenter}`}>Stack</div>
-          <div className={`${styles.titleLayer} ${styles.titleBottom}`}>Stack</div>
         </div>
         
         {techStack.map((tech, index) => (

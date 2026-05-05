@@ -23,15 +23,15 @@ export function Stack() {
   const secondaryStackRef = useRef<HTMLElement>(null);
 
   useGSAP(() => {
-    // 1) Fade in de la sección sincronizado con el scroll global (mientras Hero sale, Stack entra)
+    // 1) Fade in de la sección sincronizado con el scroll global (Fase 3: 200vh a 300vh)
     gsap.fromTo(sectionRef.current, 
       { autoAlpha: 0 }, 
       { 
         autoAlpha: 1, 
         scrollTrigger: {
           trigger: ".scroll-wrapper",
-          start: "top top",
-          end: "+=100%",
+          start: () => `top+=${window.innerHeight * 2} top`, // Inicia cuando el scroll llega a 200vh
+          end: () => `+=${window.innerHeight}`, // Dura 100vh
           scrub: true
         }
       }
@@ -41,7 +41,7 @@ export function Stack() {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: ".scroll-wrapper",
-        start: "top -30%", // Se dispara un poco después de iniciar el scroll
+        start: () => `top+=${window.innerHeight * 2.5} top`, // Dispara la animación interna a los 250vh
       }
     });
 

@@ -10,7 +10,7 @@ function App() {
   return (
     <>
       <Navbar theme={theme} toggleTheme={toggleTheme} />
-      <div className="scroll-wrapper" style={{ height: "200vh", position: "relative" }}>
+      <div className="scroll-wrapper" style={{ height: "400vh", position: "relative" }}>
         <div className="sticky-container" style={{ position: "sticky", top: 0, height: "100vh", overflow: "hidden", display: "grid" }}>
           <div style={{ gridArea: "1 / 1" }}>
             <Hero />

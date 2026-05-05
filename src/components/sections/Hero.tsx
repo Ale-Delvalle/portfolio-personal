@@ -71,25 +71,29 @@ export function Hero() {
     rotXBtn.current = gsap.quickTo(contactBtnRef.current, "rotationX", { duration: 0.8, ease: "power3" });
     rotYBtn.current = gsap.quickTo(contactBtnRef.current, "rotationY", { duration: 0.8, ease: "power3" });
 
-    // --- EXIT ANIMATION (Hero sale a medida que avanza el scroll global) ---
+    // --- EXIT ANIMATION SEQUENCE (3 Fases) ---
     const exitTl = gsap.timeline({
       scrollTrigger: {
         trigger: ".scroll-wrapper",
         start: "top top",
-        end: "+=100%", // La transición dura 100vh de scroll
+        end: "+=300%", // La transición dura 300vh de scroll (3 Fases de 100vh cada una)
         scrub: true
       }
     });
 
-    // 1. Nombre sube y desaparece
-    exitTl.to(nameContainerRef.current, { yPercent: -50, opacity: 0, duration: 1 }, 0);
-    
-    // 2. Elementos de la izquierda se van a la izquierda
-    exitTl.to(imageRef.current, { x: -100, opacity: 0, duration: 1 }, 0);
-    exitTl.to(buttonsRef.current, { x: -100, opacity: 0, duration: 1 }, 0);
+    // FASE 1 (0 a 1): Contenido del Hero desaparece RÁPIDO, SCROLL sube al centro y crece
+    exitTl.to(nameContainerRef.current, { yPercent: -50, opacity: 0, duration: 0.15 }, 0);
+    exitTl.to(imageRef.current, { x: -100, opacity: 0, duration: 0.15 }, 0);
+    exitTl.to(buttonsRef.current, { x: -100, opacity: 0, duration: 0.15 }, 0);
+    exitTl.to(rightTextRef.current, { x: 100, opacity: 0, duration: 0.15 }, 0);
 
-    // 3. Textos de la derecha se van a la derecha
-    exitTl.to(rightTextRef.current, { x: 100, opacity: 0, duration: 1 }, 0);
+    // Mover la palabra SCROLL al centro de la pantalla y aumentar font-size para evitar pixelado
+    exitTl.to(scrollIndicatorRef.current, {
+      y: "-40vh", // Sube al centro aproximado desde el bottom
+      fontSize: "3rem", // Crece usando fuente vectorial en lugar de transform: scale
+      duration: 1,
+      ease: "power1.inOut"
+    }, 0);
 
     // --- ANIMACION INFINITA SCROLL TEXT (Saltos realistas + Pausa 5s) ---
     const scrollTl = gsap.timeline({ repeat: -1, repeatDelay: 5, delay: 3 });
@@ -119,20 +123,24 @@ export function Hero() {
       ease: "power2.out"
     });
 
-    // --- FADE OUT INDICADOR SCROLL (Efecto Polvo integrado a la salida del Hero) ---
+    // FASE 2 (1 a 2): FADE OUT INDICADOR SCROLL (Efecto Polvo desde el centro)
     exitTl.to(`.${styles.scrollChar}`, {
       opacity: 0,
-      x: () => (Math.random() - 0.5) * 100,
-      y: () => -20 - Math.random() * 80,
+      x: () => (Math.random() - 0.5) * 150,
+      y: () => -30 - Math.random() * 100,
       rotation: () => (Math.random() - 0.5) * 120,
       scale: 0,
       filter: "blur(8px)",
       stagger: {
-        amount: 0.4,
-        from: "end"
+        amount: 0.5,
+        from: "end" // Empieza a romperse desde la derecha a la izquierda
       },
-      duration: 0.6
-    }, 0);
+      duration: 1
+    }, 1);
+
+    // FASE 3 (2 a 3): Espacio vacío para que entre Stack.
+    // Añadimos un tween dummy para asegurar que la timeline dure 3 unidades de tiempo exactas.
+    exitTl.to({}, { duration: 1 }, 2);
 
   }, { scope: mainRef });
 
@@ -210,7 +218,7 @@ export function Hero() {
       <div ref={scrollIndicatorRef} className={styles.scrollIndicator}>
         <span ref={scrollTextRef} style={{ display: "inline-block" }}>
           {"Scroll".split("").map((char, i) => (
-            <span key={i} className={styles.scrollChar} style={{ display: "inline-block", willChange: "transform, opacity, filter" }}>
+            <span key={i} className={styles.scrollChar} style={{ display: "inline-block" }}>
               {char}
             </span>
           ))}

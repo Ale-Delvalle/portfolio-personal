@@ -23,10 +23,25 @@ export function Stack() {
   const secondaryStackRef = useRef<HTMLElement>(null);
 
   useGSAP(() => {
+    // 1) Fade in de la sección sincronizado con el scroll global (mientras Hero sale, Stack entra)
+    gsap.fromTo(sectionRef.current, 
+      { autoAlpha: 0 }, 
+      { 
+        autoAlpha: 1, 
+        scrollTrigger: {
+          trigger: ".scroll-wrapper",
+          start: "top top",
+          end: "+=100%",
+          scrub: true
+        }
+      }
+    );
+
+    // 2) Animación interna de los elementos (Glitch, expansión de píldoras)
     const tl = gsap.timeline({
       scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top top", // Se activa justo cuando el Hero desaparece por completo (y el top de Stack toca el top de la pantalla)
+        trigger: ".scroll-wrapper",
+        start: "top -30%", // Se dispara un poco después de iniciar el scroll
       }
     });
 

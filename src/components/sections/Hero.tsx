@@ -71,17 +71,25 @@ export function Hero() {
     rotXBtn.current = gsap.quickTo(contactBtnRef.current, "rotationX", { duration: 0.8, ease: "power3" });
     rotYBtn.current = gsap.quickTo(contactBtnRef.current, "rotationY", { duration: 0.8, ease: "power3" });
 
-    // --- SCROLL PARALLAX (Solo nombre/rol) ---
-    gsap.to(nameContainerRef.current, {
-      yPercent: -20,
-      ease: "none",
+    // --- EXIT ANIMATION (Hero sale a medida que avanza el scroll global) ---
+    const exitTl = gsap.timeline({
       scrollTrigger: {
-        trigger: mainRef.current,
+        trigger: ".scroll-wrapper",
         start: "top top",
-        end: "bottom top",
+        end: "+=100%", // La transición dura 100vh de scroll
         scrub: true
       }
     });
+
+    // 1. Nombre sube y desaparece
+    exitTl.to(nameContainerRef.current, { yPercent: -50, opacity: 0, duration: 1 }, 0);
+    
+    // 2. Elementos de la izquierda se van a la izquierda
+    exitTl.to(imageRef.current, { x: -100, opacity: 0, duration: 1 }, 0);
+    exitTl.to(buttonsRef.current, { x: -100, opacity: 0, duration: 1 }, 0);
+
+    // 3. Textos de la derecha se van a la derecha
+    exitTl.to(rightTextRef.current, { x: 100, opacity: 0, duration: 1 }, 0);
 
     // --- ANIMACION INFINITA SCROLL TEXT (Saltos realistas + Pausa 5s) ---
     const scrollTl = gsap.timeline({ repeat: -1, repeatDelay: 5, delay: 3 });
@@ -111,25 +119,20 @@ export function Hero() {
       ease: "power2.out"
     });
 
-    // --- FADE OUT INDICADOR SCROLL (Efecto Polvo / Thanos Snap de derecha a izquierda) ---
-    gsap.to(`.${styles.scrollChar}`, {
+    // --- FADE OUT INDICADOR SCROLL (Efecto Polvo integrado a la salida del Hero) ---
+    exitTl.to(`.${styles.scrollChar}`, {
       opacity: 0,
-      x: () => (Math.random() - 0.5) * 100, // se esparce horizontalmente
-      y: () => -20 - Math.random() * 80, // vuela hacia arriba
-      rotation: () => (Math.random() - 0.5) * 120, // gira al azar
-      scale: 0, // se hace polvo
-      filter: "blur(8px)", // efecto granulado
+      x: () => (Math.random() - 0.5) * 100,
+      y: () => -20 - Math.random() * 80,
+      rotation: () => (Math.random() - 0.5) * 120,
+      scale: 0,
+      filter: "blur(8px)",
       stagger: {
-        amount: 0.6, // duración de la cascada
-        from: "end" // empieza por la derecha (última letra)
+        amount: 0.4,
+        from: "end"
       },
-      scrollTrigger: {
-        trigger: mainRef.current,
-        start: "75% top", // da un poco más de tiempo para apreciar el efecto
-        end: "100% top",
-        scrub: true
-      }
-    });
+      duration: 0.6
+    }, 0);
 
   }, { scope: mainRef });
 

@@ -5,21 +5,29 @@
 .navbar {
   --lw:   1px;                         /* grosor de línea               */
   --lr:   7px;                         /* radio de la curva en esquinas  */
-  --lc:   #000000;                     /* color de línea (modo claro)    */
+  --lc:   #ffffff;                     /* color de línea                 */
   --conn: 14px;                        /* longitud del conector horiz.   */
   --gap:  2.75rem;                     /* separación entre ítems         */
 
-  /* Fija la navbar al centro-izquierda de la pantalla, fuera del flujo normal */
+  /* Fija la navbar a la izquierda de la pantalla, cubriendo todo el alto */
   position: fixed;
-  left: 2rem;
-  top: 50%;
-  padding-left: 30px;
-  transform: translateY(-50%); /* centra verticalmente respecto a su propio alto */
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 10%;
+  height: 100%;
+  background: linear-gradient(135deg, #1c1c1c 0%, #000000 100%);
+  box-shadow: 
+    10px 0 20px -5px rgba(0, 0, 0, 0.8),
+    20px 0 40px rgba(0, 0, 0, 0.5),
+    40px 0 80px rgba(0, 0, 0, 0.3);
+  padding-left: max(1.5vw, 15px);
   z-index: 50;
 
   /* Oculta en mobile; se muestra como columna en desktop */
   display: none;
   flex-direction: column;
+  justify-content: center;
   align-items: flex-start;
   gap: 1.25rem;
 }
@@ -156,8 +164,7 @@
   font-weight: 700;
   letter-spacing: 0.18em;
   text-decoration: none;
-  color: var(--color-on-surface-variant);
-  opacity: 0.5;
+  color: rgba(255, 255, 255, 0.5);
   white-space: nowrap;
   transition: opacity 0.2s ease, color 0.2s ease;
 }
@@ -165,13 +172,13 @@
 /* Al hacer hover: opaco y con el color principal del texto */
 .link:hover {
   opacity: 1;
-  color: var(--color-on-background);
+  color: #ffffff;
 }
 
 /* Link activo: opaco con subrayado cian delgado y elevado */
 .activeLink {
   opacity: 1;
-  color: var(--color-on-background);
+  color: #ffffff;
   text-decoration: underline;
   text-decoration-color: var(--color-primary);
   text-underline-offset: 3px;
@@ -183,16 +190,15 @@
 .themeBtn {
   background: none;
   border: none;
-  color: var(--color-on-surface-variant);
+  color: rgba(255, 255, 255, 0.5);
   cursor: pointer;
   padding: 0;
   padding-left: calc(var(--conn) + 0.625rem);
   display: flex;
   align-items: center;
-  opacity: 0.35;
-  transition: opacity 0.2s ease;
+  transition: color 0.2s ease;
 }
 
 .themeBtn:hover {
-  opacity: 1;
+  color: #ffffff;
 }

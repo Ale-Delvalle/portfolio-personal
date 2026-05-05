@@ -110,7 +110,7 @@ p, span, div {
 /* Utilities */
 /* Fondo Platinado animado para la app en modo claro */
 .hero-mesh-gradient {
-  background: linear-gradient(-45deg, #e5e5ea, #ffffff, #d1d1d6, #f2f2f7);
+  background: linear-gradient(-45deg, #b0b0b8, #d1d1d6, #a3a3a8, #c7c7cc);
   background-size: 400% 400%;
   animation: platinumShimmer 15s ease infinite;
   background-attachment: fixed;

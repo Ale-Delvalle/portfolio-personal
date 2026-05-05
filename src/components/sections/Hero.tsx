@@ -17,6 +17,8 @@ export function Hero() {
   const mainRef = useRef<HTMLElement>(null);
   const contactBtnRef = useRef<HTMLDivElement>(null);
   const buttonsRef = useRef<HTMLDivElement>(null);
+  const scrollIndicatorRef = useRef<HTMLDivElement>(null);
+  const scrollTextRef = useRef<HTMLSpanElement>(null);
 
   // Parallax refs
   const xToBtn = useRef<any>(null);
@@ -55,7 +57,13 @@ export function Hero() {
       duration: 0.8,
       stagger: 0.15,
       ease: "power3.out"
-    }, "-=1");
+    }, "-=1")
+    // 5) Indicador de Scroll
+    .fromTo(scrollIndicatorRef.current,
+      { autoAlpha: 0, y: -10 },
+      { autoAlpha: 1, y: 0, duration: 1, ease: "power2.out" },
+      "-=0.5"
+    );
 
     // --- MOUSE PARALLAX (Botón Contactame) ---
     xToBtn.current = gsap.quickTo(contactBtnRef.current, "x", { duration: 0.8, ease: "power3" });
@@ -71,6 +79,28 @@ export function Hero() {
         trigger: mainRef.current,
         start: "top top",
         end: "bottom top",
+        scrub: true
+      }
+    });
+
+    // --- ANIMACION INFINITA SCROLL TEXT (5 Saltos + Pausa 5s) ---
+    const scrollTl = gsap.timeline({ repeat: -1, repeatDelay: 5, delay: 3 });
+    scrollTl.to(scrollTextRef.current, {
+      y: -12,
+      duration: 0.3, // un poco más rápido para que parezcan saltos cortos
+      yoyo: true,
+      repeat: 9, // 1 movimiento inicial + 9 repeticiones = 10 movimientos = 5 saltos (arriba y abajo)
+      ease: "power2.out"
+    });
+
+    // --- FADE OUT INDICADOR SCROLL ---
+    gsap.to(scrollIndicatorRef.current, {
+      autoAlpha: 0,
+      y: 50,
+      scrollTrigger: {
+        trigger: mainRef.current,
+        start: "85% top", // Comienza a desaparecer casi al final
+        end: "100% top",  // Termina de desaparecer cuando Hero ya no se ve
         scrub: true
       }
     });
@@ -147,6 +177,10 @@ export function Hero() {
 
       </div>
       <div className={styles.meshBottom}></div>
+      
+      <div ref={scrollIndicatorRef} className={styles.scrollIndicator}>
+        <span ref={scrollTextRef} style={{ display: "inline-block" }}>Scroll</span>
+      </div>
     </main>
   );
 }

@@ -386,3 +386,28 @@
 .meshBottom {
   display: none;
 }
+
+/* Scroll Indicator */
+.scrollIndicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  color: #4a0000;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0;
+  pointer-events: none; /* Para que no estorbe clicks */
+}
+
+:global(:root[data-theme="dark"]) .scrollIndicator {
+  color: #ffc2b3;
+}
+

@@ -122,28 +122,8 @@ export function Hero() {
     exitTl.to(buttonsRef.current, { x: -100, opacity: 0, duration: 0.15 }, 0);
     exitTl.to(rightTextRef.current, { x: 100, opacity: 0, duration: 0.15 }, 0);
 
-    // Mover la palabra SCROLL al centro de la pantalla y aumentar font-size para evitar pixelado
-    exitTl.to(scrollIndicatorRef.current, {
-      y: "-40vh", // Sube al centro aproximado desde el bottom
-      fontSize: "2.55rem", // Exactamente 3x su tamaño original de 0.85rem
-      duration: 1,
-      ease: "power1.inOut"
-    }, 0);
-
-    // FASE 2 (1 a 2): FADE OUT INDICADOR SCROLL (Efecto Polvo desde el centro)
-    exitTl.to(`.${styles.scrollChar}`, {
-      opacity: 0,
-      x: () => (Math.random() - 0.5) * 150,
-      y: () => -30 - Math.random() * 100,
-      rotation: () => (Math.random() - 0.5) * 120,
-      scale: 0,
-      filter: "blur(8px)",
-      stagger: {
-        amount: 0.5,
-        from: "end" // Empieza a romperse desde la derecha a la izquierda
-      },
-      duration: 1
-    }, 1);
+    // El indicador de scroll desaparece rápidamente
+    exitTl.to(scrollIndicatorRef.current, { opacity: 0, duration: 0.15 }, 0);
 
     // FASE 3 (2 a 3): Espacio vacío para que entre Stack.
     // Añadimos un tween dummy para asegurar que la timeline dure 3 unidades de tiempo exactas.

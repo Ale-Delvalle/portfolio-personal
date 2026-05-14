@@ -185,7 +185,7 @@
   color: #ffffff;
 }
 :global(:root[data-theme="dark"]) .welcomeCenter {
-  color: var(--color-primary);
+  color: #FFB347;
 }
 
 .welcomeTop {
@@ -224,10 +224,10 @@
 :global(:root[data-theme="dark"]) .name {
   background: none;
   filter: none;
-  color: #99c2ff; /* Color pastel con más tonalidad */
+  color: #ffffff;
   text-shadow: 
     0 4px 15px rgba(0, 0, 0, 0.5),
-    3px 3px 0 #99c2ff; /* Platinado más suave/azulado en dark mode */
+    3px 3px 0 #FFB347;
 }
 
 
@@ -247,7 +247,7 @@
 :global(:root[data-theme="dark"]) .sideTitleLarge,
 :global(:root[data-theme="dark"]) .sideDesc,
 :global(:root[data-theme="dark"]) .role {
-  color: #99c2ff; /* Color pastel con más tonalidad */
+  color: #ffffff;
 }
 
 
@@ -343,8 +343,8 @@
 /* Dark Mode Overrides */
 :global(:root[data-theme="dark"]) .primaryBtn {
   background: #000000;
-  color: #99c2ff;
-  border: 1px solid #99c2ff;
+  color: #ffffff;
+  border: 1px solid #FFB347;
 }
 
 :global(:root[data-theme="dark"]) .primaryBtn:hover {
@@ -406,6 +406,18 @@
   display: none;
 }
 
+:global(:root[data-theme="dark"]) .meshBottom {
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 20vh;
+  background: linear-gradient(to top, rgba(255, 112, 67, 0.4), rgba(255, 112, 67, 0));
+  pointer-events: none;
+  z-index: 5;
+}
+
 /* Scroll Indicator */
 .scrollIndicator {
   position: absolute;
@@ -427,7 +439,7 @@
 }
 
 :global(:root[data-theme="dark"]) .scrollIndicator {
-  color: #99c2ff;
+  color: #FFB347;
 }
 
 .scrollChar {

@@ -55,9 +55,45 @@
   }
 }
 
-/* Líneas color salmón en modo oscuro */
+/* Modo oscuro: Disposición horizontal y moderna */
 :global(:root[data-theme="dark"]) .navbar {
   --lc: var(--color-on-background);
+  position: fixed;
+  top: 1.5rem;
+  left: 50%;
+  bottom: auto;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: 90vw;
+  height: auto;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.75rem 2rem;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 100;
+}
+
+:global(:root[data-theme="dark"]) .navList {
+  flex-direction: row;
+  gap: 2rem;
+}
+
+:global(:root[data-theme="dark"]) .navList li {
+  padding-left: 0;
+}
+
+:global(:root[data-theme="dark"]) .navList li::before,
+:global(:root[data-theme="dark"]) .navList li::after {
+  content: none !important;
+}
+
+:global(:root[data-theme="dark"]) .themeBtn {
+  padding-left: 0;
 }
 
 /* ── Brand ──────────────────────────────────────── */

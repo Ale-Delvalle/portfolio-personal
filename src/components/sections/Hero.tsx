@@ -121,27 +121,27 @@ export function Hero() {
     let time = 0;
 
     const getGlowHeight = (x: number, t: number) => {
-      // Altura base menor para que con el blur no pase de 120px
-      let h = 70;
-      // Agregamos irregularidad más marcada
-      h += Math.sin(x * 0.01 + t) * 15;
-      h += Math.cos(x * 0.02 - t * 0.7) * 10;
-      h += Math.sin(x * 0.005 + t * 0.5) * 20;
+      // Altura base (~127px)
+      let h = 127;
+      // Agregamos irregularidad
+      h += Math.sin(x * 0.01 + t) * 28;
+      h += Math.cos(x * 0.02 - t * 0.7) * 18;
+      h += Math.sin(x * 0.005 + t * 0.5) * 36;
       
-      // Limitamos a un máximo de 100px (con blur llegará a ~120px)
-      return Math.min(100, Math.max(40, h));
+      // No permitimos que baje de 127px (70% de 182px es aprox 127px)
+      return Math.min(182, Math.max(127, h));
     };
 
     const drawGlow = () => {
-      time += 0.01;
+      time += 0.007; // Ralentizado un 30% (de 0.01 a 0.007)
 
-      // Aplicamos desenfoque para que parezca un resplandor real y no un recorte
+      // Aplicamos desenfoque para que parezca un resplandor real
       ctx.filter = 'blur(20px)';
 
       ctx.beginPath();
       ctx.moveTo(0, canvas.height);
 
-      for (let x = 0; x <= canvas.width; x += 10) { // Mayor paso para rendimiento con blur
+      for (let x = 0; x <= canvas.width; x += 10) {
         const h = getGlowHeight(x, time);
         ctx.lineTo(x, canvas.height - h);
       }
@@ -149,7 +149,7 @@ export function Hero() {
       ctx.lineTo(canvas.width, canvas.height);
       ctx.closePath();
 
-      const gradient = ctx.createLinearGradient(0, canvas.height, 0, canvas.height - 100);
+      const gradient = ctx.createLinearGradient(0, canvas.height, 0, canvas.height - 182);
       gradient.addColorStop(0, '#1a0a03');
       gradient.addColorStop(0.3, '#E65100');
       gradient.addColorStop(0.6, '#FFA726');

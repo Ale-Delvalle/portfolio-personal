@@ -407,15 +407,7 @@
 }
 
 :global(:root[data-theme="dark"]) .meshBottom {
-  display: block;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 20vh;
-  background: linear-gradient(to top, rgba(255, 112, 67, 0.4), rgba(255, 112, 67, 0));
-  pointer-events: none;
-  z-index: 5;
+  display: none;
 }
 
 /* Scroll Indicator */
@@ -447,3 +439,13 @@
   white-space: pre;
 }
 
+.starsCanvas {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}

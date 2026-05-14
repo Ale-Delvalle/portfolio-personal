@@ -233,7 +233,7 @@
   opacity: 1;
   color: #ffffff;
   text-decoration: underline;
-  text-decoration-color: var(--color-primary);
+  text-decoration-color: currentColor;
   text-underline-offset: 3px;
   text-decoration-thickness: 1px;
 }

@@ -13,6 +13,7 @@
 .titleWrapper {
   padding: 0 4rem;
   margin-bottom: 6rem;
+  margin-left: 15vw; /* Desplazamiento para el Navbar */
 }
 
 .sectionTitle {
@@ -24,17 +25,18 @@
 
 .gridContainer {
   display: flex;
-  width: 100vw;
+  width: calc(100vw - 15vw);
+  margin-left: 15vw;
 }
 
 .leftColumn {
-  width: 50vw;
+  width: 50%;
   display: flex;
   flex-direction: column;
 }
 
 .rightColumn {
-  width: 50vw;
+  width: 50%;
   display: flex;
   flex-direction: column;
   padding-top: 30vh; /* Desfase asimétrico elegante */
@@ -185,11 +187,16 @@
 
 /* Responsive */
 @media (max-width: 1024px) {
+  .titleWrapper {
+    margin-left: 0;
+  }
   .sectionTitle {
     font-size: 8vw;
   }
   .gridContainer {
     flex-direction: column;
+    width: 100vw;
+    margin-left: 0;
   }
   .leftColumn, .rightColumn {
     width: 100vw;

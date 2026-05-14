@@ -99,35 +99,7 @@ export function Hero() {
       ease: "power2.out"
     });
 
-    // --- EXIT ANIMATION SEQUENCE (3 Fases) ---
-    const exitTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: ".scroll-wrapper",
-        start: "top top",
-        end: "+=100%", // La transición dura 100vh de scroll
-        scrub: true,
-        onEnter: () => {
-          scrollTl.pause();
-          gsap.to(scrollTextRef.current, { y: 0, duration: 0.2 }); // Regresa al suelo inmediatamente
-        },
-        onLeaveBack: () => {
-          scrollTl.play();
-        }
-      }
-    });
 
-    // FASE 1 (0 a 1): Contenido del Hero desaparece RÁPIDO, SCROLL sube al centro y crece
-    exitTl.to(nameContainerRef.current, { yPercent: -50, opacity: 0, duration: 0.15 }, 0);
-    exitTl.to(imageRef.current, { x: -100, opacity: 0, duration: 0.15 }, 0);
-    exitTl.to(buttonsRef.current, { x: -100, opacity: 0, duration: 0.15 }, 0);
-    exitTl.to(rightTextRef.current, { x: 100, opacity: 0, duration: 0.15 }, 0);
-
-    // El indicador de scroll desaparece rápidamente
-    exitTl.to(scrollIndicatorRef.current, { opacity: 0, duration: 0.15 }, 0);
-
-    // FASE 3 (2 a 3): Espacio vacío para que entre Stack.
-    // Añadimos un tween dummy para asegurar que la timeline dure 3 unidades de tiempo exactas.
-    exitTl.to({}, { duration: 1 }, 2);
 
   }, { scope: mainRef });
 

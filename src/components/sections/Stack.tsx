@@ -23,15 +23,15 @@ export function Stack() {
   const secondaryStackRef = useRef<HTMLElement>(null);
 
   useGSAP(() => {
-    // 1) Fade in de la sección sincronizado con el scroll global (Fase 3: a partir de 66.6vh)
+    // 1) Fade in de la sección cuando entra en el viewport
     gsap.fromTo(sectionRef.current, 
       { autoAlpha: 0 }, 
       { 
         autoAlpha: 1, 
         scrollTrigger: {
-          trigger: ".scroll-wrapper",
-          start: () => `top+=${window.innerHeight * 0.66} top`, // Inicia a los 66vh aprox
-          end: () => `+=${window.innerHeight * 0.34}`, // Termina a los 100vh
+          trigger: sectionRef.current,
+          start: "top 80%", // Empieza cuando el tope está al 80% de la pantalla
+          end: "top 50%", // Termina cuando el tope está al 50%
           scrub: true
         }
       }
@@ -40,8 +40,8 @@ export function Stack() {
     // 2) Animación interna de los elementos (expansión de píldoras)
     const tl = gsap.timeline({
       scrollTrigger: {
-        trigger: ".scroll-wrapper",
-        start: () => `top+=${window.innerHeight * 0.8} top`, // Dispara la animación interna a los 80vh
+        trigger: sectionRef.current,
+        start: "top 70%", // Dispara la animación cuando el tope está al 70% de la pantalla
       }
     });
 

@@ -45,7 +45,7 @@
 
 /* Modo oscuro: el navbar se vuelve azul marino oscuro en lugar de negro */
 :global(:root[data-theme="dark"]) .navbar::before {
-  background: #000f1d;
+  display: none;
 }
 
 /* La navbar vertical solo aparece en pantallas ≥1024px */
@@ -74,7 +74,8 @@
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(12px);
   border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid #8C431D;
+  box-shadow: 0 0 15px rgba(140, 67, 29, 0.6);
   z-index: 100;
 }
 
@@ -253,4 +254,13 @@
 
 .themeBtn:hover {
   color: #ffffff;
+}
+
+:global(:root[data-theme="dark"]) .link {
+  color: #8C431D;
+}
+
+:global(:root[data-theme="dark"]) .link:hover,
+:global(:root[data-theme="dark"]) .activeLink {
+  color: #FFA726;
 }

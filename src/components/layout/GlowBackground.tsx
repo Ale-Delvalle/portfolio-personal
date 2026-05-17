@@ -38,7 +38,6 @@ export function GlowBackground() {
 
     window.addEventListener('hero-move-up', handleTransition);
 
-    // Orbs in varying shades of orange
     const orbs = [
       { color: 'rgba(255, 107, 0, 0.8)', size: 0.8, speedX: 0.0006, speedY: 0.0005, phaseX: 0, phaseY: 1 },
       { color: 'rgba(255, 167, 38, 0.6)', size: 0.9, speedX: 0.0004, speedY: 0.0003, phaseX: 2, phaseY: 3 },
@@ -46,6 +45,32 @@ export function GlowBackground() {
       { color: 'rgba(255, 80, 0, 0.6)', size: 1.0, speedX: 0.0003, speedY: 0.0004, phaseX: 1, phaseY: 4 },
       { color: 'rgba(255, 140, 0, 0.5)', size: 0.6, speedX: 0.0007, speedY: 0.0005, phaseX: 3, phaseY: 2 }
     ];
+
+    // Definición de las curvas de las mechas (Alta velocidad: 3 segundos por pantalla)
+    const comets = [
+      // Cruza de Izquierda a Derecha
+      { p0: {x: -0.1, y: 0.2}, p1: {x: 0.3, y: 0.4}, p2: {x: 0.7, y: 0.1}, p3: {x: 1.1, y: 0.3}, duration: 3000, delay: 0 },
+      // Cruza de Derecha a Izquierda
+      { p0: {x: 1.1, y: 0.6}, p1: {x: 0.4, y: 0.3}, p2: {x: 0.6, y: 0.8}, p3: {x: -0.1, y: 0.5}, duration: 3000, delay: 1500 },
+      // Cruza de Izquierda a Derecha (más abajo)
+      { p0: {x: -0.1, y: 0.85}, p1: {x: 0.2, y: 1.05}, p2: {x: 0.8, y: 0.6}, p3: {x: 1.1, y: 0.8}, duration: 3000, delay: 3500 },
+      // Cruza de Derecha a Izquierda (arriba)
+      { p0: {x: 1.1, y: 0.1}, p1: {x: 0.4, y: -0.1}, p2: {x: 0.6, y: 0.3}, p3: {x: -0.1, y: 0.15}, duration: 3000, delay: 800 }
+    ];
+
+    const getBezierPoint = (t: number, p0: any, p1: any, p2: any, p3: any) => {
+      const cX = 3 * (p1.x - p0.x);
+      const bX = 3 * (p2.x - p1.x) - cX;
+      const aX = p3.x - p0.x - cX - bX;
+      const x = (aX * Math.pow(t, 3)) + (bX * Math.pow(t, 2)) + (cX * t) + p0.x;
+
+      const cY = 3 * (p1.y - p0.y);
+      const bY = 3 * (p2.y - p1.y) - cY;
+      const aY = p3.y - p0.y - cY - bY;
+      const y = (aY * Math.pow(t, 3)) + (bY * Math.pow(t, 2)) + (cY * t) + p0.y;
+
+      return { x, y };
+    };
 
     const getGlowHeight = (x: number, t: number) => {
       let h = 127;
@@ -72,13 +97,85 @@ export function GlowBackground() {
 
       const minDim = Math.min(width, height);
 
+      // --- DIBUJAR COMETAS / MECHAS (Sobre fondo negro pero antes del overlay para que mantengan nitidez si están fuera) ---
+      comets.forEach(comet => {
+        const p0 = { x: comet.p0.x * width, y: comet.p0.y * height };
+        const p1 = { x: comet.p1.x * width, y: comet.p1.y * height };
+        const p2 = { x: comet.p2.x * width, y: comet.p2.y * height };
+        const p3 = { x: comet.p3.x * width, y: comet.p3.y * height };
+
+        // Línea guía siempre dibujada
+        ctx.beginPath();
+        ctx.moveTo(p0.x, p0.y);
+        ctx.bezierCurveTo(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
+        ctx.strokeStyle = 'rgba(255, 107, 0, 0.08)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Ciclo independiente para permitir superposición (aleatoria) de múltiples líneas
+        const cycle = 5000; // 3s activa + 2s pausa
+        const p = ((time + comet.delay) % cycle) / comet.duration;
+
+        if (p >= 0 && p <= 1) {
+          const lightLength = 0.1; // 10% del ancho, el doble de largo que el haz anterior
+          const segments = 25; // Suavidad del haz
+
+          // Usamos 'screen' para máximo brillo
+          ctx.globalCompositeOperation = 'screen';
+
+          // Dibujar la luz concentrada en forma de haz
+          for (let i = 0; i < segments; i++) {
+            const tCurrent = p - (i * lightLength / segments);
+            const tNext = p - ((i + 1) * lightLength / segments);
+            
+            if (tCurrent < 0) break;
+            const safeTNext = Math.max(0, tNext);
+
+            const pt1 = getBezierPoint(tCurrent, p0, p1, p2, p3);
+            const pt2 = getBezierPoint(safeTNext, p0, p1, p2, p3);
+
+            const ratio = 1 - (i / segments); // 1 = punta frontal, 0 = cola trasera del haz
+
+            // Fade suave en los extremos de la pantalla para que la luz no aparezca de golpe
+            let edgeFade = 1;
+            if (p < 0.1) edgeFade = p / 0.1;
+            if (p > 0.9) edgeFade = (1 - p) / 0.1;
+
+            ctx.beginPath();
+            ctx.moveTo(pt1.x, pt1.y);
+            ctx.lineTo(pt2.x, pt2.y);
+
+            // Luz brillante uniforme (Blanco anaranjado intenso)
+            const r = 255;
+            const g = 180;
+            const b = 80;
+            
+            // Opacidad de campana: Brillante en el centro del haz, suave en las puntas
+            const localFade = Math.sin(ratio * Math.PI); 
+            const alpha = localFade * edgeFade;
+            
+            ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+            ctx.lineWidth = 2; // Grosor uniforme
+            ctx.lineCap = 'round';
+            
+            // Glow intenso y expansivo
+            ctx.shadowColor = `rgba(255, 167, 38, ${alpha})`;
+            ctx.shadowBlur = 15;
+
+            ctx.stroke();
+            ctx.shadowBlur = 0; // Restaurar sombra
+          }
+          
+          ctx.globalCompositeOperation = 'source-over'; // Restaurar modo de mezcla
+        }
+      });
+
       // --- DIBUJAR ORBES (INTRO) ---
       if (orbAlpha > 0) {
         ctx.globalAlpha = orbAlpha;
         ctx.globalCompositeOperation = 'screen';
 
         orbs.forEach((orb) => {
-          // Fluid motion using Lissajous curves + sine waves
           const x = width / 2 + Math.sin(time * orb.speedX + orb.phaseX) * (width * 0.4) + Math.cos(time * orb.speedX * 0.5) * (width * 0.1);
           const y = height / 2 + Math.cos(time * orb.speedY + orb.phaseY) * (height * 0.4) + Math.sin(time * orb.speedY * 0.5) * (height * 0.1);
           
@@ -124,7 +221,7 @@ export function GlowBackground() {
         ctx.filter = 'none';
       }
 
-      ctx.globalAlpha = 1; // Restaurar alpha para el siguiente frame
+      ctx.globalAlpha = 1; // Restaurar alpha
       rafId = requestAnimationFrame(animate);
     };
     animate();
@@ -139,22 +236,8 @@ export function GlowBackground() {
   return (
     <div className={styles.container}>
       <canvas ref={canvasRef} className={styles.canvas} />
+      {/* Removemos la línea comentada de overlay con opacity, porque ya está implementado en la lógica con ref */}
       <div ref={overlayRef} className={styles.overlay}></div>
-      <div className={styles.linesContainer}>
-        <svg width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 1000 1000">
-          {/* Líneas guía base */}
-          <path className={styles.basePath} d="M -100 200 C 300 400, 700 100, 1100 300" />
-          <path className={styles.basePath} d="M -100 600 C 400 300, 600 800, 1100 500" />
-          <path className={styles.basePath} d="M -100 850 C 200 1050, 800 600, 1100 800" />
-          <path className={styles.basePath} d="M -100 100 C 400 -100, 600 300, 1100 150" />
-
-          {/* Haces de luz animados */}
-          <path className={`${styles.animatedPath} ${styles.path1}`} pathLength="100" d="M -100 200 C 300 400, 700 100, 1100 300" />
-          <path className={`${styles.animatedPath} ${styles.path2}`} pathLength="100" d="M -100 600 C 400 300, 600 800, 1100 500" />
-          <path className={`${styles.animatedPath} ${styles.path3}`} pathLength="100" d="M -100 850 C 200 1050, 800 600, 1100 800" />
-          <path className={`${styles.animatedPath} ${styles.path4}`} pathLength="100" d="M -100 100 C 400 -100, 600 300, 1100 150" />
-        </svg>
-      </div>
     </div>
   );
 }

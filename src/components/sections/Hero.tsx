@@ -19,6 +19,7 @@ export function Hero() {
   const buttonsRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
   const scrollTextRef = useRef<HTMLSpanElement>(null);
+  const sparksContainerRef = useRef<HTMLDivElement>(null);
   const welcomeContainerRef = useRef<HTMLDivElement>(null);
   // Parallax refs
   const xToBtn = useRef<any>(null);
@@ -91,16 +92,30 @@ export function Hero() {
     rotYBtn.current = gsap.quickTo(contactBtnRef.current, "rotationY", { duration: 0.8, ease: "power3" });
 
     // --- ANIMACION INFINITA SCROLL TEXT (Saltos realistas + Pausa 5s) ---
-    const scrollTl = gsap.timeline({ repeat: -1, repeatDelay: 5, delay: 3 });
+    const scrollTl = gsap.timeline({ repeat: -1, repeatDelay: 5, delay: 1, repeatRefresh: true });
     
+    // Explosión de partículas (Bolitas de luz)
+    scrollTl.addLabel("start")
+    .fromTo(`.${styles.spark}`,
+      { x: 0, y: 0, scale: 0.2, autoAlpha: 1 },
+      {
+        x: () => gsap.utils.random(-50, 50),
+        y: () => gsap.utils.random(-60, 20),
+        scale: () => gsap.utils.random(0.5, 1.8),
+        autoAlpha: 0,
+        duration: 1.2,
+        ease: "power2.out",
+        stagger: 0.05
+      }, "start"
+    )
     // 5 saltos principales
-    scrollTl.to(scrollTextRef.current, {
+    .to(scrollTextRef.current, {
       y: -12,
       duration: 0.3,
       yoyo: true,
       repeat: 9, // 5 saltos completos
       ease: "power2.out"
-    })
+    }, "start")
     // 6to salto: pierde fuerza (llega a la mitad)
     .to(scrollTextRef.current, {
       y: -6,
@@ -201,6 +216,11 @@ export function Hero() {
       <div className={styles.meshBottom}></div>
       
       <div ref={scrollIndicatorRef} className={styles.scrollIndicator}>
+        <div ref={sparksContainerRef} className={styles.sparksContainer}>
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className={styles.spark}></div>
+          ))}
+        </div>
         <span ref={scrollTextRef} style={{ display: "inline-block" }}>
           {"Scroll".split("").map((char, i) => (
             <span key={i} className={styles.scrollChar} style={{ display: "inline-block" }}>

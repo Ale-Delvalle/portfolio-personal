@@ -1,5 +1,5 @@
 import styles from './Hero.module.css';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -20,6 +20,13 @@ export function Hero() {
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
   const scrollTextRef = useRef<HTMLSpanElement>(null);
   const welcomeContainerRef = useRef<HTMLDivElement>(null);
+  
+  // Canvas Sparks Refs
+  const nameCanvasRef = useRef<HTMLCanvasElement>(null);
+  const roleCanvasRef = useRef<HTMLCanvasElement>(null);
+  const nameParticlesRef = useRef<any[]>([]);
+  const roleParticlesRef = useRef<any[]>([]);
+
   // Parallax refs
   const xToBtn = useRef<any>(null);
   const yToBtn = useRef<any>(null);
@@ -39,26 +46,42 @@ export function Hero() {
       { autoAlpha: 0, y: "20vh", scale: 1.5 },
       { autoAlpha: 1, y: "20vh", duration: 1, ease: "power3.out" }
     )
-    // 1.5) Bolitas brillantes detrás del nombre de izquierda a derecha
-    .addLabel("introSparks", "+=0.2")
-    .fromTo(`.${styles.introSpark}`,
-      {
-        left: (i, tgt, targets) => `${(i / targets.length) * 100}%`,
-        y: () => gsap.utils.random(0, 40),
-        scale: 0.2,
-        autoAlpha: 0
-      },
-      {
-        y: () => gsap.utils.random(-60, -10),
-        scale: () => gsap.utils.random(1, 2.5),
-        autoAlpha: 1,
-        duration: 0.6,
-        yoyo: true,
-        repeat: 1,
-        ease: "power2.out",
-        stagger: 0.03
-      }, "introSparks"
-    )
+    // 1.5) Bolitas brillantes detrás del nombre de izquierda a derecha (Línea invisible, Renderizado en Canvas)
+    const sweepProxy = { val: 0 };
+    tl.addLabel("introSparks", "+=0.2")
+    .to(sweepProxy, {
+      val: 1,
+      duration: 0.8,
+      ease: "power2.inOut",
+      onUpdate: () => {
+        const nCanvas = nameCanvasRef.current;
+        const rCanvas = roleCanvasRef.current;
+        if (!nCanvas || !rCanvas) return;
+        
+        const yBaseN = nCanvas.height * 0.8;
+        const yBaseR = rCanvas.height * 0.8;
+        const xPosN = sweepProxy.val * nCanvas.width;
+        const xPosR = sweepProxy.val * rCanvas.width;
+        
+        const emit = (particlesArr: any[], x: number, y: number) => {
+          const count = Math.floor(Math.random() * 3) + 1; 
+          for (let i = 0; i < count; i++) {
+            particlesArr.push({
+              x: x + (Math.random() - 0.5) * 15, 
+              y: y + (Math.random() - 0.5) * 15,
+              vx: (Math.random() - 0.5) * 0.8,
+              vy: (Math.random() * -1) - 0.2, 
+              life: 1.0 + Math.random() * 0.5,
+              size: Math.random() * 2.5 + 0.5 
+            });
+          }
+        };
+
+        emit(nameParticlesRef.current, xPosN, yBaseN);
+        emit(roleParticlesRef.current, xPosR, yBaseR);
+      }
+    }, "introSparks")
+    .set([nameCanvasRef.current, roleCanvasRef.current], { display: "none" }, "introSparks+=4")
     // 2) Se desplazan hacia su posición final (arriba)
     .addLabel("moveUp", "+=2.3")
     .to(nameContainerRef.current, {
@@ -163,18 +186,90 @@ export function Hero() {
     }
   };
 
+  useEffect(() => {
+    const nCanvas = nameCanvasRef.current;
+    const rCanvas = roleCanvasRef.current;
+    if (!nCanvas || !rCanvas) return;
+    
+    const nCtx = nCanvas.getContext('2d');
+    const rCtx = rCanvas.getContext('2d');
+    if (!nCtx || !rCtx) return;
+
+    const resize = () => {
+      nCanvas.width = nCanvas.offsetWidth;
+      nCanvas.height = nCanvas.offsetHeight;
+      rCanvas.width = rCanvas.offsetWidth;
+      rCanvas.height = rCanvas.offsetHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    let rafId: number;
+
+    const drawParticles = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, particles: any[]) => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.globalCompositeOperation = 'screen';
+      
+      for (let i = particles.length - 1; i >= 0; i--) {
+        let p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.008; 
+        
+        if (p.life <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+        
+        const alpha = Math.min(1, p.life);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        
+        if (p.size > 2) {
+          ctx.fillStyle = `rgba(255, 200, 100, ${alpha})`;
+        } else {
+          ctx.fillStyle = `rgba(255, 107, 0, ${alpha})`;
+        }
+        ctx.fill();
+        
+        if (p.life > 0.5 && p.size > 1.5) {
+          ctx.shadowColor = `rgba(255, 167, 38, ${alpha})`;
+          ctx.shadowBlur = 6;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
+      }
+      ctx.globalCompositeOperation = 'source-over';
+    };
+
+    const animate = () => {
+      drawParticles(nCtx, nCanvas, nameParticlesRef.current);
+      drawParticles(rCtx, rCanvas, roleParticlesRef.current);
+      rafId = requestAnimationFrame(animate);
+    };
+    rafId = requestAnimationFrame(animate);
+
+    return () => {
+      window.removeEventListener('resize', resize);
+      cancelAnimationFrame(rafId);
+    };
+  }, []);
+
   return (
     <main ref={mainRef} className={`${styles.main} hero-mesh-gradient`} onMouseMove={handleMouseMove} style={{ perspective: "1000px" }}>
       <div className={styles.content}>
         
         <div ref={nameContainerRef} className={styles.nameContainer}>
-          <div className={styles.introSparksContainer}>
-            {Array.from({ length: 30 }).map((_, i) => (
-              <div key={i} className={`${styles.spark} ${styles.introSpark}`}></div>
-            ))}
+          <div ref={nameRef} className={styles.name}>
+            <div className={styles.introSparksContainer}>
+              <canvas ref={nameCanvasRef} className={styles.introSparksCanvas} />
+            </div>
+            Alexis Delvalle
           </div>
-          <div ref={nameRef} className={styles.name}>Alexis Delvalle</div>
           <div className={styles.roleContainer}>
+            <div className={styles.introSparksContainer}>
+              <canvas ref={roleCanvasRef} className={styles.introSparksCanvas} />
+            </div>
             <div ref={roleRef} className={styles.role}>Fullstack developer and backend specialist</div>
             <div ref={welcomeContainerRef} className={styles.welcomeText}>Bienvenido a mi portfolio</div>
           </div>

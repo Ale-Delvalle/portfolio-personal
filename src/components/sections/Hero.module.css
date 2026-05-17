@@ -296,6 +296,7 @@
 }
 
 .name {
+  position: relative;
   font-size: clamp(3rem, 8vw, 6.5rem);
   font-weight: 800;
   font-family: var(--font-headline);
@@ -316,6 +317,7 @@
 :global(:root[data-theme="dark"]) .name {
   background: linear-gradient(135deg, #ffffff 0%, #FFD180 50%, #FF6B00 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
   filter: drop-shadow(0 4px 20px rgba(255, 107, 0, 0.4));
@@ -541,17 +543,19 @@
 
 .introSparksContainer {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 100%; /* Alineado a la base del texto */
+  left: 0;
+  transform: translateY(-80%); /* El 80% inferior del canvas queda exactamente sobre la base */
   width: 100%;
-  height: 120%;
+  height: 200px; /* Alto suficiente para que las partículas floten hacia arriba sin cortarse */
   pointer-events: none;
   z-index: -1; /* Detrás del texto */
 }
 
-.introSpark {
-  /* Al usarla junto a .spark heredará sus propiedades base de bolita brillante */
+.introSparksCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 /* Scroll Indicator Sparks (Bolitas de luz) */

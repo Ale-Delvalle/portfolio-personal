@@ -91,47 +91,54 @@ export function Hero() {
     rotXBtn.current = gsap.quickTo(contactBtnRef.current, "rotationX", { duration: 0.8, ease: "power3" });
     rotYBtn.current = gsap.quickTo(contactBtnRef.current, "rotationY", { duration: 0.8, ease: "power3" });
 
-    // --- ANIMACION INFINITA SCROLL TEXT (Saltos realistas + Pausa 5s) ---
-    const scrollTl = gsap.timeline({ repeat: -1, repeatDelay: 5, delay: 1, repeatRefresh: true });
+    // --- ANIMACION INFINITA SCROLL TEXT ---
+    const scrollTl = gsap.timeline({ repeat: -1, repeatDelay: 2, delay: 1, repeatRefresh: true });
     
-    // Explosión de partículas (Bolitas de luz)
-    scrollTl.addLabel("start")
-    .fromTo(`.${styles.spark}`,
-      { x: 0, y: 0, scale: 0.2, autoAlpha: 1 },
-      {
-        x: () => gsap.utils.random(-50, 50),
-        y: () => gsap.utils.random(-60, 20),
-        scale: () => gsap.utils.random(0.5, 1.8),
-        autoAlpha: 0,
-        duration: 1.2,
-        ease: "power2.out",
-        stagger: 0.05
-      }, "start"
-    )
-    // 5 saltos principales
-    .to(scrollTextRef.current, {
+    // 1) Primero: 5 saltos principales
+    scrollTl.to(scrollTextRef.current, {
       y: -12,
       duration: 0.3,
       yoyo: true,
       repeat: 9, // 5 saltos completos
       ease: "power2.out"
-    }, "start")
-    // 6to salto: pierde fuerza (llega a la mitad)
+    })
+    // 6to salto: pierde fuerza
     .to(scrollTextRef.current, {
       y: -6,
       duration: 0.25,
       yoyo: true,
-      repeat: 1, // 1 salto completo (sube y baja)
+      repeat: 1,
       ease: "power2.out"
     })
-    // 7mo salto: casi imperceptible, se detiene
+    // 7mo salto: casi imperceptible
     .to(scrollTextRef.current, {
       y: -2,
       duration: 0.15,
       yoyo: true,
-      repeat: 1, // 1 salto completo
+      repeat: 1,
       ease: "power2.out"
-    });
+    })
+    // 2) Después, cuando el texto ya está totalmente INMÓVIL, disparamos las bolitas de izq a der
+    .addLabel("particles", "+=0.3")
+    .fromTo(`.${styles.spark}`,
+      { 
+        x: (index) => -45 + (index * 10), // Las ordenamos horizontalmente
+        y: 0, 
+        scale: 0.2, 
+        autoAlpha: 0 
+      },
+      {
+        x: (index) => -20 + (index * 10), // Avanzan ligeramente a la derecha mientras suben
+        y: () => gsap.utils.random(-35, -15),
+        scale: () => gsap.utils.random(0.8, 1.8),
+        autoAlpha: 1,
+        duration: 0.6,
+        yoyo: true, // Aparecen y desaparecen suavemente
+        repeat: 1,
+        ease: "power1.out",
+        stagger: 0.1 // Este stagger hace que el estallido "viaje" de izquierda a derecha
+      }, "particles"
+    );
 
 
 
@@ -217,7 +224,7 @@ export function Hero() {
       
       <div ref={scrollIndicatorRef} className={styles.scrollIndicator}>
         <div ref={sparksContainerRef} className={styles.sparksContainer}>
-          {Array.from({ length: 8 }).map((_, i) => (
+          {Array.from({ length: 10 }).map((_, i) => (
             <div key={i} className={styles.spark}></div>
           ))}
         </div>

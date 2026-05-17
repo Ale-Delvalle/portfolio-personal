@@ -55,7 +55,9 @@ export function GlowBackground() {
       // Cruza de Izquierda a Derecha (más abajo)
       { p0: {x: -0.1, y: 0.85}, p1: {x: 0.2, y: 1.05}, p2: {x: 0.8, y: 0.6}, p3: {x: 1.1, y: 0.8}, duration: 3000, delay: 3500 },
       // Cruza de Derecha a Izquierda (arriba)
-      { p0: {x: 1.1, y: 0.1}, p1: {x: 0.4, y: -0.1}, p2: {x: 0.6, y: 0.3}, p3: {x: -0.1, y: 0.15}, duration: 3000, delay: 800 }
+      { p0: {x: 1.1, y: 0.1}, p1: {x: 0.4, y: -0.1}, p2: {x: 0.6, y: 0.3}, p3: {x: -0.1, y: 0.15}, duration: 3000, delay: 800 },
+      // Camino invisible inferior para el efecto de polvo estelar / partículas
+      { p0: {x: -0.1, y: 0.95}, p1: {x: 0.4, y: 1.05}, p2: {x: 0.6, y: 0.9}, p3: {x: 1.1, y: 0.95}, duration: 12000, delay: 2000, isParticles: true }
     ];
 
     const getBezierPoint = (t: number, p0: any, p1: any, p2: any, p3: any) => {
@@ -79,6 +81,8 @@ export function GlowBackground() {
       h += Math.sin(x * 0.005 + t * 0.5) * 36;
       return Math.min(182, Math.max(127, h));
     };
+
+    const particles: Array<{x: number, y: number, vx: number, vy: number, life: number, size: number}> = [];
 
     const animate = () => {
       time += 16;
@@ -104,71 +108,129 @@ export function GlowBackground() {
         const p2 = { x: comet.p2.x * width, y: comet.p2.y * height };
         const p3 = { x: comet.p3.x * width, y: comet.p3.y * height };
 
-        // Línea guía siempre dibujada
-        ctx.beginPath();
-        ctx.moveTo(p0.x, p0.y);
-        ctx.bezierCurveTo(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
-        ctx.strokeStyle = 'rgba(255, 107, 0, 0.08)';
-        ctx.lineWidth = 1;
-        ctx.stroke();
+        // Dibujar la línea guía solo si no es la de partículas
+        if (!comet.isParticles) {
+          ctx.beginPath();
+          ctx.moveTo(p0.x, p0.y);
+          ctx.bezierCurveTo(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
+          ctx.strokeStyle = 'rgba(255, 107, 0, 0.08)';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
 
-        // Ciclo independiente para permitir superposición (aleatoria) de múltiples líneas
-        const cycle = 5000; // 3s activa + 2s pausa
+        // Ciclo independiente
+        const cycle = comet.isParticles ? 15000 : 5000;
         const p = ((time + comet.delay) % cycle) / comet.duration;
 
         if (p >= 0 && p <= 1) {
-          const lightLength = 0.1; // 10% del ancho, el doble de largo que el haz anterior
-          const segments = 25; // Suavidad del haz
+          if (comet.isParticles) {
+            // Emitir partículas
+            let emissionRate = 3; 
+            if (p < 0.1 || p > 0.9) emissionRate = 0.5;
 
-          // Usamos 'screen' para máximo brillo
-          ctx.globalCompositeOperation = 'screen';
+            if (Math.random() < emissionRate) {
+              const head = getBezierPoint(p, p0, p1, p2, p3);
+              const count = Math.floor(Math.random() * 3) + 1;
+              for(let i=0; i<count; i++) {
+                particles.push({
+                  x: head.x + (Math.random() - 0.5) * 15,
+                  y: head.y + (Math.random() - 0.5) * 15,
+                  vx: (Math.random() - 0.5) * 0.8,
+                  vy: (Math.random() * -1) - 0.2, // Flotan hacia arriba
+                  life: 1.0 + Math.random() * 0.5,
+                  size: Math.random() * 2.5 + 0.5
+                });
+              }
+            }
+          } else {
+            const lightLength = 0.1; // 10% del ancho, el doble de largo que el haz anterior
+            const segments = 25; // Suavidad del haz
 
-          // Dibujar la luz concentrada en forma de haz
-          for (let i = 0; i < segments; i++) {
-            const tCurrent = p - (i * lightLength / segments);
-            const tNext = p - ((i + 1) * lightLength / segments);
+            // Usamos 'screen' para máximo brillo
+            ctx.globalCompositeOperation = 'screen';
+
+            // Dibujar la luz concentrada en forma de haz
+            for (let i = 0; i < segments; i++) {
+              const tCurrent = p - (i * lightLength / segments);
+              const tNext = p - ((i + 1) * lightLength / segments);
+              
+              if (tCurrent < 0) break;
+              const safeTNext = Math.max(0, tNext);
+
+              const pt1 = getBezierPoint(tCurrent, p0, p1, p2, p3);
+              const pt2 = getBezierPoint(safeTNext, p0, p1, p2, p3);
+
+              const ratio = 1 - (i / segments); // 1 = punta frontal, 0 = cola trasera del haz
+
+              // Fade suave en los extremos de la pantalla para que la luz no aparezca de golpe
+              let edgeFade = 1;
+              if (p < 0.1) edgeFade = p / 0.1;
+              if (p > 0.9) edgeFade = (1 - p) / 0.1;
+
+              ctx.beginPath();
+              ctx.moveTo(pt1.x, pt1.y);
+              ctx.lineTo(pt2.x, pt2.y);
+
+              // Luz brillante uniforme (Blanco anaranjado intenso)
+              const r = 255;
+              const g = 180;
+              const b = 80;
+              
+              // Opacidad de campana: Brillante en el centro del haz, suave en las puntas
+              const localFade = Math.sin(ratio * Math.PI); 
+              const alpha = localFade * edgeFade;
+              
+              ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+              ctx.lineWidth = 2; // Grosor uniforme
+              ctx.lineCap = 'round';
+              
+              // Glow intenso y expansivo
+              ctx.shadowColor = `rgba(255, 167, 38, ${alpha})`;
+              ctx.shadowBlur = 15;
+
+              ctx.stroke();
+              ctx.shadowBlur = 0; // Restaurar sombra
+            }
             
-            if (tCurrent < 0) break;
-            const safeTNext = Math.max(0, tNext);
-
-            const pt1 = getBezierPoint(tCurrent, p0, p1, p2, p3);
-            const pt2 = getBezierPoint(safeTNext, p0, p1, p2, p3);
-
-            const ratio = 1 - (i / segments); // 1 = punta frontal, 0 = cola trasera del haz
-
-            // Fade suave en los extremos de la pantalla para que la luz no aparezca de golpe
-            let edgeFade = 1;
-            if (p < 0.1) edgeFade = p / 0.1;
-            if (p > 0.9) edgeFade = (1 - p) / 0.1;
-
-            ctx.beginPath();
-            ctx.moveTo(pt1.x, pt1.y);
-            ctx.lineTo(pt2.x, pt2.y);
-
-            // Luz brillante uniforme (Blanco anaranjado intenso)
-            const r = 255;
-            const g = 180;
-            const b = 80;
-            
-            // Opacidad de campana: Brillante en el centro del haz, suave en las puntas
-            const localFade = Math.sin(ratio * Math.PI); 
-            const alpha = localFade * edgeFade;
-            
-            ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
-            ctx.lineWidth = 2; // Grosor uniforme
-            ctx.lineCap = 'round';
-            
-            // Glow intenso y expansivo
-            ctx.shadowColor = `rgba(255, 167, 38, ${alpha})`;
-            ctx.shadowBlur = 15;
-
-            ctx.stroke();
-            ctx.shadowBlur = 0; // Restaurar sombra
+            ctx.globalCompositeOperation = 'source-over'; // Restaurar modo de mezcla
           }
-          
-          ctx.globalCompositeOperation = 'source-over'; // Restaurar modo de mezcla
         }
       });
+
+      // Actualizar y dibujar partículas
+      ctx.globalCompositeOperation = 'screen';
+      for (let i = particles.length - 1; i >= 0; i--) {
+        let p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.008; // Se desvanecen lentamente
+        
+        if (p.life <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+
+        const alpha = Math.min(1, p.life);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        
+        // Color varía según el tamaño (las más grandes son más claras)
+        if (p.size > 2) {
+          ctx.fillStyle = `rgba(255, 200, 100, ${alpha})`;
+        } else {
+          ctx.fillStyle = `rgba(255, 107, 0, ${alpha})`;
+        }
+        ctx.fill();
+        
+        // Glow para las partículas más vivas
+        if (p.life > 0.5 && p.size > 1.5) {
+          ctx.shadowColor = `rgba(255, 167, 38, ${alpha})`;
+          ctx.shadowBlur = 6;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
+      }
+      ctx.globalCompositeOperation = 'source-over';
 
       // --- DIBUJAR ORBES (INTRO) ---
       if (orbAlpha > 0) {

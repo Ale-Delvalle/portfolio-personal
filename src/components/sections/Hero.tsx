@@ -46,6 +46,9 @@ export function Hero() {
       scale: 1,
       duration: 1.2,
       ease: "power3.inOut",
+      onStart: () => {
+        window.dispatchEvent(new CustomEvent('hero-move-up'));
+      }
     }, "moveUp")
     // 3) Imagen aparece con desplazamiento suave (Fade + Slide)
     .fromTo(imageRef.current, 

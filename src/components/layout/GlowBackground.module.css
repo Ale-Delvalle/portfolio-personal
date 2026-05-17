@@ -1,4 +1,4 @@
-.canvas {
+.container {
   position: fixed;
   top: 0;
   left: 0;
@@ -6,9 +6,31 @@
   height: 100%;
   z-index: -1;
   pointer-events: none;
+  background-color: #000;
+  overflow: hidden;
+}
+
+.canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* El blur en la capa superpuesta crea el efecto glass fluid/AAA */
+  backdrop-filter: blur(100px);
+  -webkit-backdrop-filter: blur(100px);
+  z-index: 1;
 }
 
 /* Only meaningful in dark mode */
-:global(:root:not([data-theme="dark"])) .canvas {
+:global(:root:not([data-theme="dark"])) .container {
   display: none;
 }

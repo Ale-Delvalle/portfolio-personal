@@ -176,50 +176,62 @@
   transform-style: preserve-3d;
 }
 
+.introGlow {
+  animation: introGlowPulse 1.5s infinite alternate ease-in-out;
+}
+
+@keyframes introGlowPulse {
+  0% {
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
+  }
+  100% {
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.8)) drop-shadow(0 0 35px rgba(255, 179, 71, 0.6));
+  }
+}
+
 /* --- Welcome Intro Text --- */
-.welcomeContainer {
-  position: absolute;
-  top: -50px; /* Above the name */
-  left: 50%;
-  transform: translateX(-50%);
-  width: max-content;
+.introOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000000;
+  z-index: 50;
   display: flex;
   justify-content: center;
   align-items: center;
   pointer-events: none;
 }
 
+.roleContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1000px;
+  margin-top: 0.25rem;
+}
+
 .welcomeText {
-  font-family: var(--font-body);
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  position: absolute; /* They sit on top of each other */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: var(--font-headline);
+  font-size: clamp(1rem, 2.5vw, 1.8rem);
+  font-weight: 800;
+  color: #003366;
   white-space: nowrap;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
 }
 
-.welcomeCenter {
-  position: relative; /* Defines the size of the container */
-  z-index: 2;
-  color: #ffffff;
-}
-:global(:root[data-theme="dark"]) .welcomeCenter {
-  color: #FFB347;
-}
-
-.welcomeTop {
-  color: var(--color-primary);
-  opacity: 0.5;
-  z-index: 1;
-}
-
-.welcomeBottom {
-  color: #003366; /* Azul Marino/Francia */
-  opacity: 0.5;
-  z-index: 3;
-}
-:global(:root[data-theme="dark"]) .welcomeBottom {
+:global(:root[data-theme="dark"]) .welcomeText {
   color: #ffffff;
 }
 
@@ -256,10 +268,11 @@
   font-size: clamp(1rem, 2.5vw, 1.8rem);
   font-weight: 800;
   color: #003366;
-  margin-top: 0.25rem;
   text-align: center;
   letter-spacing: normal;
   text-transform: none;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
 }
 
 /* Dark Mode Text Colors */

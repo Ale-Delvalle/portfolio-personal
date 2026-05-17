@@ -19,6 +19,7 @@ export function Hero() {
   const buttonsRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
   const scrollTextRef = useRef<HTMLSpanElement>(null);
+  const welcomeContainerRef = useRef<HTMLDivElement>(null);
   // Parallax refs
   const xToBtn = useRef<any>(null);
   const yToBtn = useRef<any>(null);
@@ -30,19 +31,22 @@ export function Hero() {
   useGSAP(() => {
     const tl = gsap.timeline({ onComplete: () => setIntroDone(true) });
 
+    gsap.set(nameContainerRef.current, { zIndex: 51, position: 'relative' });
+    gsap.set(nameContainerRef.current, { zIndex: 51, position: 'relative' });
+    gsap.set(welcomeContainerRef.current, { x: -50, autoAlpha: 0 });
     // 1) Nombre y Rol aparecen en el centro de la pantalla a escala 1.5
     tl.fromTo(nameContainerRef.current, 
       { autoAlpha: 0, y: "20vh", scale: 1.5 },
       { autoAlpha: 1, y: "20vh", duration: 1, ease: "power3.out" }
     )
     // 2) Se desplazan hacia su posición final (arriba)
+    .addLabel("moveUp", "+=0.3")
     .to(nameContainerRef.current, {
-      y: 0,
+      y: 30,
       scale: 1,
       duration: 1.2,
       ease: "power3.inOut",
-      delay: 0.3
-    })
+    }, "moveUp")
     // 3) Imagen aparece con desplazamiento suave (Fade + Slide)
     .fromTo(imageRef.current, 
       { autoAlpha: 0, y: 50 },
@@ -57,6 +61,19 @@ export function Hero() {
       stagger: 0.15,
       ease: "power3.out"
     }, "-=1")
+    // 4.5) Bienvenido a mi portfolio reemplaza el role de izquierda a derecha
+    .to(roleRef.current, {
+      x: 50,
+      autoAlpha: 0,
+      duration: 0.5,
+      ease: "power2.in"
+    }, "moveUp+=2")
+    .to(welcomeContainerRef.current, {
+      x: 0,
+      autoAlpha: 1,
+      duration: 0.5,
+      ease: "power2.out"
+    }, ">")
     // 5) Indicador de Scroll
     .fromTo(scrollIndicatorRef.current,
       { autoAlpha: 0, y: -10 },
@@ -129,7 +146,10 @@ export function Hero() {
         
         <div ref={nameContainerRef} className={styles.nameContainer}>
           <div ref={nameRef} className={styles.name}>Alexis Delvalle</div>
-          <div ref={roleRef} className={styles.role}>Fullstack developer and backend specialist</div>
+          <div className={styles.roleContainer}>
+            <div ref={roleRef} className={styles.role}>Fullstack developer and backend specialist</div>
+            <div ref={welcomeContainerRef} className={styles.welcomeText}>Bienvenido a mi portfolio</div>
+          </div>
         </div>
 
         <div className={styles.textsContainer}>

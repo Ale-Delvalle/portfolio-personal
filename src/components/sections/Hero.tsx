@@ -39,8 +39,28 @@ export function Hero() {
       { autoAlpha: 0, y: "20vh", scale: 1.5 },
       { autoAlpha: 1, y: "20vh", duration: 1, ease: "power3.out" }
     )
+    // 1.5) Bolitas brillantes detrás del nombre de izquierda a derecha
+    .addLabel("introSparks", "+=0.2")
+    .fromTo(`.${styles.introSpark}`,
+      {
+        left: (i, tgt, targets) => `${(i / targets.length) * 100}%`,
+        y: () => gsap.utils.random(0, 40),
+        scale: 0.2,
+        autoAlpha: 0
+      },
+      {
+        y: () => gsap.utils.random(-60, -10),
+        scale: () => gsap.utils.random(1, 2.5),
+        autoAlpha: 1,
+        duration: 0.6,
+        yoyo: true,
+        repeat: 1,
+        ease: "power2.out",
+        stagger: 0.03
+      }, "introSparks"
+    )
     // 2) Se desplazan hacia su posición final (arriba)
-    .addLabel("moveUp", "+=0.3")
+    .addLabel("moveUp", "+=2.3")
     .to(nameContainerRef.current, {
       y: 30,
       scale: 1,
@@ -148,6 +168,11 @@ export function Hero() {
       <div className={styles.content}>
         
         <div ref={nameContainerRef} className={styles.nameContainer}>
+          <div className={styles.introSparksContainer}>
+            {Array.from({ length: 30 }).map((_, i) => (
+              <div key={i} className={`${styles.spark} ${styles.introSpark}`}></div>
+            ))}
+          </div>
           <div ref={nameRef} className={styles.name}>Alexis Delvalle</div>
           <div className={styles.roleContainer}>
             <div ref={roleRef} className={styles.role}>Fullstack developer and backend specialist</div>

@@ -3,7 +3,6 @@ import styles from './GlowBackground.module.css';
 
 export function GlowBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -106,9 +105,6 @@ export function GlowBackground() {
       if (transitionStarted) {
         waveAlpha = Math.min(1, waveAlpha + 0.015);
         orbAlpha = Math.max(0, orbAlpha - 0.02);
-        if (overlayRef.current) {
-          overlayRef.current.style.opacity = orbAlpha.toString();
-        }
       }
       
       ctx.fillStyle = '#000000';
@@ -116,27 +112,51 @@ export function GlowBackground() {
 
       const minDim = Math.min(width, height);
 
-      // --- LÓGICA DE TIEMPOS (BURST + PAUSA) ---
-      const BURST_DURATION = 5000; // 3 cometas salen a los 0s, 1s y 2s. Como tardan 3s, todo termina a los 5s.
-      const PAUSE_DURATION = 10000; // 10s exactos sin luces cruzando
-      const TOTAL_CYCLE = BURST_DURATION + PAUSE_DURATION; // 15s totales por ciclo
+      // --- 1. DIBUJAR ORBES (INTRO) ---
+      if (orbAlpha > 0) {
+        ctx.globalAlpha = orbAlpha;
+        ctx.globalCompositeOperation = 'screen';
+        ctx.filter = 'blur(80px)'; 
+
+        orbs.forEach((orb) => {
+          const x = width / 2 + Math.sin(time * orb.speedX + orb.phaseX) * (width * 0.4) + Math.cos(time * orb.speedX * 0.5) * (width * 0.1);
+          const y = height / 2 + Math.cos(time * orb.speedY + orb.phaseY) * (height * 0.4) + Math.sin(time * orb.speedY * 0.5) * (height * 0.1);
+          
+          const radius = minDim * orb.size;
+
+          const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+          gradient.addColorStop(0, orb.color);
+          gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.arc(x, y, radius, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        ctx.filter = 'none'; 
+        ctx.globalCompositeOperation = 'source-over';
+      }
+
+      // --- 2. LÓGICA DE TIEMPOS (BURST + PAUSA) PARA LUCES ---
+      const BURST_DURATION = 5000; 
+      const PAUSE_DURATION = 10000; 
+      const TOTAL_CYCLE = BURST_DURATION + PAUSE_DURATION; 
       
       const currentCycleTime = globalTimer % TOTAL_CYCLE;
 
-      // Al inicio exacto de un nuevo ciclo, elegimos 3 líneas al azar para encender
       if (globalTimer > 16 && currentCycleTime < 16) {
         const allLightIndices = [0, 1, 2, 3];
         currentBurstIndices = shuffle(allLightIndices).slice(0, 3);
       }
 
-      // --- DIBUJAR COMETAS / MECHAS ---
+      // --- 3. DIBUJAR COMETAS / MECHAS ---
       comets.forEach((comet, index) => {
         const p0 = { x: comet.p0.x * width, y: comet.p0.y * height };
         const p1 = { x: comet.p1.x * width, y: comet.p1.y * height };
         const p2 = { x: comet.p2.x * width, y: comet.p2.y * height };
         const p3 = { x: comet.p3.x * width, y: comet.p3.y * height };
 
-        // Dibujar la línea guía solo si no es la de partículas
         if (!comet.isParticles) {
           ctx.beginPath();
           ctx.moveTo(p0.x, p0.y);
@@ -147,7 +167,7 @@ export function GlowBackground() {
         }
 
         if (comet.isParticles) {
-          // Las partículas de abajo ignoran la pausa global y funcionan siempre (como indicó el usuario)
+          if (!transitionStarted) return; // Solo empieza cuando termina la intro
           const p = ((time + 2000) % 15000) / comet.duration;
 
           if (p >= 0 && p <= 1) {
@@ -170,14 +190,13 @@ export function GlowBackground() {
             }
           }
         } else {
-          // Luz Láser / Haz: Solo dibuja si fue seleccionado para esta ronda
           if (currentBurstIndices.includes(index)) {
-            const burstPos = currentBurstIndices.indexOf(index); // 0, 1 o 2
-            const startOffset = burstPos * 1000; // Salen escalonados: a los 0s, 1s y 2s
+            const burstPos = currentBurstIndices.indexOf(index); 
+            const startOffset = burstPos * 1000; 
 
             if (currentCycleTime >= startOffset && currentCycleTime <= startOffset + comet.duration) {
               const p = (currentCycleTime - startOffset) / comet.duration;
-              const lightLength = 0.1; // 10% del ancho
+              const lightLength = 0.1; 
               const segments = 25; 
 
               ctx.globalCompositeOperation = 'screen';
@@ -225,13 +244,13 @@ export function GlowBackground() {
         }
       });
 
-      // Actualizar y dibujar partículas
+      // --- 4. ACTUALIZAR Y DIBUJAR PARTÍCULAS ---
       ctx.globalCompositeOperation = 'screen';
       for (let i = particles.length - 1; i >= 0; i--) {
         let p = particles[i];
         p.x += p.vx;
         p.y += p.vy;
-        p.life -= 0.008; // Se desvanecen lentamente
+        p.life -= 0.008; 
         
         if (p.life <= 0) {
           particles.splice(i, 1);
@@ -242,7 +261,6 @@ export function GlowBackground() {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         
-        // Color varía según el tamaño (las más grandes son más claras)
         if (p.size > 2) {
           ctx.fillStyle = `rgba(255, 200, 100, ${alpha})`;
         } else {
@@ -250,7 +268,6 @@ export function GlowBackground() {
         }
         ctx.fill();
         
-        // Glow para las partículas más vivas
         if (p.life > 0.5 && p.size > 1.5) {
           ctx.shadowColor = `rgba(255, 167, 38, ${alpha})`;
           ctx.shadowBlur = 6;
@@ -260,29 +277,7 @@ export function GlowBackground() {
       }
       ctx.globalCompositeOperation = 'source-over';
 
-      // --- DIBUJAR ORBES (INTRO) ---
-      if (orbAlpha > 0) {
-        ctx.globalAlpha = orbAlpha;
-        ctx.globalCompositeOperation = 'screen';
 
-        orbs.forEach((orb) => {
-          const x = width / 2 + Math.sin(time * orb.speedX + orb.phaseX) * (width * 0.4) + Math.cos(time * orb.speedX * 0.5) * (width * 0.1);
-          const y = height / 2 + Math.cos(time * orb.speedY + orb.phaseY) * (height * 0.4) + Math.sin(time * orb.speedY * 0.5) * (height * 0.1);
-          
-          const radius = minDim * orb.size;
-
-          const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
-          gradient.addColorStop(0, orb.color);
-          gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-
-          ctx.fillStyle = gradient;
-          ctx.beginPath();
-          ctx.arc(x, y, radius, 0, Math.PI * 2);
-          ctx.fill();
-        });
-
-        ctx.globalCompositeOperation = 'source-over';
-      }
 
       // --- DIBUJAR WAVE INFERIOR (POST-INTRO) ---
       if (waveAlpha > 0) {
@@ -326,8 +321,6 @@ export function GlowBackground() {
   return (
     <div className={styles.container}>
       <canvas ref={canvasRef} className={styles.canvas} />
-      {/* Removemos la línea comentada de overlay con opacity, porque ya está implementado en la lógica con ref */}
-      <div ref={overlayRef} className={styles.overlay}></div>
     </div>
   );
 }

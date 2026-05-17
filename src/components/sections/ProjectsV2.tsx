@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import styles from './ProjectsV2.module.css';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
@@ -13,32 +13,40 @@ import peliculasImg from '../../assets/projects/web-peliculas.jpg';
 gsap.registerPlugin(ScrollTrigger);
 
 const projects = [
-  { id: 1, title: 'E-Commerce', image: ecommerceImg, tags: ['React', 'Node.js'] },
-  { id: 2, title: 'H n P', image: hnpImg, tags: ['TypeScript', 'NestJS'] },
-  { id: 3, title: 'Portfolio', image: portfolioImg, tags: ['React', 'CSS'] },
-  { id: 4, title: 'Sis. de Turnos', image: turnosImg, tags: ['PostgreSQL', 'Express'] },
-  { id: 5, title: 'Web de Películas', image: peliculasImg, tags: ['React', 'API REST'] },
+  { id: 1, title: 'E-Commerce', image: ecommerceImg, fromTop: true },
+  { id: 2, title: 'H n P', image: hnpImg, fromTop: false },
+  { id: 3, title: 'Portfolio Básico', image: portfolioImg, fromTop: true },
+  { id: 4, title: 'Sistema de Turnos', image: turnosImg, fromTop: false },
+  { id: 5, title: 'Web de Películas', image: peliculasImg, fromTop: true },
 ];
 
 export function ProjectsV2() {
   const sectionRef = useRef<HTMLElement>(null);
-  const [activePanel, setActivePanel] = useState(0);
 
   useGSAP(() => {
-    gsap.fromTo(
-      `.${styles.panelsContainer}`,
-      { autoAlpha: 0, y: 60 },
-      {
-        autoAlpha: 1,
-        y: 0,
-        duration: 1,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 70%',
-        },
-      }
-    );
+    const columns = sectionRef.current?.querySelectorAll(`.${styles.column}`);
+    if (!columns) return;
+
+    columns.forEach((column, index) => {
+      const fromTop = projects[index].fromTop;
+
+      gsap.fromTo(
+        column,
+        { y: fromTop ? '-105%' : '105%', autoAlpha: 0 },
+        {
+          y: '0%',
+          autoAlpha: 1,
+          duration: 1.4,
+          delay: index * 0.08,
+          ease: 'expo.out',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 65%',
+            toggleActions: 'play none none reverse',
+          },
+        }
+      );
+    });
   }, { scope: sectionRef });
 
   return (
@@ -49,33 +57,17 @@ export function ProjectsV2() {
       </div>
 
       <div className={styles.panelsContainer}>
-        {projects.map((project, index) => (
-          <div
-            key={project.id}
-            className={`${styles.panel} ${activePanel === index ? styles.panelActive : ''}`}
-            onMouseEnter={() => setActivePanel(index)}
-          >
+        {projects.map((project) => (
+          <div key={project.id} className={styles.column}>
             <div
-              className={styles.panelBg}
+              className={styles.columnBg}
               style={{ backgroundImage: `url(${project.image})` }}
             ></div>
             <div className={styles.overlay}></div>
-
-            {/* Content when inactive: vertical title */}
-            <div className={styles.inactiveContent}>
-              <span className={styles.inactiveTitle}>{project.title}</span>
-            </div>
-
-            {/* Content when active */}
-            <div className={styles.activeContent}>
+            <div className={styles.columnContent}>
               <span className={styles.projectNum}>0{project.id}</span>
               <h3 className={styles.projectTitle}>{project.title}</h3>
-              <div className={styles.tags}>
-                {project.tags.map((tag) => (
-                  <span key={tag} className={styles.tag}>{tag}</span>
-                ))}
-              </div>
-              <button className={styles.viewBtn}>Ver proyecto →</button>
+              <span className={styles.viewLabel}>Ver proyecto →</span>
             </div>
           </div>
         ))}

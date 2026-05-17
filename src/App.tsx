@@ -1,6 +1,7 @@
 
 import { useTheme } from './hooks/useTheme';
 import { Navbar } from './components/layout/Navbar';
+import { GlowBackground } from './components/layout/GlowBackground';
 import { Hero } from './components/sections/Hero';
 import { Stack } from './components/sections/Stack';
 import { Projects } from './components/sections/Projects';
@@ -14,6 +15,7 @@ function App() {
 
   return (
     <>
+      <GlowBackground />
       <Navbar theme={theme} toggleTheme={toggleTheme} />
       <Hero />
       <Stack />

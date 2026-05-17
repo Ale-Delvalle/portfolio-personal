@@ -1,5 +1,5 @@
 import styles from './Hero.module.css';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -19,8 +19,6 @@ export function Hero() {
   const buttonsRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
   const scrollTextRef = useRef<HTMLSpanElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
   // Parallax refs
   const xToBtn = useRef<any>(null);
   const yToBtn = useRef<any>(null);
@@ -104,79 +102,6 @@ export function Hero() {
 
   }, { scope: mainRef });
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const setCanvasSize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    setCanvasSize();
-    window.addEventListener('resize', setCanvasSize);
-
-    let time = 0;
-
-    const getGlowHeight = (x: number, t: number) => {
-      // Altura base (~127px)
-      let h = 127;
-      // Agregamos irregularidad
-      h += Math.sin(x * 0.01 + t) * 28;
-      h += Math.cos(x * 0.02 - t * 0.7) * 18;
-      h += Math.sin(x * 0.005 + t * 0.5) * 36;
-      
-      // No permitimos que baje de 127px (70% de 182px es aprox 127px)
-      return Math.min(182, Math.max(127, h));
-    };
-
-    const drawGlow = () => {
-      time += 0.007; // Ralentizado un 30% (de 0.01 a 0.007)
-
-      // Aplicamos desenfoque para que parezca un resplandor real
-      ctx.filter = 'blur(20px)';
-
-      ctx.beginPath();
-      ctx.moveTo(0, canvas.height);
-
-      for (let x = 0; x <= canvas.width; x += 10) {
-        const h = getGlowHeight(x, time);
-        ctx.lineTo(x, canvas.height - h);
-      }
-
-      ctx.lineTo(canvas.width, canvas.height);
-      ctx.closePath();
-
-      const gradient = ctx.createLinearGradient(0, canvas.height, 0, canvas.height - 182);
-      gradient.addColorStop(0, '#1a0a03');
-      gradient.addColorStop(0.3, '#E65100');
-      gradient.addColorStop(0.6, '#FFA726');
-      gradient.addColorStop(0.85, '#FFF59D');
-      gradient.addColorStop(1, 'rgba(255, 245, 157, 0)');
-
-      ctx.fillStyle = gradient;
-      ctx.fill();
-
-      // Restauramos el filtro
-      ctx.filter = 'none';
-    };
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      drawGlow();
-
-      requestAnimationFrame(animate);
-    };
-    animate();
-
-    return () => {
-      window.removeEventListener('resize', setCanvasSize);
-    };
-  }, []);
-
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!introDone || window.innerWidth < 1024) return;
 
@@ -200,7 +125,6 @@ export function Hero() {
 
   return (
     <main ref={mainRef} className={`${styles.main} hero-mesh-gradient`} onMouseMove={handleMouseMove} style={{ perspective: "1000px" }}>
-      <canvas ref={canvasRef} className={styles.starsCanvas}></canvas>
       <div className={styles.content}>
         
         <div ref={nameContainerRef} className={styles.nameContainer}>

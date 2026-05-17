@@ -3,7 +3,7 @@
   width: 100vw;
   padding-top: 120px; /* Espacio para el navbar */
   padding-bottom: 10vh;
-  background-color: var(--color-background);
+  background-color: transparent;
   color: var(--color-on-background);
   display: flex;
   flex-direction: column;

@@ -98,51 +98,7 @@
   100% { transform: translateY(0px); }
 }
 
-/* --- Rings Animation --- */
-.ringsContainer {
-  display: none;
-}
 
-:global(:root[data-theme="dark"]) .ringsContainer {
-  display: block;
-  position: absolute;
-  width: 35vh;
-  height: 35vh;
-  max-width: 300px;
-  max-height: 300px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1;
-  pointer-events: none;
-}
-
-:global(:root[data-theme="dark"]) .ring1,
-:global(:root[data-theme="dark"]) .ring2 {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  border-radius: 50%;
-  border: 1px solid transparent;
-}
-
-:global(:root[data-theme="dark"]) .ring1 {
-  border-top-color: rgba(255, 107, 0, 0.8);
-  border-right-color: rgba(255, 167, 38, 0.4);
-  animation: spinRing 12s linear infinite;
-  box-shadow: 0 0 20px rgba(255, 107, 0, 0.2);
-}
-
-:global(:root[data-theme="dark"]) .ring2 {
-  margin: 20px;
-  border-bottom-color: rgba(255, 167, 38, 0.8);
-  border-left-color: rgba(255, 107, 0, 0.4);
-  animation: spinRing 8s linear infinite reverse;
-  box-shadow: 0 0 15px rgba(255, 167, 38, 0.2);
-}
-
-@keyframes spinRing {
-  100% { transform: rotate(360deg); }
-}
 
 .textBlock {
   display: flex;

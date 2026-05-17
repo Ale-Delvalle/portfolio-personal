@@ -278,10 +278,6 @@ export function Hero() {
         <div className={styles.textsContainer}>
           <div className={styles.leftColumn}>
             <div ref={imageRef} className={styles.imageWrapper}>
-              <div className={styles.ringsContainer}>
-                <div className={styles.ring1}></div>
-                <div className={styles.ring2}></div>
-              </div>
               <img src={profileImg} alt="Alexis Delvalle" className={styles.profileImage} />
             </div>
             <div ref={buttonsRef} className={styles.buttonGroup}>

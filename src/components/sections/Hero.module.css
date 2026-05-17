@@ -79,6 +79,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 
 .profileImage {
@@ -86,6 +87,61 @@
   height: 100%;
   max-height: 35vh;
   object-fit: contain;
+  position: relative;
+  z-index: 2;
+  animation: floatProfile 6s ease-in-out infinite;
+}
+
+@keyframes floatProfile {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+  100% { transform: translateY(0px); }
+}
+
+/* --- Rings Animation --- */
+.ringsContainer {
+  display: none;
+}
+
+:global(:root[data-theme="dark"]) .ringsContainer {
+  display: block;
+  position: absolute;
+  width: 35vh;
+  height: 35vh;
+  max-width: 300px;
+  max-height: 300px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+:global(:root[data-theme="dark"]) .ring1,
+:global(:root[data-theme="dark"]) .ring2 {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 50%;
+  border: 1px solid transparent;
+}
+
+:global(:root[data-theme="dark"]) .ring1 {
+  border-top-color: rgba(255, 107, 0, 0.8);
+  border-right-color: rgba(255, 167, 38, 0.4);
+  animation: spinRing 12s linear infinite;
+  box-shadow: 0 0 20px rgba(255, 107, 0, 0.2);
+}
+
+:global(:root[data-theme="dark"]) .ring2 {
+  margin: 20px;
+  border-bottom-color: rgba(255, 167, 38, 0.8);
+  border-left-color: rgba(255, 107, 0, 0.4);
+  animation: spinRing 8s linear infinite reverse;
+  box-shadow: 0 0 15px rgba(255, 167, 38, 0.2);
+}
+
+@keyframes spinRing {
+  100% { transform: rotate(360deg); }
 }
 
 .textBlock {
@@ -105,12 +161,15 @@
 
 :global(:root[data-theme="dark"]) .textBlock {
   position: relative;
-  background: rgba(255, 107, 0, 0.03);
-  border: 1px solid rgba(255, 167, 38, 0.13);
-  box-shadow: 0 0 24px rgba(255, 107, 0, 0.05), inset 0 0 20px rgba(0, 0, 0, 0.4);
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
+  background: rgba(10, 10, 12, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 167, 38, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   overflow: hidden;
+  border-radius: 16px;
 }
 
 :global(:root[data-theme="dark"]) .textBlock::before {
@@ -120,13 +179,14 @@
   left: 0;
   width: 3px;
   height: 100%;
-  background: linear-gradient(to bottom, #FF6B00, #FFA726);
+  background: linear-gradient(to bottom, #FF6B00, #FFD180);
+  box-shadow: 0 0 15px rgba(255, 107, 0, 0.8);
   border-radius: 16px 0 0 16px;
 }
 
 :global(:root[data-theme="dark"]) .textBlock:hover {
   border-color: rgba(255, 167, 38, 0.32);
-  box-shadow: 0 0 32px rgba(255, 107, 0, 0.12), inset 0 0 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 32px rgba(255, 107, 0, 0.15), inset 0 0 20px rgba(255, 167, 38, 0.1);
 }
 
 @media (min-width: 768px) {
@@ -254,12 +314,12 @@
 }
 
 :global(:root[data-theme="dark"]) .name {
-  background: none;
-  filter: none;
-  color: #ffffff;
-  text-shadow: 
-    0 4px 15px rgba(0, 0, 0, 0.5),
-    3px 3px 0 #FFB347;
+  background: linear-gradient(135deg, #ffffff 0%, #FFD180 50%, #FF6B00 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: drop-shadow(0 4px 20px rgba(255, 107, 0, 0.4));
+  text-shadow: none;
 }
 
 
@@ -334,7 +394,10 @@
 }
 
 :global([data-theme="dark"]) .btnLayer {
-  background: #6B2D00 !important;
+  background: transparent !important;
+  border: 1px solid rgba(255, 167, 38, 0.3) !important;
+  box-shadow: inset 0 0 10px rgba(255, 107, 0, 0.4);
+  backdrop-filter: blur(2px);
 }
 
 .secondaryBtn {
@@ -381,8 +444,9 @@
 }
 
 :global(:root[data-theme="dark"]) .primaryBtn:hover {
-  background: rgba(255, 107, 0, 0.1) !important;
-  box-shadow: 0 0 20px rgba(255, 107, 0, 0.2);
+  background: rgba(255, 107, 0, 0.15) !important;
+  box-shadow: 0 0 25px rgba(255, 107, 0, 0.4), inset 0 0 10px rgba(255, 107, 0, 0.2);
+  border-color: #FFA726 !important;
   transform: translateY(-2px);
 }
 

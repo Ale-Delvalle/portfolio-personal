@@ -140,6 +140,21 @@ export function GlowBackground() {
     <div className={styles.container}>
       <canvas ref={canvasRef} className={styles.canvas} />
       <div ref={overlayRef} className={styles.overlay}></div>
+      <div className={styles.linesContainer}>
+        <svg width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 1000 1000">
+          {/* Líneas guía base */}
+          <path className={styles.basePath} d="M -100 200 C 300 400, 700 100, 1100 300" />
+          <path className={styles.basePath} d="M -100 600 C 400 300, 600 800, 1100 500" />
+          <path className={styles.basePath} d="M -100 850 C 200 1050, 800 600, 1100 800" />
+          <path className={styles.basePath} d="M -100 100 C 400 -100, 600 300, 1100 150" />
+
+          {/* Haces de luz animados */}
+          <path className={`${styles.animatedPath} ${styles.path1}`} pathLength="100" d="M -100 200 C 300 400, 700 100, 1100 300" />
+          <path className={`${styles.animatedPath} ${styles.path2}`} pathLength="100" d="M -100 600 C 400 300, 600 800, 1100 500" />
+          <path className={`${styles.animatedPath} ${styles.path3}`} pathLength="100" d="M -100 850 C 200 1050, 800 600, 1100 800" />
+          <path className={`${styles.animatedPath} ${styles.path4}`} pathLength="100" d="M -100 100 C 400 -100, 600 300, 1100 150" />
+        </svg>
+      </div>
     </div>
   );
 }

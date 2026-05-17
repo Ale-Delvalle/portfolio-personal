@@ -34,3 +34,52 @@
 :global(:root:not([data-theme="dark"])) .container {
   display: none;
 }
+
+/* --- Shimmer Lines SVG --- */
+.linesContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2; /* Encima del canvas y overlay para que no se desenfoquen y se vean nítidas */
+}
+
+.basePath {
+  fill: none;
+  stroke: rgba(255, 107, 0, 0.05); /* Línea guía curva apenas visible */
+  stroke-width: 2;
+}
+
+.animatedPath {
+  fill: none;
+  stroke: #FFA726;
+  stroke-width: 3;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 6px #FF6B00) drop-shadow(0 0 12px #FF6B00);
+  /* 15 unidades de luz, 200 unidades de vacío (más del total de 100 para asegurar que hay un solo haz) */
+  stroke-dasharray: 15 200; 
+}
+
+/* Animaciones cruzadas */
+.path1 { animation: moveDashRight 8s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+.path2 { animation: moveDashLeft 10s cubic-bezier(0.4, 0, 0.2, 1) infinite 2s; }
+.path3 { animation: moveDashRight 12s cubic-bezier(0.4, 0, 0.2, 1) infinite 5s; }
+.path4 { animation: moveDashLeft 9s cubic-bezier(0.4, 0, 0.2, 1) infinite 1s; }
+
+@keyframes moveDashRight {
+  /* Empieza fuera del camino a la izquierda (offset alto) y se mueve a la derecha (offset negativo) */
+  0% { stroke-dashoffset: 120; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { stroke-dashoffset: -20; opacity: 0; }
+}
+
+@keyframes moveDashLeft {
+  /* Empieza fuera del camino a la derecha y se mueve a la izquierda */
+  0% { stroke-dashoffset: -20; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { stroke-dashoffset: 120; opacity: 0; }
+}

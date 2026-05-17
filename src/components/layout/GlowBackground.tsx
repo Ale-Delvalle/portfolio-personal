@@ -49,15 +49,15 @@ export function GlowBackground() {
     // Definición de las curvas de las mechas (Alta velocidad: 3 segundos por pantalla)
     const comets = [
       // Cruza de Izquierda a Derecha
-      { p0: {x: -0.1, y: 0.2}, p1: {x: 0.3, y: 0.4}, p2: {x: 0.7, y: 0.1}, p3: {x: 1.1, y: 0.3}, duration: 3000, delay: 0 },
+      { p0: {x: -0.1, y: 0.2}, p1: {x: 0.3, y: 0.4}, p2: {x: 0.7, y: 0.1}, p3: {x: 1.1, y: 0.3}, duration: 3000 },
       // Cruza de Derecha a Izquierda
-      { p0: {x: 1.1, y: 0.6}, p1: {x: 0.4, y: 0.3}, p2: {x: 0.6, y: 0.8}, p3: {x: -0.1, y: 0.5}, duration: 3000, delay: 1500 },
+      { p0: {x: 1.1, y: 0.6}, p1: {x: 0.4, y: 0.3}, p2: {x: 0.6, y: 0.8}, p3: {x: -0.1, y: 0.5}, duration: 3000 },
       // Cruza de Izquierda a Derecha (más abajo)
-      { p0: {x: -0.1, y: 0.85}, p1: {x: 0.2, y: 1.05}, p2: {x: 0.8, y: 0.6}, p3: {x: 1.1, y: 0.8}, duration: 3000, delay: 3500 },
+      { p0: {x: -0.1, y: 0.85}, p1: {x: 0.2, y: 1.05}, p2: {x: 0.8, y: 0.6}, p3: {x: 1.1, y: 0.8}, duration: 3000 },
       // Cruza de Derecha a Izquierda (arriba)
-      { p0: {x: 1.1, y: 0.1}, p1: {x: 0.4, y: -0.1}, p2: {x: 0.6, y: 0.3}, p3: {x: -0.1, y: 0.15}, duration: 3000, delay: 800 },
+      { p0: {x: 1.1, y: 0.1}, p1: {x: 0.4, y: -0.1}, p2: {x: 0.6, y: 0.3}, p3: {x: -0.1, y: 0.15}, duration: 3000 },
       // Camino invisible inferior para el efecto de polvo estelar / partículas
-      { p0: {x: -0.1, y: 0.95}, p1: {x: 0.4, y: 1.05}, p2: {x: 0.6, y: 0.9}, p3: {x: 1.1, y: 0.95}, duration: 12000, delay: 2000, isParticles: true }
+      { p0: {x: -0.1, y: 0.95}, p1: {x: 0.4, y: 1.05}, p2: {x: 0.6, y: 0.9}, p3: {x: 1.1, y: 0.95}, duration: 12000, isParticles: true }
     ];
 
     const getBezierPoint = (t: number, p0: any, p1: any, p2: any, p3: any) => {
@@ -83,9 +83,24 @@ export function GlowBackground() {
     };
 
     const particles: Array<{x: number, y: number, vx: number, vy: number, life: number, size: number}> = [];
+    
+    // Variables para el control de "Bursts" (Ráfagas) y Pausas de 10s
+    let globalTimer = 0;
+    let currentBurstIndices = [0, 1, 2];
+
+    const shuffle = (array: number[]) => {
+      let currentIndex = array.length, randomIndex;
+      while (currentIndex !== 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+      }
+      return array;
+    };
 
     const animate = () => {
       time += 16;
+      globalTimer += 16;
       waveTime += 0.007;
 
       if (transitionStarted) {
@@ -101,8 +116,21 @@ export function GlowBackground() {
 
       const minDim = Math.min(width, height);
 
-      // --- DIBUJAR COMETAS / MECHAS (Sobre fondo negro pero antes del overlay para que mantengan nitidez si están fuera) ---
-      comets.forEach(comet => {
+      // --- LÓGICA DE TIEMPOS (BURST + PAUSA) ---
+      const BURST_DURATION = 5000; // 3 cometas salen a los 0s, 1s y 2s. Como tardan 3s, todo termina a los 5s.
+      const PAUSE_DURATION = 10000; // 10s exactos sin luces cruzando
+      const TOTAL_CYCLE = BURST_DURATION + PAUSE_DURATION; // 15s totales por ciclo
+      
+      const currentCycleTime = globalTimer % TOTAL_CYCLE;
+
+      // Al inicio exacto de un nuevo ciclo, elegimos 3 líneas al azar para encender
+      if (globalTimer > 16 && currentCycleTime < 16) {
+        const allLightIndices = [0, 1, 2, 3];
+        currentBurstIndices = shuffle(allLightIndices).slice(0, 3);
+      }
+
+      // --- DIBUJAR COMETAS / MECHAS ---
+      comets.forEach((comet, index) => {
         const p0 = { x: comet.p0.x * width, y: comet.p0.y * height };
         const p1 = { x: comet.p1.x * width, y: comet.p1.y * height };
         const p2 = { x: comet.p2.x * width, y: comet.p2.y * height };
@@ -118,13 +146,11 @@ export function GlowBackground() {
           ctx.stroke();
         }
 
-        // Ciclo independiente
-        const cycle = comet.isParticles ? 15000 : 5000;
-        const p = ((time + comet.delay) % cycle) / comet.duration;
+        if (comet.isParticles) {
+          // Las partículas de abajo ignoran la pausa global y funcionan siempre (como indicó el usuario)
+          const p = ((time + 2000) % 15000) / comet.duration;
 
-        if (p >= 0 && p <= 1) {
-          if (comet.isParticles) {
-            // Emitir partículas
+          if (p >= 0 && p <= 1) {
             let emissionRate = 3; 
             if (p < 0.1 || p > 0.9) emissionRate = 0.5;
 
@@ -136,63 +162,65 @@ export function GlowBackground() {
                   x: head.x + (Math.random() - 0.5) * 15,
                   y: head.y + (Math.random() - 0.5) * 15,
                   vx: (Math.random() - 0.5) * 0.8,
-                  vy: (Math.random() * -1) - 0.2, // Flotan hacia arriba
+                  vy: (Math.random() * -1) - 0.2,
                   life: 1.0 + Math.random() * 0.5,
                   size: Math.random() * 2.5 + 0.5
                 });
               }
             }
-          } else {
-            const lightLength = 0.1; // 10% del ancho, el doble de largo que el haz anterior
-            const segments = 25; // Suavidad del haz
+          }
+        } else {
+          // Luz Láser / Haz: Solo dibuja si fue seleccionado para esta ronda
+          if (currentBurstIndices.includes(index)) {
+            const burstPos = currentBurstIndices.indexOf(index); // 0, 1 o 2
+            const startOffset = burstPos * 1000; // Salen escalonados: a los 0s, 1s y 2s
 
-            // Usamos 'screen' para máximo brillo
-            ctx.globalCompositeOperation = 'screen';
+            if (currentCycleTime >= startOffset && currentCycleTime <= startOffset + comet.duration) {
+              const p = (currentCycleTime - startOffset) / comet.duration;
+              const lightLength = 0.1; // 10% del ancho
+              const segments = 25; 
 
-            // Dibujar la luz concentrada en forma de haz
-            for (let i = 0; i < segments; i++) {
-              const tCurrent = p - (i * lightLength / segments);
-              const tNext = p - ((i + 1) * lightLength / segments);
-              
-              if (tCurrent < 0) break;
-              const safeTNext = Math.max(0, tNext);
+              ctx.globalCompositeOperation = 'screen';
 
-              const pt1 = getBezierPoint(tCurrent, p0, p1, p2, p3);
-              const pt2 = getBezierPoint(safeTNext, p0, p1, p2, p3);
+              for (let i = 0; i < segments; i++) {
+                const tCurrent = p - (i * lightLength / segments);
+                const tNext = p - ((i + 1) * lightLength / segments);
+                
+                if (tCurrent < 0) break;
+                const safeTNext = Math.max(0, tNext);
 
-              const ratio = 1 - (i / segments); // 1 = punta frontal, 0 = cola trasera del haz
+                const pt1 = getBezierPoint(tCurrent, p0, p1, p2, p3);
+                const pt2 = getBezierPoint(safeTNext, p0, p1, p2, p3);
 
-              // Fade suave en los extremos de la pantalla para que la luz no aparezca de golpe
-              let edgeFade = 1;
-              if (p < 0.1) edgeFade = p / 0.1;
-              if (p > 0.9) edgeFade = (1 - p) / 0.1;
+                const ratio = 1 - (i / segments); 
 
-              ctx.beginPath();
-              ctx.moveTo(pt1.x, pt1.y);
-              ctx.lineTo(pt2.x, pt2.y);
+                let edgeFade = 1;
+                if (p < 0.1) edgeFade = p / 0.1;
+                if (p > 0.9) edgeFade = (1 - p) / 0.1;
 
-              // Luz brillante uniforme (Blanco anaranjado intenso)
-              const r = 255;
-              const g = 180;
-              const b = 80;
-              
-              // Opacidad de campana: Brillante en el centro del haz, suave en las puntas
-              const localFade = Math.sin(ratio * Math.PI); 
-              const alpha = localFade * edgeFade;
-              
-              ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
-              ctx.lineWidth = 2; // Grosor uniforme
-              ctx.lineCap = 'round';
-              
-              // Glow intenso y expansivo
-              ctx.shadowColor = `rgba(255, 167, 38, ${alpha})`;
-              ctx.shadowBlur = 15;
+                ctx.beginPath();
+                ctx.moveTo(pt1.x, pt1.y);
+                ctx.lineTo(pt2.x, pt2.y);
 
-              ctx.stroke();
-              ctx.shadowBlur = 0; // Restaurar sombra
+                const r = 255;
+                const g = 180;
+                const b = 80;
+                
+                const localFade = Math.sin(ratio * Math.PI); 
+                const alpha = localFade * edgeFade;
+                
+                ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+                ctx.lineWidth = 2; 
+                ctx.lineCap = 'round';
+                
+                ctx.shadowColor = `rgba(255, 167, 38, ${alpha})`;
+                ctx.shadowBlur = 15;
+
+                ctx.stroke();
+                ctx.shadowBlur = 0; 
+              }
+              ctx.globalCompositeOperation = 'source-over'; 
             }
-            
-            ctx.globalCompositeOperation = 'source-over'; // Restaurar modo de mezcla
           }
         }
       });

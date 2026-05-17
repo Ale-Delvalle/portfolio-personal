@@ -19,7 +19,6 @@ export function Hero() {
   const buttonsRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
   const scrollTextRef = useRef<HTMLSpanElement>(null);
-  const sparksContainerRef = useRef<HTMLDivElement>(null);
   const welcomeContainerRef = useRef<HTMLDivElement>(null);
   // Parallax refs
   const xToBtn = useRef<any>(null);
@@ -117,28 +116,7 @@ export function Hero() {
       yoyo: true,
       repeat: 1,
       ease: "power2.out"
-    })
-    // 2) Después, cuando el texto ya está totalmente INMÓVIL, disparamos las bolitas de izq a der
-    .addLabel("particles", "+=0.3")
-    .fromTo(`.${styles.spark}`,
-      { 
-        x: (index) => -45 + (index * 10), // Las ordenamos horizontalmente
-        y: 0, 
-        scale: 0.2, 
-        autoAlpha: 0 
-      },
-      {
-        x: (index) => -20 + (index * 10), // Avanzan ligeramente a la derecha mientras suben
-        y: () => gsap.utils.random(-35, -15),
-        scale: () => gsap.utils.random(0.8, 1.8),
-        autoAlpha: 1,
-        duration: 0.6,
-        yoyo: true, // Aparecen y desaparecen suavemente
-        repeat: 1,
-        ease: "power1.out",
-        stagger: 0.1 // Este stagger hace que el estallido "viaje" de izquierda a derecha
-      }, "particles"
-    );
+    });
 
 
 
@@ -223,11 +201,6 @@ export function Hero() {
       <div className={styles.meshBottom}></div>
       
       <div ref={scrollIndicatorRef} className={styles.scrollIndicator}>
-        <div ref={sparksContainerRef} className={styles.sparksContainer}>
-          {Array.from({ length: 10 }).map((_, i) => (
-            <div key={i} className={styles.spark}></div>
-          ))}
-        </div>
         <span ref={scrollTextRef} style={{ display: "inline-block" }}>
           {"Scroll".split("").map((char, i) => (
             <span key={i} className={styles.scrollChar} style={{ display: "inline-block" }}>

@@ -1,5 +1,6 @@
 import { useRef, useState, useCallback, useEffect } from 'react';
 import styles from './ProjectsV2.module.css';
+import { ProjectDetail } from './ProjectDetail';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -12,7 +13,7 @@ import imgPeliculas from '../../assets/projects/web-peliculas.jpg';
 
 gsap.registerPlugin(ScrollTrigger);
 
-type Project = {
+export type Project = {
   id: number;
   title: string;
   description: string;
@@ -253,59 +254,12 @@ export function ProjectsV2() {
         </div>
       </div>
 
-      {/* ════════════════════════════════════════════
-          DETAIL VIEW — full viewport overlay
-          ════════════════════════════════════════════ */}
-      <div ref={detailRef} className={styles.detailView}>
-        {detail && (
-          <>
-            {/* Scrollable content area */}
-            <div ref={scrollAreaRef} className={styles.detailScrollArea}>
-
-              {/* Centered header: title, description, tags */}
-              <div className={styles.detailHeader}>
-                <h2 className={styles.detailTitle}>{detail.title}</h2>
-                <p className={styles.detailDesc}>{detail.description}</p>
-                <div className={styles.detailTags}>
-                  {detail.tags.map(tag => (
-                    <span key={tag} className={styles.detailTag}>{tag}</span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Screenshots at 85% width */}
-              <div className={styles.detailGallery}>
-                {detail.screenshots.map((src, i) => (
-                  <div key={i} className={styles.detailScreenshot}>
-                    <div className={styles.detailBrowserBar}>
-                      <span className={styles.detailMacDot} data-color="red"    />
-                      <span className={styles.detailMacDot} data-color="yellow" />
-                      <span className={styles.detailMacDot} data-color="green"  />
-                      <span className={styles.detailBrowserUrl}>
-                        {detail.title.toLowerCase().replace(/\s/g, '-')}.dev
-                      </span>
-                    </div>
-                    <img
-                      src={src}
-                      alt={`${detail.title} — pantalla ${i + 1}`}
-                      className={styles.detailScreenshotImg}
-                    />
-                  </div>
-                ))}
-              </div>
-
-            </div>
-
-            {/* Back button pinned to bottom-left */}
-            <div className={styles.backBtnWrapper}>
-              <button className={styles.backBtn} onClick={goBack}>
-                <span className={styles.backArrow}>←</span>
-                Volver a la sección de proyectos
-              </button>
-            </div>
-          </>
-        )}
-      </div>
+      <ProjectDetail
+        outerRef={detailRef}
+        scrollRef={scrollAreaRef}
+        detail={detail}
+        goBack={goBack}
+      />
 
     </section>
   );

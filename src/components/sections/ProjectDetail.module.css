@@ -1,0 +1,181 @@
+/* =========================================================
+   DETAIL VIEW — full viewport overlay
+   ========================================================= */
+.detailView {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: #000000;
+  overflow: hidden;
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* ── Scrollable content (only scrollbar visible) ── */
+.detailScrollArea {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.detailScrollArea::-webkit-scrollbar       { width: 4px; }
+.detailScrollArea::-webkit-scrollbar-track { background: transparent; }
+.detailScrollArea::-webkit-scrollbar-thumb { background: rgba(255, 167, 38, 0.2); border-radius: 2px; }
+
+/* ── Back button pinned to bottom-right ── */
+.backBtnWrapper {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 10;
+}
+
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: rgba(255, 107, 0, 0.12);
+  border: 1px solid rgba(255, 167, 38, 0.38);
+  border-radius: 10px;
+  cursor: pointer;
+  color: #FFA726;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  font-family: 'Inter', sans-serif;
+  padding: 0.8rem 1.8rem;
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease, color 0.25s ease;
+  backdrop-filter: blur(10px);
+}
+
+.backBtn:hover {
+  background: rgba(255, 107, 0, 0.24);
+  border-color: rgba(255, 167, 38, 0.65);
+  transform: translateX(-4px);
+  color: #ffffff;
+}
+
+.backArrow {
+  display: inline-block;
+  font-size: 1.25rem;
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.backBtn:hover .backArrow { transform: translateX(-5px); }
+
+/* ── Centered header: title, description, tags ── */
+.detailHeader {
+  text-align: center;
+  padding: 5rem 10% 3.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.detailTitle {
+  font-size: clamp(3rem, 7vw, 6rem);
+  font-weight: 900;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.0;
+  letter-spacing: -0.04em;
+  font-family: 'Inter', sans-serif;
+}
+
+.detailDesc {
+  font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+  color: rgba(255, 255, 255, 0.5);
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  line-height: 1.7;
+  max-width: 580px;
+}
+
+.detailTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.detailTag {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgba(255, 167, 38, 0.85);
+  border: 1px solid rgba(255, 167, 38, 0.28);
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(255, 107, 0, 0.1);
+  font-family: 'Inter', sans-serif;
+  white-space: nowrap;
+}
+
+/* ── Gallery: screenshots at 70% width ── */
+.detailGallery {
+  width: 70%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-bottom: 8rem;
+}
+
+.detailScreenshot {
+  flex-shrink: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 167, 38, 0.12);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 24px 60px rgba(0, 0, 0, 0.6);
+  background: #0a0a0a;
+}
+
+.detailBrowserBar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background: rgba(14, 7, 1, 0.98);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.detailMacDot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  display: block; flex-shrink: 0;
+}
+
+.detailMacDot[data-color="red"]    { background: #FF5F57; }
+.detailMacDot[data-color="yellow"] { background: #FEBC2E; }
+.detailMacDot[data-color="green"]  { background: #28C840; }
+
+.detailBrowserUrl {
+  font-size: 0.62rem;
+  color: rgba(255, 255, 255, 0.25);
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.02em;
+  margin-left: 0.4rem;
+}
+
+.detailScreenshotImg {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: top;
+}
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+@media (max-width: 1024px) {
+  .detailHeader   { padding: 3rem 5% 2.5rem; }
+  .detailGallery  { width: 82%; }
+  .backBtnWrapper { bottom: 1.5rem; right: 1.5rem; }
+}
+
+@media (max-width: 600px) {
+  .detailTitle    { font-size: 2.5rem; }
+  .backBtn        { font-size: 0.85rem; padding: 0.65rem 1.2rem; }
+  .backBtnWrapper { bottom: 1rem; right: 1rem; }
+  .detailGallery  { width: 92%; }
+}

@@ -10,6 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 export function Hero() {
   const nameRef = useRef<HTMLDivElement>(null);
+  const nameWhiteRef = useRef<HTMLSpanElement>(null);
   const roleRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const rightTextRef = useRef<HTMLDivElement>(null);
@@ -125,7 +126,23 @@ export function Hero() {
       { autoAlpha: 0, y: -10 },
       { autoAlpha: 1, y: 0, duration: 1, ease: "power2.out" },
       "-=0.5"
-    );
+    )
+    // 6) Barrido del nombre: de degradado brillante a blanco, de derecha a izquierda
+    .addLabel("nameWipe", "+=0.2")
+    .fromTo(nameWhiteRef.current,
+      { clipPath: 'inset(0 100% 0 0)', textShadow: '0 0 28px rgba(200, 215, 255, 0.95)' },
+      { clipPath: 'inset(0 0% 0 0)', textShadow: '0 0 8px rgba(200, 215, 255, 0.08)', duration: 0.9, ease: 'power2.inOut' },
+      "nameWipe"
+    )
+    .call(() => {
+      if (document.documentElement.getAttribute('data-theme') === 'dark' && nameRef.current) {
+        gsap.to(nameRef.current, {
+          filter: 'drop-shadow(0 4px 20px rgba(255, 107, 0, 0))',
+          duration: 0.4,
+          ease: 'power2.inOut',
+        });
+      }
+    }, [], "nameWipe+=0.6");
 
     // --- MOUSE PARALLAX (Botón Contactame) ---
     xToBtn.current = gsap.quickTo(contactBtnRef.current, "x", { duration: 0.8, ease: "power3" });
@@ -265,6 +282,9 @@ export function Hero() {
               <canvas ref={nameCanvasRef} className={styles.introSparksCanvas} />
             </div>
             Alexis Delvalle
+            <span ref={nameWhiteRef} className={styles.nameWhiteOverlay} aria-hidden="true">
+              Alexis Delvalle
+            </span>
           </div>
           <div className={styles.roleContainer}>
             <div className={styles.introSparksContainer}>

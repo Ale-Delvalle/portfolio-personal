@@ -168,7 +168,7 @@ export function GlowBackground() {
 
         if (comet.isParticles) {
           if (!transitionStarted) return; // Solo empieza cuando termina la intro
-          const p = ((time + 2000) % 15000) / comet.duration;
+          const p = ((time + 2000) % 22000) / comet.duration;
 
           if (p >= 0 && p <= 1) {
             let emissionRate = 3; 

@@ -57,8 +57,8 @@ export function Stack() {
     });
 
     const isMobile = window.innerWidth < 768;
-    const radiusX = isMobile ? window.innerWidth * 0.45 : 416; // 30% más lejos
-    const radiusY = isMobile ? 286 : 208; // 30% más lejos
+    const radiusX = isMobile ? window.innerWidth * 0.40 : 416;
+    const radiusY = isMobile ? 155 : 208;
 
     const titleCenter = sectionRef.current?.querySelector(`.${styles.titleCenter}`);
 

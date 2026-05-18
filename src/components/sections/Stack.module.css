@@ -1,10 +1,9 @@
 .stackSection {
-  padding: 5rem 2rem 120px 2rem;
+  padding: 1.5rem 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 80vh;
   overflow: hidden;
   position: relative;
 }
@@ -18,6 +17,12 @@
   align-items: center;
   justify-content: center;
   margin: 0 auto;
+}
+
+@media (max-width: 767px) {
+  .circleContainer {
+    height: 360px;
+  }
 }
 
 .titleContainer {
@@ -109,8 +114,8 @@
   font-family: var(--font-body);
   font-size: 1.2rem;
   color: #003366;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
   text-align: center;
 }
 
@@ -126,7 +131,6 @@
   font-family: var(--font-body);
   color: #003366;
   opacity: 0; /* for animation */
-  margin-bottom: 80px;
 }
 
 :global(:root[data-theme="dark"]) .secondaryStack {

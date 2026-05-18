@@ -114,7 +114,7 @@ export function ProjectsV2() {
 
     const trigger = {
       trigger: sectionRef.current,
-      start: 'top 65%',
+      start: 'top 30%',
       toggleActions: 'play none none reverse',
     };
 

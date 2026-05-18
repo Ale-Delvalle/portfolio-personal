@@ -132,15 +132,6 @@ export function ProjectsV2() {
                   <p className={styles.rowDesc}>{project.description}</p>
                 </div>
 
-                <div className={styles.rowMeta}>
-                  <div className={styles.rowTags}>
-                    {project.tags.map((tag) => (
-                      <span key={tag} className={styles.tag}>{tag}</span>
-                    ))}
-                  </div>
-                  <span className={styles.rowYear}>{project.year}</span>
-                </div>
-
                 <span className={styles.rowArrow}>↗</span>
               </div>
             ))}

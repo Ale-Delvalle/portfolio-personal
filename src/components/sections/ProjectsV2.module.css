@@ -310,6 +310,59 @@
 .metaTitleVisible { opacity: 1; transform: translateY(0); }
 
 /* =========================================================
+   Hero clone — fixed overlay for open transition
+   ========================================================= */
+.heroClone {
+  position: fixed;
+  z-index: 1500;
+  display: none; /* GSAP switches to flex */
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 167, 38, 0.14);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5), 0 24px 60px rgba(0, 0, 0, 0.55), 0 0 40px rgba(255, 107, 0, 0.07);
+  background: #0a0a0a;
+  pointer-events: none;
+}
+
+.heroCloneBrowserBar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background: rgba(14, 7, 1, 0.98);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  flex-shrink: 0;
+}
+
+.heroCloneDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: block;
+  flex-shrink: 0;
+}
+
+.heroCloneDot[data-color="red"]    { background: #FF5F57; }
+.heroCloneDot[data-color="yellow"] { background: #FEBC2E; }
+.heroCloneDot[data-color="green"]  { background: #28C840; }
+
+.heroImgWrapper {
+  flex: 1;
+  overflow: hidden;
+  background: #111;
+  min-height: 0;
+}
+
+.heroImg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: top;
+}
+
+/* =========================================================
    Responsive
    ========================================================= */
 @media (max-width: 1024px) {

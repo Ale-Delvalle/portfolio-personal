@@ -76,6 +76,11 @@ export function ProjectsV2() {
   const mainRef       = useRef<HTMLDivElement>(null);
   const detailRef     = useRef<HTMLDivElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const previewFrameRef = useRef<HTMLDivElement>(null);
+  const heroRef         = useRef<HTMLDivElement>(null);
+  const heroImgRef      = useRef<HTMLImageElement>(null);
+  const firstScreenRef  = useRef<HTMLDivElement>(null);
+  const detailHeaderRef = useRef<HTMLDivElement>(null);
 
   const [activeId,  setActiveId]  = useState(1);
   const [selected,  setSelected]  = useState<Project | null>(null);
@@ -128,20 +133,87 @@ export function ProjectsV2() {
   // ── Open project detail page ────────────────────────────
   const openProject = useCallback((project: Project) => {
     lastRef.current = project;
-    setSelected(project);
 
+    const sourceRect = previewFrameRef.current?.getBoundingClientRect();
+
+    setSelected(project);
     document.body.style.overflow = 'hidden';
-    gsap.killTweensOf([mainRef.current, detailRef.current]);
+    gsap.killTweensOf([mainRef.current, detailRef.current, heroRef.current]);
 
     if (scrollAreaRef.current) scrollAreaRef.current.scrollTop = 0;
+    gsap.set(detailRef.current, { x: 0 });
 
-    const tl = gsap.timeline();
-    tl.to(mainRef.current, { x: '-5%', autoAlpha: 0, duration: 0.4, ease: 'power3.in' })
-      .fromTo(detailRef.current,
-        { x: '5%', autoAlpha: 0 },
-        { x: '0%', autoAlpha: 1, duration: 0.58, ease: 'expo.out' },
-        '-=0.1'
-      );
+    if (!sourceRect || !heroRef.current || !heroImgRef.current) {
+      const tl = gsap.timeline();
+      tl.to(mainRef.current, { x: '-5%', autoAlpha: 0, duration: 0.4, ease: 'power3.in' })
+        .fromTo(detailRef.current,
+          { x: '5%', autoAlpha: 0 },
+          { x: '0%', autoAlpha: 1, duration: 0.58, ease: 'expo.out' },
+          '-=0.1'
+        );
+      return;
+    }
+
+    const hero    = heroRef.current;
+    const heroImg = heroImgRef.current;
+
+    heroImg.src = project.image;
+    gsap.set(hero, {
+      display: 'flex',
+      left:    sourceRect.left,
+      top:     sourceRect.top,
+      width:   sourceRect.width,
+      height:  sourceRect.height,
+    });
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const firstScreen = firstScreenRef.current;
+        const header      = detailHeaderRef.current;
+
+        if (!firstScreen || !header) {
+          gsap.set(hero, { display: 'none' });
+          const tl = gsap.timeline();
+          tl.to(mainRef.current, { x: '-5%', autoAlpha: 0, duration: 0.4, ease: 'power3.in' })
+            .fromTo(detailRef.current,
+              { x: '5%', autoAlpha: 0 },
+              { x: '0%', autoAlpha: 1, duration: 0.58, ease: 'expo.out' },
+              '-=0.1'
+            );
+          return;
+        }
+
+        const targetRect = firstScreen.getBoundingClientRect();
+
+        gsap.set(header,      { autoAlpha: 0 });
+        gsap.set(firstScreen, { opacity: 0 });
+
+        const tl = gsap.timeline();
+        tl
+          .to(mainRef.current, { x: '-5%', autoAlpha: 0, duration: 0.45, ease: 'power3.in' }, 0)
+          .fromTo(detailRef.current,
+            { autoAlpha: 0 },
+            { autoAlpha: 1, duration: 0.45, ease: 'power2.inOut' },
+            0.1
+          )
+          .to(hero, {
+            left:   targetRect.left,
+            top:    targetRect.top,
+            width:  targetRect.width,
+            height: targetRect.height,
+            duration: 0.62,
+            ease:     'expo.out',
+          }, 0.15)
+          .call(() => {
+            gsap.set(firstScreen, { opacity: 1 });
+            gsap.set(hero, { display: 'none' });
+          })
+          .fromTo(header,
+            { y: 20, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: 0.5, ease: 'expo.out' }
+          );
+      });
+    });
   }, []);
 
   // ── Go back to projects list ────────────────────────────
@@ -203,7 +275,7 @@ export function ProjectsV2() {
 
           {/* Right: preview */}
           <div className={styles.previewCol}>
-            <div className={styles.previewFrame}>
+            <div ref={previewFrameRef} className={styles.previewFrame}>
               <div className={styles.browserBar}>
                 <div className={styles.browserDots}>
                   <span className={styles.dot} data-color="red" />
@@ -259,7 +331,21 @@ export function ProjectsV2() {
         scrollRef={scrollAreaRef}
         detail={detail}
         goBack={goBack}
+        firstScreenRef={firstScreenRef}
+        detailHeaderRef={detailHeaderRef}
       />
+
+      {/* Hero clone — flies from preview to gallery on open */}
+      <div ref={heroRef} className={styles.heroClone} aria-hidden="true">
+        <div className={styles.heroCloneBrowserBar}>
+          <span className={styles.heroCloneDot} data-color="red" />
+          <span className={styles.heroCloneDot} data-color="yellow" />
+          <span className={styles.heroCloneDot} data-color="green" />
+        </div>
+        <div className={styles.heroImgWrapper}>
+          <img ref={heroImgRef} src="" alt="" className={styles.heroImg} />
+        </div>
+      </div>
 
     </section>
   );

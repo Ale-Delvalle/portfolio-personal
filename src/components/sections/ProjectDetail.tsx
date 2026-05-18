@@ -5,18 +5,20 @@ import type { Project } from './ProjectsV2';
 type Props = {
   detail: Project | null;
   goBack: () => void;
-  outerRef: RefObject<HTMLDivElement>;
-  scrollRef: RefObject<HTMLDivElement>;
+  outerRef: RefObject<HTMLDivElement | null>;
+  scrollRef: RefObject<HTMLDivElement | null>;
+  firstScreenRef: RefObject<HTMLDivElement | null>;
+  detailHeaderRef: RefObject<HTMLDivElement | null>;
 };
 
-export function ProjectDetail({ detail, goBack, outerRef, scrollRef }: Props) {
+export function ProjectDetail({ detail, goBack, outerRef, scrollRef, firstScreenRef, detailHeaderRef }: Props) {
   return (
     <div ref={outerRef} className={styles.detailView}>
       {detail && (
         <>
           <div ref={scrollRef} className={styles.detailScrollArea}>
 
-            <div className={styles.detailHeader}>
+            <div className={styles.detailHeader} ref={detailHeaderRef}>
               <h2 className={styles.detailTitle}>{detail.title}</h2>
               <p className={styles.detailDesc}>{detail.description}</p>
               <div className={styles.detailTags}>
@@ -28,7 +30,7 @@ export function ProjectDetail({ detail, goBack, outerRef, scrollRef }: Props) {
 
             <div className={styles.detailGallery}>
               {detail.screenshots.map((src, i) => (
-                <div key={i} className={styles.detailScreenshot}>
+                <div key={i} className={styles.detailScreenshot} ref={i === 0 ? firstScreenRef : undefined}>
                   <div className={styles.detailBrowserBar}>
                     <span className={styles.detailMacDot} data-color="red"    />
                     <span className={styles.detailMacDot} data-color="yellow" />
@@ -47,6 +49,10 @@ export function ProjectDetail({ detail, goBack, outerRef, scrollRef }: Props) {
             </div>
 
           </div>
+
+          <button className={styles.backArrowBtn} onClick={goBack} aria-label="Volver a proyectos">
+            ←
+          </button>
 
           <div className={styles.backBtnWrapper}>
             <button className={styles.backBtn} onClick={goBack}>

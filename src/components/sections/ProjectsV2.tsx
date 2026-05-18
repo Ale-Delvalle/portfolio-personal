@@ -107,10 +107,12 @@ export function ProjectsV2() {
 
   // ── Section entrance animations (main view only) ────────
   useGSAP(() => {
-    const header  = mainRef.current?.querySelector(`.${styles.header}`);
-    const line    = mainRef.current?.querySelector(`.${styles.headerLine}`);
-    const rows    = mainRef.current?.querySelectorAll(`.${styles.row}`);
-    const preview = mainRef.current?.querySelector(`.${styles.previewCol}`);
+    const header = mainRef.current?.querySelector(`.${styles.header}`);
+    const line   = mainRef.current?.querySelector(`.${styles.headerLine}`);
+    const rows   = mainRef.current?.querySelectorAll(`.${styles.row}`);
+    const frame  = mainRef.current?.querySelector(`.${styles.previewFrame}`);
+    const meta   = mainRef.current?.querySelector(`.${styles.previewMeta}`);
+    const imgs   = mainRef.current?.querySelectorAll<HTMLElement>(`.${styles.previewImg}`);
 
     const trigger = {
       trigger: sectionRef.current,
@@ -118,9 +120,25 @@ export function ProjectsV2() {
       toggleActions: 'play none none reverse',
     };
 
-    if (header)  gsap.fromTo(header,  { y: 24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.9,  ease: 'expo.out', scrollTrigger: trigger });
-    if (line)    gsap.fromTo(line,    { scaleX: 0 },            { scaleX: 1, duration: 1.5, ease: 'expo.out', transformOrigin: 'left', scrollTrigger: trigger, delay: 0.15 });
-    if (preview) gsap.fromTo(preview, { x: 50, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 1.1,  ease: 'expo.out', scrollTrigger: trigger, delay: 0.2 });
+    if (header) gsap.fromTo(header, { y: 24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.9, ease: 'expo.out', scrollTrigger: trigger });
+    if (line)   gsap.fromTo(line,   { scaleX: 0 },           { scaleX: 1, duration: 1.5, ease: 'expo.out', transformOrigin: 'left', scrollTrigger: trigger, delay: 0.15 });
+
+    // Clip-path wipe reveal for the preview frame
+    if (frame) {
+      gsap.fromTo(frame,
+        { clipPath: 'inset(0 100% 0 0 round 12px)' },
+        { clipPath: 'inset(0 0% 0 0 round 12px)', duration: 1.2, ease: 'expo.out', scrollTrigger: trigger, delay: 0.2 }
+      );
+    }
+    if (meta) {
+      gsap.fromTo(meta,
+        { y: 12, autoAlpha: 0 },
+        { y: 0, autoAlpha: 1, duration: 0.8, ease: 'expo.out', scrollTrigger: trigger, delay: 0.45 }
+      );
+    }
+
+    // Scale images slightly so mouse-parallax movement has room without gaps
+    if (imgs?.length) gsap.set(imgs, { scale: 1.08, transformOrigin: 'center center' });
 
     rows?.forEach((row, i) => {
       gsap.fromTo(row,
@@ -129,6 +147,49 @@ export function ProjectsV2() {
       );
     });
   }, { scope: sectionRef });
+
+  // ── 3D tilt + mouse-parallax + glare on the preview frame ──
+  const handlePreviewMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const frame = previewFrameRef.current;
+    if (!frame) return;
+    const rect = frame.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+
+    gsap.to(frame, {
+      rotateX: (0.5 - y) * 8,
+      rotateY: (x - 0.5) * 12,
+      transformPerspective: 1000,
+      duration: 0.5,
+      ease: 'power2.out',
+      overwrite: 'auto',
+    });
+
+    const imgs = frame.querySelectorAll<HTMLElement>(`.${styles.previewImg}`);
+    gsap.to(imgs, {
+      x: (0.5 - x) * 18,
+      y: (0.5 - y) * 12,
+      duration: 0.6,
+      ease: 'power2.out',
+      overwrite: 'auto',
+    });
+
+    const glare = frame.querySelector<HTMLElement>(`.${styles.previewGlare}`);
+    if (glare) {
+      glare.style.background = `radial-gradient(circle at ${x * 100}% ${y * 100}%, rgba(255,255,255,0.11) 0%, transparent 60%)`;
+      gsap.to(glare, { opacity: 1, duration: 0.3, overwrite: 'auto' });
+    }
+  }, []);
+
+  const handlePreviewLeave = useCallback(() => {
+    const frame = previewFrameRef.current;
+    if (!frame) return;
+    gsap.to(frame, { rotateX: 0, rotateY: 0, duration: 0.75, ease: 'expo.out', overwrite: 'auto' });
+    const imgs = frame.querySelectorAll<HTMLElement>(`.${styles.previewImg}`);
+    gsap.to(imgs, { x: 0, y: 0, duration: 0.75, ease: 'expo.out', overwrite: 'auto' });
+    const glare = frame.querySelector<HTMLElement>(`.${styles.previewGlare}`);
+    if (glare) gsap.to(glare, { opacity: 0, duration: 0.45, overwrite: 'auto' });
+  }, []);
 
   // ── Open project detail page ────────────────────────────
   const openProject = useCallback((project: Project) => {
@@ -275,7 +336,12 @@ export function ProjectsV2() {
 
           {/* Right: preview */}
           <div className={styles.previewCol}>
-            <div ref={previewFrameRef} className={styles.previewFrame}>
+            <div
+              ref={previewFrameRef}
+              className={styles.previewFrame}
+              onMouseMove={handlePreviewMove}
+              onMouseLeave={handlePreviewLeave}
+            >
               <div className={styles.browserBar}>
                 <div className={styles.browserDots}>
                   <span className={styles.dot} data-color="red" />
@@ -297,6 +363,7 @@ export function ProjectsV2() {
                 ))}
                 <div className={styles.imgOverlay} />
               </div>
+              <div className={styles.previewGlare} aria-hidden="true" />
             </div>
 
             <div className={styles.previewMeta}>

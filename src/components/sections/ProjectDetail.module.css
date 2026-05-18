@@ -157,16 +157,6 @@
   border: 1px solid rgba(255, 167, 38, 0.12);
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 24px 60px rgba(0, 0, 0, 0.6);
   background: #0a0a0a;
-  position: relative;
-  will-change: transform;
-  transition: box-shadow 0.45s ease;
-}
-
-.detailScreenshot:hover {
-  box-shadow:
-    0 0 0 1px rgba(255, 167, 38, 0.22),
-    0 28px 80px rgba(0, 0, 0, 0.75),
-    0 0 55px rgba(255, 107, 0, 0.08);
 }
 
 .detailBrowserBar {
@@ -196,28 +186,12 @@
   margin-left: 0.4rem;
 }
 
-.detailImgTrack {
-  overflow: hidden;
-  position: relative;
-  height: calc(100svh - 17rem);
-}
-
 .detailScreenshotImg {
   width: 100%;
-  height: calc(100% + 80px);
   display: block;
   object-fit: cover;
-  object-position: top center;
-  will-change: transform;
-}
-
-.glare {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0;
-  z-index: 1;
-  border-radius: 12px;
+  object-position: top;
+  max-height: calc(100svh - 17rem);
 }
 
 /* =========================================================

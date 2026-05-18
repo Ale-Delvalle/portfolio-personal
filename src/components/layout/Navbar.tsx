@@ -1,6 +1,7 @@
-import { useRef } from 'react';
+import { useRef, useCallback } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Moon, Sun } from 'lucide-react';
 import styles from './Navbar.module.css';
 
@@ -9,11 +10,16 @@ interface NavbarProps {
   toggleTheme: () => void;
 }
 
+const NAV_ITEMS = [
+  { label: 'Home',      target: 'home'      },
+  { label: 'Proyectos', target: 'proyectos' },
+  { label: 'Stack',     target: 'stack'     },
+] as const;
+
 export function Navbar({ theme, toggleTheme }: NavbarProps) {
   const navRef = useRef<HTMLElement>(null);
 
   useGSAP(() => {
-    // Sincronizado (2.5s) con la aparición de los textos laterales en el Hero
     gsap.from(navRef.current, {
       opacity: 0,
       x: -30,
@@ -23,21 +29,25 @@ export function Navbar({ theme, toggleTheme }: NavbarProps) {
     });
   }, []);
 
+  const scrollTo = useCallback((id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'instant', block: 'start' });
+    // GSAP ScrollTrigger puede perderse el salto instantáneo; refresh fuerza el recálculo
+    requestAnimationFrame(() => ScrollTrigger.refresh());
+  }, []);
+
   return (
     <nav ref={navRef} className={styles.navbar}>
       <ul className={styles.navList}>
-        <li>
-          <a href="#work" className={`${styles.link} ${styles.activeLink}`}>Work</a>
-        </li>
-        <li>
-          <a href="#expertise" className={styles.link}>Expertise</a>
-        </li>
-        <li>
-          <a href="#experience" className={styles.link}>Experience</a>
-        </li>
-        <li>
-          <a href="#inquiry" className={styles.link}>Inquiry</a>
-        </li>
+        {NAV_ITEMS.map(({ label, target }) => (
+          <li key={target}>
+            <button
+              className={styles.link}
+              onClick={() => scrollTo(target)}
+            >
+              {label}
+            </button>
+          </li>
+        ))}
       </ul>
 
       <button className={styles.themeBtn} onClick={toggleTheme} aria-label="Toggle Theme">

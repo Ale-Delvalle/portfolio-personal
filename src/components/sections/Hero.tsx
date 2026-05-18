@@ -273,7 +273,7 @@ export function Hero() {
   }, []);
 
   return (
-    <main ref={mainRef} className={`${styles.main} hero-mesh-gradient`} onMouseMove={handleMouseMove} style={{ perspective: "1000px" }}>
+    <main id="home" ref={mainRef} className={`${styles.main} hero-mesh-gradient`} onMouseMove={handleMouseMove} style={{ perspective: "1000px" }}>
       <div className={styles.content}>
         
         <div ref={nameContainerRef} className={styles.nameContainer}>

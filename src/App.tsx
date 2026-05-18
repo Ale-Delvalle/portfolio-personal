@@ -16,10 +16,10 @@ function App() {
       <GlowBackground />
       <Navbar theme={theme} toggleTheme={toggleTheme} />
       <Hero />
-      <Stack />
       {/* <Projects /> */}
       {/* <ProjectsV1 /> */}
       <ProjectsV2 />
+      <Stack />
     </>
   );
 }

@@ -123,22 +123,22 @@ export function ProjectsV2() {
     if (header) gsap.fromTo(header, { y: 24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.9, ease: 'expo.out', scrollTrigger: trigger });
     if (line)   gsap.fromTo(line,   { scaleX: 0 },           { scaleX: 1, duration: 1.5, ease: 'expo.out', transformOrigin: 'left', scrollTrigger: trigger, delay: 0.15 });
 
-    // Clip-path wipe reveal for the preview frame
+    // Simultaneous 3D fade-in for the preview frame
     if (frame) {
       gsap.fromTo(frame,
-        { clipPath: 'inset(0 100% 0 0 round 12px)' },
-        { clipPath: 'inset(0 0% 0 0 round 12px)', duration: 1.2, ease: 'expo.out', scrollTrigger: trigger, delay: 0.2 }
+        { autoAlpha: 0, scale: 0.9, rotateY: 12, transformPerspective: 1200 },
+        { autoAlpha: 1, scale: 1, rotateY: 0, duration: 0.9, ease: 'expo.out', scrollTrigger: trigger, delay: 0.15 }
       );
     }
     if (meta) {
       gsap.fromTo(meta,
         { y: 12, autoAlpha: 0 },
-        { y: 0, autoAlpha: 1, duration: 0.8, ease: 'expo.out', scrollTrigger: trigger, delay: 0.45 }
+        { y: 0, autoAlpha: 1, duration: 0.8, ease: 'expo.out', scrollTrigger: trigger, delay: 0.35 }
       );
     }
 
-    // Scale images slightly so mouse-parallax movement has room without gaps
-    if (imgs?.length) gsap.set(imgs, { scale: 1.08, transformOrigin: 'center center' });
+    // Scale images so mouse-parallax movement has room without gaps
+    if (imgs?.length) gsap.set(imgs, { scale: 1.18, transformOrigin: 'center center' });
 
     rows?.forEach((row, i) => {
       gsap.fromTo(row,
@@ -149,46 +149,77 @@ export function ProjectsV2() {
   }, { scope: sectionRef });
 
   // ── 3D tilt + mouse-parallax + glare on the preview frame ──
-  const handlePreviewMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    const frame = previewFrameRef.current;
-    if (!frame) return;
-    const rect = frame.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width;
-    const y = (e.clientY - rect.top) / rect.height;
+  // Global listener: strong effect when over frame, subtle when anywhere else
+  useEffect(() => {
+    const handleGlobalMove = (e: MouseEvent) => {
+      const frame = previewFrameRef.current;
+      if (!frame) return;
 
-    gsap.to(frame, {
-      rotateX: (0.5 - y) * 8,
-      rotateY: (x - 0.5) * 12,
-      transformPerspective: 1000,
-      duration: 0.5,
-      ease: 'power2.out',
-      overwrite: 'auto',
-    });
+      const rect = frame.getBoundingClientRect();
+      const isOver = (
+        e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top &&
+        e.clientY <= rect.bottom
+      );
 
-    const imgs = frame.querySelectorAll<HTMLElement>(`.${styles.previewImg}`);
-    gsap.to(imgs, {
-      x: (0.5 - x) * 18,
-      y: (0.5 - y) * 12,
-      duration: 0.6,
-      ease: 'power2.out',
-      overwrite: 'auto',
-    });
+      if (isOver) {
+        const x = (e.clientX - rect.left) / rect.width;
+        const y = (e.clientY - rect.top) / rect.height;
 
-    const glare = frame.querySelector<HTMLElement>(`.${styles.previewGlare}`);
-    if (glare) {
-      glare.style.background = `radial-gradient(circle at ${x * 100}% ${y * 100}%, rgba(255,255,255,0.11) 0%, transparent 60%)`;
-      gsap.to(glare, { opacity: 1, duration: 0.3, overwrite: 'auto' });
-    }
-  }, []);
+        gsap.to(frame, {
+          rotateX: (0.5 - y) * 12,
+          rotateY: (x - 0.5) * 16,
+          transformPerspective: 1200,
+          duration: 0.4,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        });
 
-  const handlePreviewLeave = useCallback(() => {
-    const frame = previewFrameRef.current;
-    if (!frame) return;
-    gsap.to(frame, { rotateX: 0, rotateY: 0, duration: 0.75, ease: 'expo.out', overwrite: 'auto' });
-    const imgs = frame.querySelectorAll<HTMLElement>(`.${styles.previewImg}`);
-    gsap.to(imgs, { x: 0, y: 0, duration: 0.75, ease: 'expo.out', overwrite: 'auto' });
-    const glare = frame.querySelector<HTMLElement>(`.${styles.previewGlare}`);
-    if (glare) gsap.to(glare, { opacity: 0, duration: 0.45, overwrite: 'auto' });
+        const imgs = frame.querySelectorAll<HTMLElement>(`.${styles.previewImg}`);
+        gsap.to(imgs, {
+          x: (0.5 - x) * 25,
+          y: (0.5 - y) * 17,
+          duration: 0.5,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        });
+
+        const glare = frame.querySelector<HTMLElement>(`.${styles.previewGlare}`);
+        if (glare) {
+          glare.style.background = `radial-gradient(circle at ${x * 100}% ${y * 100}%, rgba(255,255,255,0.14) 0%, transparent 60%)`;
+          gsap.to(glare, { opacity: 1, duration: 0.3, overwrite: 'auto' });
+        }
+      } else {
+        // Subtle parallax based on window-normalised coords
+        const wx = e.clientX / window.innerWidth;
+        const wy = e.clientY / window.innerHeight;
+
+        gsap.to(frame, {
+          rotateX: (0.5 - wy) * 4,
+          rotateY: (wx - 0.5) * 5,
+          transformPerspective: 1200,
+          duration: 0.9,
+          ease: 'expo.out',
+          overwrite: 'auto',
+        });
+
+        const imgs = frame.querySelectorAll<HTMLElement>(`.${styles.previewImg}`);
+        gsap.to(imgs, {
+          x: (0.5 - wx) * 10,
+          y: (0.5 - wy) * 7,
+          duration: 0.9,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        });
+
+        const glare = frame.querySelector<HTMLElement>(`.${styles.previewGlare}`);
+        if (glare) gsap.to(glare, { opacity: 0, duration: 0.45, overwrite: 'auto' });
+      }
+    };
+
+    window.addEventListener('mousemove', handleGlobalMove);
+    return () => window.removeEventListener('mousemove', handleGlobalMove);
   }, []);
 
   // ── Open project detail page ────────────────────────────
@@ -295,7 +326,7 @@ export function ProjectsV2() {
   const detail   = selected ?? lastRef.current;
 
   return (
-    <section ref={sectionRef} className={styles.section}>
+    <section id="proyectos" ref={sectionRef} className={styles.section}>
 
       {/* ════════════════════════════════════════════
           MAIN VIEW — list + preview
@@ -339,8 +370,6 @@ export function ProjectsV2() {
             <div
               ref={previewFrameRef}
               className={styles.previewFrame}
-              onMouseMove={handlePreviewMove}
-              onMouseLeave={handlePreviewLeave}
             >
               <div className={styles.browserBar}>
                 <div className={styles.browserDots}>

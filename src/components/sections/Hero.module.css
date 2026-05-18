@@ -300,9 +300,7 @@
   white-space: nowrap;
   color: #ffffff;
   -webkit-text-fill-color: #ffffff;
-  text-shadow:
-    2px 3px 0 rgba(140, 55, 0, 0.55),
-    4px 6px 0 rgba(90, 25, 0, 0.28);
+  text-shadow: none;
   background: none;
   -webkit-background-clip: initial;
   background-clip: initial;

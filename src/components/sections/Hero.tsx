@@ -130,8 +130,8 @@ export function Hero() {
     // 6) Barrido del nombre: de degradado brillante a blanco, de derecha a izquierda
     .addLabel("nameWipe", "+=0.2")
     .fromTo(nameWhiteRef.current,
-      { clipPath: 'inset(0 100% 0 0)', textShadow: '0 0 28px rgba(200, 215, 255, 0.95)' },
-      { clipPath: 'inset(0 0% 0 0)', textShadow: '2px 3px 0 rgba(140, 55, 0, 0.55), 4px 6px 0 rgba(90, 25, 0, 0.28)', duration: 0.9, ease: 'power2.inOut' },
+      { clipPath: 'inset(0 100% 0 0)' },
+      { clipPath: 'inset(0 0% 0 0)', textShadow: 'none', duration: 0.9, ease: 'power2.inOut' },
       "nameWipe"
     )
     .call(() => {

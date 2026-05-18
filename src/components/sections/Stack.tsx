@@ -24,15 +24,15 @@ export function Stack() {
 
   useGSAP(() => {
     // 1) Fade in de la sección cuando entra en el viewport
-    gsap.fromTo(sectionRef.current, 
-      { autoAlpha: 0 }, 
-      { 
-        autoAlpha: 1, 
+    gsap.fromTo(sectionRef.current,
+      { autoAlpha: 0 },
+      {
+        autoAlpha: 1,
+        duration: 0.5,
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 80%", // Empieza cuando el tope está al 80% de la pantalla
-          end: "top 50%", // Termina cuando el tope está al 50%
-          scrub: true
+          start: "top 30%",
+          once: true,
         }
       }
     );
@@ -41,7 +41,7 @@ export function Stack() {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: sectionRef.current,
-        start: "top 70%", // Dispara la animación cuando el tope está al 70% de la pantalla
+        start: "top 30%",
       }
     });
 
@@ -113,12 +113,34 @@ export function Stack() {
     }
 
     if (secondaryStackRef.current && secTitle) {
-      tl.fromTo([secTitle, secondaryStackRef.current], 
-        { y: 30, autoAlpha: 0 }, 
+      tl.fromTo([secTitle, secondaryStackRef.current],
+        { y: 30, autoAlpha: 0 },
         { y: 0, autoAlpha: 1, duration: 0.6, stagger: 0.2, ease: "power2.out" },
         "-=0.5"
       );
     }
+
+    // Animación de salida: todos los elementos se desvanecen al mismo tiempo.
+    // fromTo con from explícito para que el scrub pueda revertir correctamente.
+    const exitTargets = [
+      ...cardsRef.current.filter(Boolean),
+      titleCenter,
+      secTitle,
+      secondaryStackRef.current,
+    ].filter(Boolean);
+
+    gsap.fromTo(exitTargets,
+      { autoAlpha: 1 },
+      {
+        autoAlpha: 0,
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "bottom 70%",
+          end: "bottom 20%",
+          scrub: true,
+        }
+      }
+    );
 
   }, { scope: sectionRef });
 

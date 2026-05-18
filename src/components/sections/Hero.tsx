@@ -131,7 +131,7 @@ export function Hero() {
     .addLabel("nameWipe", "+=0.2")
     .fromTo(nameWhiteRef.current,
       { clipPath: 'inset(0 100% 0 0)', textShadow: '0 0 28px rgba(200, 215, 255, 0.95)' },
-      { clipPath: 'inset(0 0% 0 0)', textShadow: '0 0 8px rgba(200, 215, 255, 0.08)', duration: 0.9, ease: 'power2.inOut' },
+      { clipPath: 'inset(0 0% 0 0)', textShadow: '2px 3px 0 rgba(140, 55, 0, 0.55), 4px 6px 0 rgba(90, 25, 0, 0.28)', duration: 0.9, ease: 'power2.inOut' },
       "nameWipe"
     )
     .call(() => {
@@ -302,6 +302,7 @@ export function Hero() {
             </div>
             <div ref={buttonsRef} className={styles.buttonGroup}>
               <button className={styles.primaryBtn}>Revisar proyectos</button>
+              <a href="/cv-alexis-delvalle.pdf" download className={styles.primaryBtn}>Descargar CV</a>
               <div ref={contactBtnRef} className={styles.btn3dContainer}>
                 {Array.from({ length: 6 }).map((_, i) => (
                   <div key={i} className={styles.btnLayer} style={{ transform: `translateZ(${-i * 2}px)` }}></div>

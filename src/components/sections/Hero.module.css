@@ -260,13 +260,12 @@
   line-height: 1.1;
   letter-spacing: -0.02em;
   white-space: nowrap;
-  color: #003366;
-  /* Sombra para volumen que contraste con el fondo casi blanco */
-  text-shadow: 
-    0 4px 15px rgba(0, 51, 102, 0.3),
-    3px 3px 0 #003366;
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+  text-shadow:
+    2px 3px 0 rgba(140, 55, 0, 0.55),
+    4px 6px 0 rgba(90, 25, 0, 0.28);
   background: none;
-  -webkit-text-fill-color: initial;
   filter: none;
 }
 
@@ -301,6 +300,9 @@
   white-space: nowrap;
   color: #ffffff;
   -webkit-text-fill-color: #ffffff;
+  text-shadow:
+    2px 3px 0 rgba(140, 55, 0, 0.55),
+    4px 6px 0 rgba(90, 25, 0, 0.28);
   background: none;
   -webkit-background-clip: initial;
   background-clip: initial;
@@ -351,6 +353,11 @@
   transition: all 0.3s ease;
   border: none;
   outline: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-sizing: border-box;
 }
 
 /* Light Mode / Base Buttons */

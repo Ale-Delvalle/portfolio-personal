@@ -30,9 +30,7 @@ export function Navbar({ theme, toggleTheme }: NavbarProps) {
   }, []);
 
   const scrollTo = useCallback((id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'instant', block: 'start' });
-    // GSAP ScrollTrigger puede perderse el salto instantáneo; refresh fuerza el recálculo
-    requestAnimationFrame(() => ScrollTrigger.refresh());
+    window.dispatchEvent(new CustomEvent('navigate', { detail: { id } }));
   }, []);
 
   return (

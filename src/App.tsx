@@ -17,6 +17,7 @@ gsap.registerPlugin(ScrollTrigger);
 function App() {
   const { theme, toggleTheme } = useTheme();
   const isAnimating = useRef(false);
+  const activeIndexRef = useRef(0);
 
   useEffect(() => {
     // Disable native scroll restoration to avoid weird jumps on reload
@@ -26,32 +27,45 @@ function App() {
 
     const sections = ['home', 'proyectos', 'stack'];
     
-    // Ocultar scrollbar porque controlaremos el scroll manualmente
-    document.body.style.overflow = 'hidden';
+    // Maintain the active index across events
+    const initialScroll = window.scrollY;
+    activeIndexRef.current = Math.round(initialScroll / window.innerHeight);
 
     const handleWheel = (e: WheelEvent) => {
-      // Si hay un modal abierto (como el detalle del proyecto) que ya ocultó el overflow, no hacemos nada
-      // O si estamos en medio de una transición, ignoramos
       if (isAnimating.current) return;
-
       const direction = Math.sign(e.deltaY);
       if (direction === 0) return;
 
-      // Buscar en qué sección estamos basados en el scroll actual
-      const currentScroll = window.scrollY;
-      const windowHeight = window.innerHeight;
-      const currentIndex = Math.round(currentScroll / windowHeight);
+      if (e.preventDefault) {
+        e.preventDefault();
+      }
 
-      let nextIndex = currentIndex + direction;
+      let nextIndex = activeIndexRef.current + direction;
       if (nextIndex < 0) nextIndex = 0;
       if (nextIndex >= sections.length) nextIndex = sections.length - 1;
 
-      if (currentIndex === nextIndex) return;
+      if (activeIndexRef.current === nextIndex) return;
+
+      navigateToSection(sections[activeIndexRef.current], sections[nextIndex]);
+    };
+
+    const handleScroll = () => {
+      // Si estamos en medio de una transición nuestra, ignoramos
+      if (isAnimating.current) return;
+
+      // Simplemente mantenemos el índice actualizado para que si luego
+      // usan la rueda del ratón, empiece desde la sección correcta.
+      const currentScroll = window.scrollY;
+      const windowHeight = window.innerHeight;
+      activeIndexRef.current = Math.round(currentScroll / windowHeight);
+    };
+
+    const navigateToSection = (currentSectionId: string, nextSectionId: string) => {
+      if (isAnimating.current) return;
+      if (currentSectionId === nextSectionId) return;
 
       isAnimating.current = true;
-
-      const currentSectionId = sections[currentIndex];
-      const nextSectionId = sections[nextIndex];
+      activeIndexRef.current = sections.indexOf(nextSectionId);
 
       const currentEl = document.getElementById(currentSectionId);
       const nextEl = document.getElementById(nextSectionId);
@@ -75,6 +89,9 @@ function App() {
               
               // Liberar el bloqueo
               setTimeout(() => {
+                // Restauramos la visibilidad de la sección anterior "detrás de cámaras"
+                // para que si el usuario usa el scroll nativo, no vea una pantalla negra
+                gsap.set(currentEl, { autoAlpha: 1 });
                 isAnimating.current = false;
               }, 400); // cooldown de trackpad
             }, 100);
@@ -85,7 +102,14 @@ function App() {
       }
     };
 
+    const handleNavClick = (e: CustomEvent<{ id: string }>) => {
+      const targetId = e.detail.id;
+      navigateToSection(sections[activeIndexRef.current], targetId);
+    };
+
+    window.addEventListener('navigate', handleNavClick as EventListener);
     window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('scroll', handleScroll, { passive: false });
 
     // Handle touch swipe for mobile
     let touchStartY = 0;
@@ -110,10 +134,11 @@ function App() {
     window.addEventListener('touchmove', handleTouchMove, { passive: false });
 
     return () => {
-      document.body.style.overflow = '';
       window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('navigate', handleNavClick as EventListener);
     };
   }, []);
 

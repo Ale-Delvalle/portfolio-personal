@@ -1,7 +1,10 @@
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import styles from './Stack.module.css';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const techStack = [
   { id: 'typescript', name: 'TypeScript', color: '#3178C6' },
@@ -15,13 +18,12 @@ const techStack = [
 ];
 
 export function Stack() {
-  const sectionRef       = useRef<HTMLElement>(null);
-  const cardsRef         = useRef<(HTMLDivElement | null)[]>([]);
-  const secondaryStackRef = useRef<HTMLElement>(null);
-  const tlRef            = useRef<gsap.core.Timeline | null>(null);
-  const playedRef        = useRef(false);
+  const sectionRef         = useRef<HTMLElement>(null);
+  const circleContainerRef = useRef<HTMLDivElement>(null);
+  const cardsRef           = useRef<(HTMLDivElement | null)[]>([]);
+  const secondaryStackRef  = useRef<HTMLElement>(null);
+  const playedRef          = useRef(false);
 
-  // Construye el timeline pausado y aplica los estados iniciales
   useGSAP(() => {
     const isMobile = window.innerWidth < 768;
     const radiusX  = isMobile ? window.innerWidth * 0.40 : 416;
@@ -37,7 +39,6 @@ export function Stack() {
     if (secondaryStackRef.current) gsap.set(secondaryStackRef.current, { autoAlpha: 0, y: 30 });
 
     const tl = gsap.timeline({ paused: true });
-    tlRef.current = tl;
 
     if (titleCenter) {
       tl.to(titleCenter, { autoAlpha: 1, scale: 1, duration: 1.0, ease: 'back.out(1.5)' });
@@ -73,33 +74,41 @@ export function Stack() {
         y: 0, autoAlpha: 1, duration: 0.6, stagger: 0.2, ease: 'power2.out',
       }, '-=0.5');
     }
-  }, { scope: sectionRef });
 
-  // IntersectionObserver: dispara el timeline cuando la sección es visible,
-  // independientemente de si el scroll fue suave o instantáneo.
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !playedRef.current) {
+    // ScrollTrigger para manejar la animación inicial y las subsecuentes
+    ScrollTrigger.create({
+      trigger: sectionRef.current,
+      start: 'top 30%',
+      onEnter: () => {
+        if (!playedRef.current) {
           playedRef.current = true;
-          tlRef.current?.play();
-          observer.disconnect();
+          tl.play();
+        } else {
+          // Segunda vez en adelante: animación de entrada tipo ProjectsV2
+          const elements = [circleContainerRef.current, secTitle, secondaryStackRef.current].filter(Boolean);
+          gsap.fromTo(elements,
+            { y: 45, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: 0.85, stagger: 0.15, ease: 'expo.out', overwrite: 'auto' }
+          );
         }
       },
-      { threshold: 0.1 },
-    );
+      onLeaveBack: () => {
+        if (playedRef.current) {
+          // Animación de salida tipo ProjectsV2 (reverse)
+          const elements = [circleContainerRef.current, secTitle, secondaryStackRef.current].filter(Boolean);
+          gsap.to(elements,
+            { y: 45, autoAlpha: 0, duration: 0.5, ease: 'expo.out', overwrite: 'auto' }
+          );
+        }
+      }
+    });
 
-    observer.observe(section);
-    return () => observer.disconnect();
-  }, []);
+  }, { scope: sectionRef });
 
   return (
     <section id="stack" ref={sectionRef} className={`${styles.stackSection} hero-mesh-gradient`}>
 
-      <div className={styles.circleContainer}>
+      <div ref={circleContainerRef} className={styles.circleContainer}>
         <div className={styles.titleContainer}>
           <div className={`${styles.titleLayer} ${styles.titleCenter}`}>Stack</div>
         </div>

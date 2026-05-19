@@ -45,14 +45,14 @@ export function Hero() {
     // 1) Nombre y Rol aparecen en el centro de la pantalla a escala 1.5
     tl.fromTo(nameContainerRef.current, 
       { autoAlpha: 0, y: "20vh", scale: 1.5 },
-      { autoAlpha: 1, y: "20vh", duration: 1, ease: "power3.out" }
+      { autoAlpha: 1, y: "20vh", duration: 0.3, ease: "power3.out" }
     )
     // 1.5) Bolitas brillantes detrás del nombre de izquierda a derecha (Línea invisible, Renderizado en Canvas)
     const sweepProxy = { val: 0 };
-    tl.addLabel("introSparks", "+=0.2")
+    tl.addLabel("introSparks", "+=0.05")
     .to(sweepProxy, {
       val: 1,
-      duration: 0.8,
+      duration: 0.3,
       ease: "power2.inOut",
       onUpdate: () => {
         const nCanvas = nameCanvasRef.current;
@@ -82,9 +82,9 @@ export function Hero() {
         emit(roleParticlesRef.current, xPosR, yBaseR);
       }
     }, "introSparks")
-    .set([nameCanvasRef.current, roleCanvasRef.current], { display: "none" }, "introSparks+=4")
+    .set([nameCanvasRef.current, roleCanvasRef.current], { display: "none" }, "introSparks+=1")
     // 2) Se desplazan hacia su posición final (arriba)
-    .addLabel("moveUp", "+=2.3")
+    .addLabel("moveUp", "+=0.1")
     .to(nameContainerRef.current, {
       y: 30,
       scale: 1,

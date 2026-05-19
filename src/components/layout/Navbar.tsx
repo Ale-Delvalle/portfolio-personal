@@ -1,7 +1,6 @@
 import { useRef, useCallback } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Moon, Sun } from 'lucide-react';
 import styles from './Navbar.module.css';
 
@@ -25,7 +24,7 @@ export function Navbar({ theme, toggleTheme }: NavbarProps) {
       x: -30,
       duration: 0.8,
       ease: "power3.out",
-      delay: 2.5
+      delay: 0.4
     });
   }, []);
 

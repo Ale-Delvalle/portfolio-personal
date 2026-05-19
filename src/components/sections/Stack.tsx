@@ -75,10 +75,12 @@ export function Stack() {
       }, '-=0.5');
     }
 
-    // ScrollTrigger para manejar la animación inicial y las subsecuentes
+
+    // Stack entra solo cuando ya se acomodó justo por debajo del Navbar
     ScrollTrigger.create({
       trigger: sectionRef.current,
-      start: 'top 30%',
+      start: 'top 15%',
+      end: 'bottom 15%',
       onEnter: () => {
         if (!playedRef.current) {
           playedRef.current = true;
@@ -92,9 +94,28 @@ export function Stack() {
           );
         }
       },
+      onLeave: () => {
+        if (playedRef.current) {
+          // Animación de salida cuando se pasa de largo hacia abajo
+          const elements = [circleContainerRef.current, secTitle, secondaryStackRef.current].filter(Boolean);
+          gsap.to(elements,
+            { y: -45, autoAlpha: 0, duration: 0.5, ease: 'expo.out', overwrite: 'auto' }
+          );
+        }
+      },
+      onEnterBack: () => {
+        if (playedRef.current) {
+          // Animación de entrada al volver desde abajo
+          const elements = [circleContainerRef.current, secTitle, secondaryStackRef.current].filter(Boolean);
+          gsap.fromTo(elements,
+            { y: -45, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: 0.85, stagger: 0.15, ease: 'expo.out', overwrite: 'auto' }
+          );
+        }
+      },
       onLeaveBack: () => {
         if (playedRef.current) {
-          // Animación de salida tipo ProjectsV2 (reverse)
+          // Animación de salida tipo ProjectsV2 al volver hacia arriba
           const elements = [circleContainerRef.current, secTitle, secondaryStackRef.current].filter(Boolean);
           gsap.to(elements,
             { y: 45, autoAlpha: 0, duration: 0.5, ease: 'expo.out', overwrite: 'auto' }

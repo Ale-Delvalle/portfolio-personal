@@ -114,10 +114,13 @@ export function ProjectsV2() {
     const meta   = mainRef.current?.querySelector(`.${styles.previewMeta}`);
     const imgs   = mainRef.current?.querySelectorAll<HTMLElement>(`.${styles.previewImg}`);
 
+
+    // ProjectsV2 entra solo cuando ya se acomodó justo por debajo del Navbar
     const trigger = {
       trigger: sectionRef.current,
-      start: 'top 30%',
-      toggleActions: 'play none none reverse',
+      start: 'top 15%',
+      end: 'bottom 15%',
+      toggleActions: 'play reverse play reverse',
     };
 
     if (header) gsap.fromTo(header, { y: 24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.9, ease: 'expo.out', scrollTrigger: trigger });

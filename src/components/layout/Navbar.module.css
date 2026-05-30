@@ -21,6 +21,288 @@
   content: none;
 }
 
+/* ── Brand ──────────────────────────────────────── */
+.brand {
+  font-family: "Inter", sans-serif;
+}
+
+/* ── Lista de navegación ────────────────────────── */
+.navList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.navList li {
+  position: relative;
+  padding-left: calc(var(--conn) + 0.625rem); /* espacio para las líneas conectoras */
+}
+
+/* Línea vertical descendente + giro redondeado hacia la derecha en el primer ítem */
+.navList li:first-child::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: var(--lr);
+  height: calc(50% + var(--gap)); /* llega hasta el ítem siguiente */
+  border-top:  var(--lw) solid var(--lc);
+  border-left: var(--lw) solid var(--lc);
+  border-top-left-radius: var(--lr);
+}
+
+/* Segmento horizontal que conecta la esquina con el texto del primer ítem */
+.navList li:first-child::after {
+  content: '';
+  position: absolute;
+  left: var(--lr);
+  top: 50%;
+  transform: translateY(-50%);
+  width: calc(var(--conn) - var(--lr));
+  height: var(--lw);
+  background: var(--lc);
+}
+
+/* Barra vertical que atraviesa el ítem y sus gaps superior/inferior */
+.navList li:not(:first-child):not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: calc(-1 * var(--gap));
+  width: var(--lw);
+  height: calc(100% + 2 * var(--gap));
+  background: var(--lc);
+}
+
+/* Rama horizontal que sale de la barra vertical hacia el texto */
+.navList li:not(:first-child):not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--conn);
+  height: var(--lw);
+  background: var(--lc);
+}
+
+/* Línea vertical ascendente + giro redondeado hacia la derecha en el último ítem */
+.navList li:last-child::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: calc(-1 * var(--gap));
+  width: var(--lr);
+  height: calc(50% + var(--gap));
+  border-bottom: var(--lw) solid var(--lc);
+  border-left:   var(--lw) solid var(--lc);
+  border-bottom-left-radius: var(--lr);
+}
+
+/* Segmento horizontal que conecta la esquina con el texto del último ítem */
+.navList li:last-child::after {
+  content: '';
+  position: absolute;
+  left: var(--lr);
+  top: 50%;
+  transform: translateY(-50%);
+  width: calc(var(--conn) - var(--lr));
+  height: var(--lw);
+  background: var(--lc);
+}
+
+/* ── Links ──────────────────────────────────────── */
+.link {
+  display: block;
+  font-family: "Inter", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+  transition: opacity 0.2s ease, color 0.2s ease;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.link:hover {
+  opacity: 1;
+  color: #ffffff;
+}
+
+.activeLink {
+  opacity: 1;
+  color: #ffffff;
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+/* ── Botón de tema ──────────────────────────────── */
+.themeBtn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  padding: 0;
+  padding-left: calc(var(--conn) + 0.625rem);
+  display: flex;
+  align-items: center;
+  transition: color 0.2s ease;
+}
+
+.themeBtn:hover {
+  color: #ffffff;
+}
+
+/* Hamburguesa y Overlay de Menú Móvil */
+.hamburgerBtn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: transform 0.2s ease, color 0.2s ease;
+  z-index: 2001;
+}
+
+/* Estilos de Tema Globales */
+:global(:root[data-theme="dark"]) .link {
+  color: #8C431D;
+}
+
+:global(:root[data-theme="dark"]) .link:hover,
+:global(:root[data-theme="dark"]) .activeLink {
+  color: #FFA726;
+}
+
+:global(:root[data-theme="light"]) .link {
+  color: rgba(0, 80, 158, 0.6);
+}
+
+:global(:root[data-theme="light"]) .link:hover,
+:global(:root[data-theme="light"]) .activeLink {
+  color: #00509E;
+}
+
+:global(:root[data-theme="light"]) .themeBtn {
+  color: rgba(0, 80, 158, 0.6);
+}
+
+:global(:root[data-theme="light"]) .hamburgerBtn {
+  color: rgba(0, 80, 158, 0.6);
+}
+:global(:root[data-theme="light"]) .hamburgerBtn:hover {
+  color: #00509E;
+}
+:global(:root[data-theme="dark"]) .hamburgerBtn {
+  color: #8C431D;
+}
+:global(:root[data-theme="dark"]) .hamburgerBtn:hover {
+  color: #FFA726;
+}
+
+.menuOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeInOverlay 0.3s ease both;
+}
+
+:global(:root[data-theme="light"]) .menuOverlay {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+}
+
+:global(:root[data-theme="dark"]) .menuOverlay {
+  background: rgba(8, 9, 11, 0.6);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+}
+
+.menuContent {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: slideUpMenu 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.mobileNavList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.mobileLink {
+  background: none;
+  border: none;
+  font-family: var(--font-headline);
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+  padding: 0.5rem 1rem;
+}
+
+.mobileLink:hover {
+  transform: scale(1.08);
+}
+
+:global(:root[data-theme="light"]) .mobileLink {
+  color: #00509E;
+}
+:global(:root[data-theme="dark"]) .mobileLink {
+  color: #FFA726;
+  text-shadow: 0 0 15px rgba(255, 107, 0, 0.15);
+}
+
+@keyframes fadeInNavbar {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUpMenu {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   MEDIA QUERIES (deben ir al final para que sobreescriban los estilos base)
+   ========================================================================== */
+
+/* --- DESKTOP (>= 1024px) --- */
 @media (min-width: 1024px) {
   /* En desktop light mode: barra lateral vertical */
   :global(:root[data-theme="light"]) .navbar {
@@ -48,10 +330,8 @@
     filter: blur(25px);
     z-index: -1;
   }
-}
 
-/* Modo oscuro desktop (≥1024px): Píldora horizontal superior */
-@media (min-width: 1024px) {
+  /* Modo oscuro desktop: Píldora horizontal superior */
   :global(:root[data-theme="dark"]) .navbar {
     --lc: var(--color-on-background);
     top: 8vh;
@@ -89,64 +369,6 @@
 
   :global(:root[data-theme="dark"]) .themeBtn {
     padding-left: 0;
-  }
-}
-
-/* --- MOBILE (< 768px) --- */
-@media (max-width: 767px) {
-  .navbar {
-    bottom: 1.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    top: auto;
-    width: max-content;
-    max-width: 90vw;
-    height: auto;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 1.5rem;
-    padding: 0.65rem 1.5rem;
-    border-radius: 9999px;
-    z-index: 2000;
-  }
-
-  /* Relleno de lista horizontal */
-  .navList {
-    flex-direction: row;
-    gap: 1.5rem;
-  }
-
-  .navList li {
-    padding-left: 0;
-  }
-
-  .navList li::before,
-  .navList li::after {
-    content: none !important;
-  }
-
-  .themeBtn {
-    padding-left: 0;
-  }
-
-  /* Light mode styles */
-  :global(:root[data-theme="light"]) .navbar {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(0, 80, 158, 0.15);
-    box-shadow: 0 8px 32px rgba(0, 80, 158, 0.08);
-  }
-
-  /* Dark mode styles */
-  :global(:root[data-theme="dark"]) .navbar {
-    background: rgba(12, 14, 17, 0.75);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 167, 38, 0.3);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 15px rgba(140, 67, 29, 0.2);
-    --lc: var(--color-on-background);
   }
 }
 
@@ -206,191 +428,57 @@
   }
 }
 
-/* ── Brand ──────────────────────────────────────── */
-/* Nombre/marca en mayúsculas con mucho letter-spacing, alineado con los links */
-.brand {
-  font-family: "Inter", sans-serif;
-}
+/* --- MOBILE (< 768px) --- */
+@media (max-width: 767px) {
+  .navbar {
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    top: auto;
+    width: max-content;
+    max-width: 90vw;
+    height: auto;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0.65rem 1.5rem;
+    border-radius: 9999px;
+    z-index: 2000;
+  }
 
-/* ── Lista de navegación ────────────────────────── */
-/* Lista sin estilo por defecto, ítems en columna separados por --gap */
-.navList {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap);
-}
+  .navItemDesktopOnly {
+    display: none !important;
+  }
 
-/* Cada ítem tiene posición relative para anclar los pseudo-elementos de línea */
-.navList li {
-  position: relative;
-  padding-left: calc(var(--conn) + 0.625rem); /* espacio para las líneas conectoras */
-}
+  .hamburgerBtn {
+    display: flex;
+  }
 
-/*
- * ┌ PRIMER ÍTEM
- * ::before → esquina (border+radius solo en los --lr px del giro) + línea vertical
- * ::after  → tramo recto horizontal al texto (background, sin anti-aliasing)
- */
-/* Línea vertical descendente + giro redondeado hacia la derecha en el primer ítem */
-.navList li:first-child::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  width: var(--lr);
-  height: calc(50% + var(--gap)); /* llega hasta el ítem siguiente */
-  border-top:  var(--lw) solid var(--lc);
-  border-left: var(--lw) solid var(--lc);
-  border-top-left-radius: var(--lr);
-}
+  .navList {
+    display: none !important;
+  }
 
-/* Segmento horizontal que conecta la esquina con el texto del primer ítem */
-.navList li:first-child::after {
-  content: '';
-  position: absolute;
-  left: var(--lr); /* arranca después de la curva */
-  top: 50%;
-  transform: translateY(-50%);
-  width: calc(var(--conn) - var(--lr));
-  height: var(--lw);
-  background: var(--lc);
-}
+  .themeBtn {
+    padding-left: 0;
+  }
 
-/*
- * ├ ÍTEMS DEL MEDIO
- * ::before → barra vertical continua que cubre el li + ambos gaps adyacentes
- * ::after  → conector horizontal en el punto medio del ítem
- */
-/* Barra vertical que atraviesa el ítem y sus gaps superior/inferior */
-.navList li:not(:first-child):not(:last-child)::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: calc(-1 * var(--gap));
-  width: var(--lw);
-  height: calc(100% + 2 * var(--gap));
-  background: var(--lc);
-}
+  /* Light mode styles */
+  :global(:root[data-theme="light"]) .navbar {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 80, 158, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 80, 158, 0.08);
+  }
 
-/* Rama horizontal que sale de la barra vertical hacia el texto */
-.navList li:not(:first-child):not(:last-child)::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: var(--conn);
-  height: var(--lw);
-  background: var(--lc);
-}
-
-/*
- * └ ÚLTIMO ÍTEM
- * ::before → línea vertical + esquina (border+radius solo en los --lr px del giro)
- * ::after  → tramo recto horizontal al texto (background, sin anti-aliasing)
- */
-/* Línea vertical ascendente + giro redondeado hacia la derecha en el último ítem */
-.navList li:last-child::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: calc(-1 * var(--gap)); /* sube hasta el ítem anterior */
-  width: var(--lr);
-  height: calc(50% + var(--gap));
-  border-bottom: var(--lw) solid var(--lc);
-  border-left:   var(--lw) solid var(--lc);
-  border-bottom-left-radius: var(--lr);
-}
-
-/* Segmento horizontal que conecta la esquina con el texto del último ítem */
-.navList li:last-child::after {
-  content: '';
-  position: absolute;
-  left: var(--lr);
-  top: 50%;
-  transform: translateY(-50%);
-  width: calc(var(--conn) - var(--lr));
-  height: var(--lw);
-  background: var(--lc);
-}
-
-/* ── Links ──────────────────────────────────────── */
-/* Link/button en mayúsculas, compacto, semitransparente hasta el hover */
-.link {
-  display: block;
-  font-family: "Inter", sans-serif;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-decoration: none;
-  color: rgba(255, 255, 255, 0.5);
-  white-space: nowrap;
-  transition: opacity 0.2s ease, color 0.2s ease;
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-}
-
-/* Al hacer hover: opaco y con el color principal del texto */
-.link:hover {
-  opacity: 1;
-  color: #ffffff;
-}
-
-/* Link activo: opaco con subrayado cian delgado y elevado */
-.activeLink {
-  opacity: 1;
-  color: #ffffff;
-  text-decoration: underline;
-  text-decoration-color: currentColor;
-  text-underline-offset: 3px;
-  text-decoration-thickness: 1px;
-}
-
-/* ── Botón de tema ──────────────────────────────── */
-/* Botón sin estilos nativos, alineado con los links, muy transparente por defecto */
-.themeBtn {
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.5);
-  cursor: pointer;
-  padding: 0;
-  padding-left: calc(var(--conn) + 0.625rem);
-  display: flex;
-  align-items: center;
-  transition: color 0.2s ease;
-}
-
-.themeBtn:hover {
-  color: #ffffff;
-}
-:global(:root[data-theme="dark"]) .link {
-  color: #8C431D;
-}
-
-:global(:root[data-theme="dark"]) .link:hover,
-:global(:root[data-theme="dark"]) .activeLink {
-  color: #FFA726;
-}
-
-:global(:root[data-theme="light"]) .link {
-  color: rgba(0, 80, 158, 0.6);
-}
-
-:global(:root[data-theme="light"]) .link:hover,
-:global(:root[data-theme="light"]) .activeLink {
-  color: #00509E;
-}
-
-:global(:root[data-theme="light"]) .themeBtn {
-  color: rgba(0, 80, 158, 0.6);
-}
-
-@keyframes fadeInNavbar {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  /* Dark mode styles */
+  :global(:root[data-theme="dark"]) .navbar {
+    background: rgba(12, 14, 17, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 167, 38, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 15px rgba(140, 67, 29, 0.2);
+    --lc: var(--color-on-background);
+  }
 }

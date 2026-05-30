@@ -198,15 +198,24 @@
    Responsive
    ========================================================= */
 @media (max-width: 1024px) {
-  .detailHeader   { padding: 2rem 5% 1.5rem; }
-  .detailGallery  { width: 82%; }
+  .detailHeader   { padding: 5rem 5% 1.5rem !important; }
+  .detailGallery  { width: 82% !important; }
   .backBtnWrapper { bottom: 1.5rem; right: 1.5rem; }
 }
 
-@media (max-width: 600px) {
-  .detailTitle    { font-size: 1.4rem; }
-  .backBtn        { font-size: 0.85rem; padding: 0.65rem 1.2rem; }
-  .backBtnWrapper { bottom: 1rem; right: 1rem; }
+@media (max-width: 767px) {
+  .detailTitle    { font-size: 1.4rem !important; }
+  .backBtn        { font-size: 0.85rem !important; padding: 0.65rem 1.2rem !important; }
+  .backBtnWrapper { 
+    position: relative !important;
+    bottom: auto !important;
+    right: auto !important;
+    margin: 3rem auto 0 auto !important;
+    display: flex !important;
+    justify-content: center !important;
+    z-index: 10 !important;
+  }
   .backArrowBtn   { top: 1rem; left: 1rem; }
-  .detailGallery  { width: 92%; }
+  .detailGallery  { width: 92% !important; padding-bottom: 4rem !important; }
+  .detailScreenshotImg { max-height: calc(100svh - 10rem) !important; }
 }

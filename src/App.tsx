@@ -32,6 +32,7 @@ function App() {
     activeIndexRef.current = Math.round(initialScroll / window.innerHeight);
 
     const handleWheel = (e: WheelEvent) => {
+      if (window.innerWidth < 1024) return;
       if (isAnimating.current) return;
       const direction = Math.sign(e.deltaY);
       if (direction === 0) return;
@@ -104,7 +105,15 @@ function App() {
 
     const handleNavClick = (e: CustomEvent<{ id: string }>) => {
       const targetId = e.detail.id;
-      navigateToSection(sections[activeIndexRef.current], targetId);
+      if (window.innerWidth < 1024) {
+        const targetEl = document.getElementById(targetId);
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          activeIndexRef.current = sections.indexOf(targetId);
+        }
+      } else {
+        navigateToSection(sections[activeIndexRef.current], targetId);
+      }
     };
 
     window.addEventListener('navigate', handleNavClick as EventListener);
@@ -117,6 +126,7 @@ function App() {
       touchStartY = e.touches[0].clientY;
     };
     const handleTouchMove = (e: TouchEvent) => {
+      if (window.innerWidth < 1024) return;
       if (isAnimating.current) {
         e.preventDefault();
         return;

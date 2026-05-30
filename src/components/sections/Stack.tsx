@@ -25,9 +25,14 @@ export function Stack() {
   const playedRef          = useRef(false);
 
   useGSAP(() => {
+    const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
     const isMobile = window.innerWidth < 768;
-    const radiusX  = isMobile ? window.innerWidth * 0.40 : 416;
-    const radiusY  = isMobile ? 155 : 208;
+    
+    // Escala menor en móviles para evitar colisiones
+    const pillScale = isMobile ? 0.78 : 1.0;
+
+    const radiusX  = isMobile ? Math.min(window.innerWidth * 0.38, 140) : (isTablet ? 300 : 416);
+    const radiusY  = isMobile ? 120 : (isTablet ? 160 : 208);
 
     const titleCenter = sectionRef.current?.querySelector<HTMLElement>(`.${styles.titleCenter}`);
     const secTitle    = sectionRef.current?.querySelector<HTMLElement>(`.${styles.secondaryTitle}`);
@@ -47,7 +52,7 @@ export function Stack() {
     tl.to(cardsRef.current, {
       x: (i) => Math.cos((i / techStack.length) * 2 * Math.PI - Math.PI / 2) * radiusX,
       y: (i) => Math.sin((i / techStack.length) * 2 * Math.PI - Math.PI / 2) * radiusY,
-      scale: 1,
+      scale: pillScale,
       autoAlpha: 1,
       duration: 1.2,
       stagger: 0.1,
@@ -95,6 +100,7 @@ export function Stack() {
         }
       },
       onLeave: () => {
+        if (window.innerWidth < 1024) return;
         if (playedRef.current) {
           // Animación de salida cuando se pasa de largo hacia abajo
           const elements = [circleContainerRef.current, secTitle, secondaryStackRef.current].filter(Boolean);
@@ -114,6 +120,7 @@ export function Stack() {
         }
       },
       onLeaveBack: () => {
+        if (window.innerWidth < 1024) return;
         if (playedRef.current) {
           // Animación de salida tipo ProjectsV2 al volver hacia arriba
           const elements = [circleContainerRef.current, secTitle, secondaryStackRef.current].filter(Boolean);
@@ -140,12 +147,16 @@ export function Stack() {
             className={styles.techPill}
             ref={(el) => { cardsRef.current[index] = el; }}
             onMouseEnter={() => {
+              const currentMobile = window.innerWidth < 768;
+              const currentScale = currentMobile ? 0.78 : 1.0;
               if (cardsRef.current[index])
-                gsap.to(cardsRef.current[index], { scale: 1.2, duration: 2.0, ease: 'power2.out' });
+                gsap.to(cardsRef.current[index], { scale: currentScale * 1.15, duration: 0.3, ease: 'power2.out' });
             }}
             onMouseLeave={() => {
+              const currentMobile = window.innerWidth < 768;
+              const currentScale = currentMobile ? 0.78 : 1.0;
               if (cardsRef.current[index])
-                gsap.to(cardsRef.current[index], { scale: 1, duration: 2.0, ease: 'power2.out' });
+                gsap.to(cardsRef.current[index], { scale: currentScale, duration: 0.3, ease: 'power2.out' });
             }}
           >
             {tech.name}

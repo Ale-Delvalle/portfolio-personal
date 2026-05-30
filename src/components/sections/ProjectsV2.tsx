@@ -158,6 +158,15 @@ export function ProjectsV2() {
       const frame = previewFrameRef.current;
       if (!frame) return;
 
+      if (window.innerWidth < 1024) {
+        gsap.set(frame, { rotateX: 0, rotateY: 0 });
+        const imgs = frame.querySelectorAll<HTMLElement>(`.${styles.previewImg}`);
+        gsap.set(imgs, { x: 0, y: 0 });
+        const glare = frame.querySelector<HTMLElement>(`.${styles.previewGlare}`);
+        if (glare) gsap.set(glare, { opacity: 0 });
+        return;
+      }
+
       const rect = frame.getBoundingClientRect();
       const isOver = (
         e.clientX >= rect.left &&

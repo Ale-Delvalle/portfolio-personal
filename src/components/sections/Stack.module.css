@@ -156,3 +156,48 @@
   background: rgba(255, 107, 0, 0.2);
   border-color: rgba(255, 167, 38, 0.3);
 }
+
+/* =========================================================
+   Responsive Overrides for Stack Section
+   ========================================================= */
+
+@media (max-width: 1023px) {
+  .stackSection {
+    height: auto !important;
+    min-height: 100vh;
+    min-height: 100svh;
+    overflow: visible !important;
+    padding: 6rem 1.5rem 5rem 1.5rem !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .titleLayer {
+    font-size: clamp(2.5rem, 10vw, 3.8rem) !important;
+  }
+
+  .circleContainer {
+    height: 320px !important;
+  }
+
+  .techPill {
+    padding: 0.4rem 0.85rem !important;
+    font-size: 0.72rem !important;
+  }
+
+  .secondaryTitle {
+    font-size: 0.95rem !important;
+    padding: 0 0.5rem !important;
+    margin-top: 2.5rem !important;
+  }
+
+  .secondaryStack {
+    gap: 0.75rem !important;
+    padding: 0 0.5rem !important;
+  }
+
+  .secondaryStack p {
+    font-size: 0.8rem !important;
+    padding: 0.35rem 0.75rem !important;
+  }
+}

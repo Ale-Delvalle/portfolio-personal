@@ -581,3 +581,91 @@
   z-index: -1;
   pointer-events: none;
 }
+
+/* =========================================================
+   Responsive Overrides for Hero Section
+   ========================================================= */
+
+@media (max-width: 1023px) {
+  .main {
+    height: auto !important;
+    min-height: 100vh;
+    min-height: 100svh;
+    overflow: visible !important;
+  }
+  .content {
+    height: auto !important;
+    padding: 6rem 1.5rem 4rem 1.5rem !important;
+  }
+  .scrollIndicator {
+    display: none !important; /* No scroll indicator on tablet/mobile where layout is flowing */
+  }
+}
+
+@media (max-width: 767px) {
+  .name {
+    white-space: normal !important;
+    font-size: clamp(2rem, 9vw, 3.8rem) !important;
+  }
+  
+  :global(:root[data-theme="dark"]) .nameWhiteOverlay {
+    white-space: normal !important;
+    font-size: clamp(2rem, 9vw, 3.8rem) !important;
+  }
+
+  .role {
+    font-size: 1.15rem !important;
+  }
+
+  .welcomeText {
+    font-size: 1.15rem !important;
+  }
+
+  .profileImage {
+    max-height: 25vh !important;
+  }
+
+  .buttonGroup {
+    gap: 1.25rem !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    align-items: center !important;
+  }
+
+  .primaryBtn, .secondaryBtn {
+    width: 100% !important;
+    max-width: 280px !important;
+    padding: 0.65rem 1.25rem !important;
+    font-size: 0.88rem !important;
+  }
+
+  .btn3dContainer {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+
+  .btn3dContainer button {
+    width: 100% !important;
+    max-width: 280px !important;
+  }
+
+  /* Simplify 3D button layers on mobile for performance */
+  .btnLayer {
+    display: none !important;
+  }
+
+  .textBlock {
+    padding: 1rem 1.25rem !important;
+    border-radius: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .name {
+    font-size: clamp(1.8rem, 8vw, 2.5rem) !important;
+  }
+  :global(:root[data-theme="dark"]) .nameWhiteOverlay {
+    font-size: clamp(1.8rem, 8vw, 2.5rem) !important;
+  }
+}

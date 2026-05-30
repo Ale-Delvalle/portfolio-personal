@@ -37,15 +37,20 @@ export function Hero() {
   const [introDone, setIntroDone] = useState(false);
 
   useGSAP(() => {
+    const isMobile = window.innerWidth < 768;
+    const startY = isMobile ? "10vh" : "20vh";
+    const startScale = isMobile ? 1.15 : 1.5;
+    const endY = isMobile ? 10 : 30;
+
     const tl = gsap.timeline({ onComplete: () => setIntroDone(true) });
 
     gsap.set(nameContainerRef.current, { zIndex: 51, position: 'relative' });
     gsap.set(nameContainerRef.current, { zIndex: 51, position: 'relative' });
     gsap.set(welcomeContainerRef.current, { x: -50, autoAlpha: 0 });
-    // 1) Nombre y Rol aparecen en el centro de la pantalla a escala 1.5
+    // 1) Nombre y Rol aparecen en el centro de la pantalla
     tl.fromTo(nameContainerRef.current, 
-      { autoAlpha: 0, y: "20vh", scale: 1.5 },
-      { autoAlpha: 1, y: "20vh", duration: 0.3, ease: "power3.out" }
+      { autoAlpha: 0, y: startY, scale: startScale },
+      { autoAlpha: 1, y: startY, duration: 0.3, ease: "power3.out" }
     )
     // 1.5) Bolitas brillantes detrás del nombre de izquierda a derecha (Línea invisible, Renderizado en Canvas)
     const sweepProxy = { val: 0 };
@@ -86,7 +91,7 @@ export function Hero() {
     // 2) Se desplazan hacia su posición final (arriba)
     .addLabel("moveUp", "+=0.1")
     .to(nameContainerRef.current, {
-      y: 30,
+      y: endY,
       scale: 1,
       duration: 1.2,
       ease: "power3.inOut",

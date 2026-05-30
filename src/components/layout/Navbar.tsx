@@ -1,6 +1,4 @@
-import { useRef, useCallback } from 'react';
-import { useGSAP } from '@gsap/react';
-import gsap from 'gsap';
+import { useCallback } from 'react';
 import { Moon, Sun } from 'lucide-react';
 import styles from './Navbar.module.css';
 
@@ -16,24 +14,12 @@ const NAV_ITEMS = [
 ] as const;
 
 export function Navbar({ theme, toggleTheme }: NavbarProps) {
-  const navRef = useRef<HTMLElement>(null);
-
-  useGSAP(() => {
-    gsap.from(navRef.current, {
-      opacity: 0,
-      x: -30,
-      duration: 0.8,
-      ease: "power3.out",
-      delay: 0.4
-    });
-  }, []);
-
   const scrollTo = useCallback((id: string) => {
     window.dispatchEvent(new CustomEvent('navigate', { detail: { id } }));
   }, []);
 
   return (
-    <nav ref={navRef} className={styles.navbar}>
+    <nav className={styles.navbar}>
       <ul className={styles.navList}>
         {NAV_ITEMS.map(({ label, target }) => (
           <li key={target}>

@@ -12,7 +12,8 @@
   position: fixed;
   z-index: 100;
   display: flex;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: fadeInNavbar 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
 }
 
 /* Capa de fondo que difumina físicamente el borde recto (solo en desktop light mode) */
@@ -137,16 +138,6 @@
     border: 1px solid rgba(0, 80, 158, 0.15);
     box-shadow: 0 8px 32px rgba(0, 80, 158, 0.08);
   }
-  :global(:root[data-theme="light"]) .link {
-    color: rgba(0, 80, 158, 0.6);
-  }
-  :global(:root[data-theme="light"]) .link:hover,
-  :global(:root[data-theme="light"]) .activeLink {
-    color: #00509E;
-  }
-  :global(:root[data-theme="light"]) .themeBtn {
-    color: rgba(0, 80, 158, 0.6);
-  }
 
   /* Dark mode styles */
   :global(:root[data-theme="dark"]) .navbar {
@@ -202,16 +193,6 @@
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(0, 80, 158, 0.15);
     box-shadow: 0 8px 32px rgba(0, 80, 158, 0.08);
-  }
-  :global(:root[data-theme="light"]) .link {
-    color: rgba(0, 80, 158, 0.6);
-  }
-  :global(:root[data-theme="light"]) .link:hover,
-  :global(:root[data-theme="light"]) .activeLink {
-    color: #00509E;
-  }
-  :global(:root[data-theme="light"]) .themeBtn {
-    color: rgba(0, 80, 158, 0.6);
   }
 
   /* Dark mode styles */
@@ -387,7 +368,6 @@
 .themeBtn:hover {
   color: #ffffff;
 }
-
 :global(:root[data-theme="dark"]) .link {
   color: #8C431D;
 }
@@ -395,4 +375,22 @@
 :global(:root[data-theme="dark"]) .link:hover,
 :global(:root[data-theme="dark"]) .activeLink {
   color: #FFA726;
+}
+
+:global(:root[data-theme="light"]) .link {
+  color: rgba(0, 80, 158, 0.6);
+}
+
+:global(:root[data-theme="light"]) .link:hover,
+:global(:root[data-theme="light"]) .activeLink {
+  color: #00509E;
+}
+
+:global(:root[data-theme="light"]) .themeBtn {
+  color: rgba(0, 80, 158, 0.6);
+}
+
+@keyframes fadeInNavbar {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

@@ -591,11 +591,32 @@
     height: auto !important;
     min-height: 100vh;
     min-height: 100svh;
-    overflow: visible !important;
+    overflow: hidden !important; /* Evita desborde horizontal de partículas y textos */
   }
   .content {
     height: auto !important;
     padding: 6rem 1.5rem 4rem 1.5rem !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    box-sizing: border-box !important;
+  }
+  .nameContainer {
+    width: 100% !important;
+    max-width: 100vw !important;
+    box-sizing: border-box !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .name, :global(:root[data-theme="dark"]) .nameWhiteOverlay {
+    white-space: normal !important;
+  }
+  .role {
+    white-space: normal !important;
+    text-align: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 1rem !important;
+    box-sizing: border-box !important;
   }
   .scrollIndicator {
     display: none !important; /* No scroll indicator on tablet/mobile where layout is flowing */

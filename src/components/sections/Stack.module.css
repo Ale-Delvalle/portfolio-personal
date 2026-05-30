@@ -166,7 +166,7 @@
     height: auto !important;
     min-height: 100vh;
     min-height: 100svh;
-    overflow: visible !important;
+    overflow: hidden !important;
     padding: 6rem 1.5rem 5rem 1.5rem !important;
   }
 }

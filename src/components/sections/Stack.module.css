@@ -44,12 +44,8 @@
 }
 
 .titleCenter {
-  position: relative; /* Define el tamaño del contenedor */
+  position: relative;
   z-index: 2;
-  color: #003366;
-  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-:global(:root[data-theme="dark"]) .titleCenter {
   color: #ffffff;
   text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 107, 0, 0.4);
 }
@@ -61,32 +57,29 @@
 }
 
 .titleBottom {
-  color: #111111;
+  color: #ffffff;
   opacity: 0;
   z-index: 3;
-}
-:global(:root[data-theme="dark"]) .titleBottom {
-  color: #ffffff;
 }
 
 .techPill {
   position: absolute;
   top: 50%;
   left: 50%;
-  background: #ffffff;
+  background: #141416;
   padding: 0.65rem 1.45rem;
   border-radius: 30px;
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.9), 0 4px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 12px rgba(255, 107, 0, 0.2);
   font-family: var(--font-headline);
   font-size: 0.9rem;
   font-weight: 700;
-  color: #000000;
+  color: #ffffff;
   z-index: 5;
   white-space: nowrap;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 167, 38, 0.4);
   cursor: pointer;
   will-change: transform, opacity, box-shadow;
   backface-visibility: hidden;
@@ -97,24 +90,13 @@
   z-index: 20;
 }
 
-:global(:root[data-theme="dark"]) .techPill {
-  background: #141416;
-  color: #ffffff;
-  box-shadow: 0 0 12px rgba(255, 107, 0, 0.2);
-  border: 1px solid rgba(255, 167, 38, 0.4);
-}
-
 .secondaryTitle {
   font-family: var(--font-body);
   font-size: 1.2rem;
-  color: #003366;
+  color: #ffffff;
   margin-top: 1rem;
   margin-bottom: 1rem;
   text-align: center;
-}
-
-:global(:root[data-theme="dark"]) .secondaryTitle {
-  color: #ffffff;
 }
 
 .secondaryStack {
@@ -123,31 +105,19 @@
   gap: 1.5rem;
   justify-content: center;
   font-family: var(--font-body);
-  color: #003366;
-}
-
-:global(:root[data-theme="dark"]) .secondaryStack {
   color: #ffffff;
 }
 
 .secondaryStack p {
-  background: rgba(0, 51, 102, 0.05);
+  background: rgba(255, 107, 0, 0.1);
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-weight: 600;
+  border: 1px solid rgba(255, 167, 38, 0.15);
   transition: background 0.3s ease;
 }
 
-:global(:root[data-theme="dark"]) .secondaryStack p {
-  background: rgba(255, 107, 0, 0.1);
-  border: 1px solid rgba(255, 167, 38, 0.15);
-}
-
 .secondaryStack p:hover {
-  background: rgba(0, 51, 102, 0.1);
-}
-
-:global(:root[data-theme="dark"]) .secondaryStack p:hover {
   background: rgba(255, 107, 0, 0.2);
   border-color: rgba(255, 167, 38, 0.3);
 }

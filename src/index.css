@@ -3,55 +3,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
-  /* =========================================
-     LIGHT MODE TOKENS (Auto-generated MD3 logic)
-     ========================================= */
-
-  /* Color de acento principal (salmón) y su contenedor más claro */
-  --color-primary: #00509E;
-  --color-primary-container: #b3d4ff;
-  /* Texto sobre elementos con color primary-fixed (contraste oscuro) */
-  --color-on-primary-fixed: #001a33;
-
-  /* Escala de superficies: de más oscura (lowest) a más clara (highest) */
-  --color-surface: #f9f9fd;
-  --color-surface-container-lowest: #ffffff;
-  --color-surface-container-low: #f3f3f7;
-  --color-surface-container: #edeef3;
-  --color-surface-container-high: #e7e8ed;
-  --color-surface-container-highest: #e2e2e7;
-
-  /* Colores de texto sobre fondo y superficies */
-  --color-on-background: #000000;
-  --color-on-surface: #000000;
-  --color-on-surface-variant: #42474e;   /* texto secundario/muted */
-  --color-outline-variant: #c3c7cf;      /* bordes sutiles */
-
-  /* Fondo global y texto sobre primary */
-  --color-background: #f2f2f7; /* Base platinada clara */
-  --color-on-primary: #ffffff;
-
-  /* Font Families */
-  --font-headline: 'Inter', sans-serif;
-  --font-body: 'Inter', sans-serif;
-  --font-label: 'Inter', sans-serif;
-
-  /* Glassmorphism Settings */
-  --glass-bg: rgba(249, 249, 253, 0.6);    /* fondo semitransparente para glass cards */
-  --glass-border: rgba(0, 0, 0, 0.05);     /* borde sutil en componentes glass */
-}
-
-:root[data-theme="dark"] {
-  /* =========================================
-     DARK MODE TOKENS (From the original file)
-     ========================================= */
-
-  /* Salmón brillante como acento en oscuro */
   --color-primary: #66a3ff;
   --color-primary-container: #003366;
   --color-on-primary-fixed: #001a33;
 
-  /* Superficies muy oscuras, casi negras */
   --color-surface: #0c0e11;
   --color-surface-container-lowest: #000000;
   --color-surface-container-low: #111417;
@@ -59,16 +14,18 @@
   --color-surface-container-high: #1d2024;
   --color-surface-container-highest: #23262a;
 
-  /* Texto claro sobre fondos oscuros (ahora usando el color del degradado) */
   --color-on-background: #66a3ff;
   --color-on-surface: #99c2ff;
-  --color-on-surface-variant: #66a3ff;   /* texto secundario en oscuro */
-  --color-outline-variant: #99c2ff;     /* bordes en oscuro */
+  --color-on-surface-variant: #66a3ff;
+  --color-outline-variant: #99c2ff;
 
   --color-background: #000000;
   --color-on-primary: #000000;
 
-  /* Glassmorphism en oscuro: fondo oscuro semitransparente con borde blanco */
+  --font-headline: 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-label: 'Inter', sans-serif;
+
   --glass-bg: rgba(12, 14, 17, 0.6);
   --glass-border: rgba(255, 255, 255, 0.1);
 }
@@ -113,24 +70,8 @@ p, span, div {
 }
 
 /* Utilities */
-/* Fondo Platinado animado para la app en modo claro */
 .hero-mesh-gradient {
-  background: linear-gradient(-45deg, #b0b0b8, #d1d1d6, #a3a3a8, #c7c7cc);
-  background-size: 400% 400%;
-  animation: platinumShimmer 15s ease infinite;
-  background-attachment: fixed;
-}
-
-@keyframes platinumShimmer {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* Mantener el modo oscuro en negro puro */
-:root[data-theme="dark"] .hero-mesh-gradient {
   background: transparent;
-  animation: none;
 }
 
 /* Línea decorativa horizontal: desvanece en los extremos, 50% opacidad */

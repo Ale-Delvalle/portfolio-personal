@@ -122,7 +122,7 @@
   font-weight: 700;
   letter-spacing: 0.18em;
   text-decoration: none;
-  color: rgba(255, 255, 255, 0.5);
+  color: #8C431D;
   white-space: nowrap;
   transition: opacity 0.2s ease, color 0.2s ease;
   background: none;
@@ -133,12 +133,12 @@
 
 .link:hover {
   opacity: 1;
-  color: #ffffff;
+  color: #FFA726;
 }
 
 .activeLink {
   opacity: 1;
-  color: #ffffff;
+  color: #FFA726;
   text-decoration: underline;
   text-decoration-color: currentColor;
   text-underline-offset: 3px;
@@ -149,7 +149,7 @@
 .themeBtn {
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.5);
+  color: #8C431D;
   cursor: pointer;
   padding: 0;
   padding-left: calc(var(--conn) + 0.625rem);
@@ -159,7 +159,7 @@
 }
 
 .themeBtn:hover {
-  color: #ffffff;
+  color: #FFA726;
 }
 
 /* Hamburguesa y Overlay de Menú Móvil */
@@ -173,41 +173,10 @@
   padding: 0;
   transition: transform 0.2s ease, color 0.2s ease;
   z-index: 2001;
-}
-
-/* Estilos de Tema Globales */
-:global(:root[data-theme="dark"]) .link {
   color: #8C431D;
 }
 
-:global(:root[data-theme="dark"]) .link:hover,
-:global(:root[data-theme="dark"]) .activeLink {
-  color: #FFA726;
-}
-
-:global(:root[data-theme="light"]) .link {
-  color: rgba(0, 80, 158, 0.6);
-}
-
-:global(:root[data-theme="light"]) .link:hover,
-:global(:root[data-theme="light"]) .activeLink {
-  color: #00509E;
-}
-
-:global(:root[data-theme="light"]) .themeBtn {
-  color: rgba(0, 80, 158, 0.6);
-}
-
-:global(:root[data-theme="light"]) .hamburgerBtn {
-  color: rgba(0, 80, 158, 0.6);
-}
-:global(:root[data-theme="light"]) .hamburgerBtn:hover {
-  color: #00509E;
-}
-:global(:root[data-theme="dark"]) .hamburgerBtn {
-  color: #8C431D;
-}
-:global(:root[data-theme="dark"]) .hamburgerBtn:hover {
+.hamburgerBtn:hover {
   color: #FFA726;
 }
 
@@ -219,15 +188,6 @@
   align-items: center;
   justify-content: center;
   animation: fadeInOverlay 0.3s ease both;
-}
-
-:global(:root[data-theme="light"]) .menuOverlay {
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-}
-
-:global(:root[data-theme="dark"]) .menuOverlay {
   background: rgba(8, 9, 11, 0.6);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
@@ -269,10 +229,7 @@
   transform: scale(1.08);
 }
 
-:global(:root[data-theme="light"]) .mobileLink {
-  color: #00509E;
-}
-:global(:root[data-theme="dark"]) .mobileLink {
+.mobileLink {
   color: #FFA726;
   text-shadow: 0 0 15px rgba(255, 107, 0, 0.15);
 }
@@ -304,35 +261,7 @@
 
 /* --- DESKTOP (>= 1024px) --- */
 @media (min-width: 1024px) {
-  /* En desktop light mode: barra lateral vertical */
-  :global(:root[data-theme="light"]) .navbar {
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 10%;
-    height: 100%;
-    background: transparent;
-    padding-left: max(1.5vw, 15px);
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 1.25rem;
-  }
-
-  :global(:root[data-theme="light"]) .navbar::before {
-    content: '';
-    position: absolute;
-    top: -50px;
-    bottom: -50px;
-    left: -50px;
-    width: calc(100% + 60px); 
-    background: #000000;
-    filter: blur(25px);
-    z-index: -1;
-  }
-
-  /* Modo oscuro desktop: Píldora horizontal superior */
-  :global(:root[data-theme="dark"]) .navbar {
+  .navbar {
     --lc: var(--color-on-background);
     top: 8vh;
     left: 50%;
@@ -353,21 +282,21 @@
     box-shadow: 0 0 15px rgba(140, 67, 29, 0.6);
   }
 
-  :global(:root[data-theme="dark"]) .navList {
+  .navList {
     flex-direction: row;
     gap: 2rem;
   }
 
-  :global(:root[data-theme="dark"]) .navList li {
+  .navList li {
     padding-left: 0;
   }
 
-  :global(:root[data-theme="dark"]) .navList li::before,
-  :global(:root[data-theme="dark"]) .navList li::after {
+  .navList li::before,
+  .navList li::after {
     content: none !important;
   }
 
-  :global(:root[data-theme="dark"]) .themeBtn {
+  .themeBtn {
     padding-left: 0;
   }
 }
@@ -408,17 +337,7 @@
     padding-left: 0;
   }
 
-  /* Light mode styles */
-  :global(:root[data-theme="light"]) .navbar {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(0, 80, 158, 0.15);
-    box-shadow: 0 8px 32px rgba(0, 80, 158, 0.08);
-  }
-
-  /* Dark mode styles */
-  :global(:root[data-theme="dark"]) .navbar {
+  .navbar {
     background: rgba(12, 14, 17, 0.75);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -463,17 +382,7 @@
     padding-left: 0;
   }
 
-  /* Light mode styles */
-  :global(:root[data-theme="light"]) .navbar {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(0, 80, 158, 0.15);
-    box-shadow: 0 8px 32px rgba(0, 80, 158, 0.08);
-  }
-
-  /* Dark mode styles */
-  :global(:root[data-theme="dark"]) .navbar {
+  .navbar {
     background: rgba(12, 14, 17, 0.75);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);

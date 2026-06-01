@@ -20,9 +20,5 @@
 
 
 
-/* Only meaningful in dark mode */
-:global(:root:not([data-theme="dark"])) .container {
-  display: none;
-}
 
 

@@ -382,7 +382,8 @@
     height: auto !important;
     min-height: 100vh;
     min-height: 100svh;
-    overflow: hidden !important;
+    overflow: clip !important;
+    overscroll-behavior: none;
   }
   
   .mainView {

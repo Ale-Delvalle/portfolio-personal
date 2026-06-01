@@ -116,11 +116,12 @@ export function ProjectsV2() {
 
 
     // ProjectsV2 entra solo cuando ya se acomodó justo por debajo del Navbar
+    const isSmall = window.innerWidth < 1024;
     const trigger = {
       trigger: sectionRef.current,
-      start: 'top 15%',
+      start: isSmall ? 'top 80%' : 'top 15%',
       end: 'bottom 15%',
-      toggleActions: 'play reverse play reverse',
+      toggleActions: isSmall ? 'play none none none' : 'play reverse play reverse',
     };
 
     if (header) gsap.fromTo(header, { y: 24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.9, ease: 'expo.out', scrollTrigger: trigger });
@@ -149,6 +150,26 @@ export function ProjectsV2() {
         { y: 0, autoAlpha: 1, duration: 0.85, delay: 0.12 + i * 0.09, ease: 'expo.out', scrollTrigger: trigger }
       );
     });
+
+    // Mobile: inclinación del frame vinculada al scroll (fallback cuando no hay gyroscopio)
+    if (window.innerWidth < 1024) {
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: 'top center',
+        end: 'bottom center',
+        scrub: 3,
+        onUpdate: (self) => {
+          const frame = previewFrameRef.current;
+          if (!frame || (window as any).__gyroActive) return;
+          const tiltY = (self.progress - 0.5) * 8;
+          gsap.set(frame, {
+            rotateX: tiltY * -0.5,
+            rotateY: tiltY,
+            transformPerspective: 1000,
+          });
+        },
+      });
+    }
   }, { scope: sectionRef });
 
   // ── 3D tilt + mouse-parallax + glare on the preview frame ──
@@ -234,6 +255,62 @@ export function ProjectsV2() {
     return () => window.removeEventListener('mousemove', handleGlobalMove);
   }, []);
 
+  // ── DeviceOrientation tilt para mobile (reemplaza el tilt de mouse) ─────
+  useEffect(() => {
+    if (window.innerWidth >= 1024) return;
+
+    const applyOrientation = (e: DeviceOrientationEvent) => {
+      const frame = previewFrameRef.current;
+      if (!frame) return;
+
+      // gamma: inclinación izquierda-derecha. beta: adelante-atrás (compensamos 45° de sostenimiento natural)
+      const gamma = Math.min(Math.max(e.gamma ?? 0, -25), 25);
+      const beta  = Math.min(Math.max((e.beta ?? 0) - 45, -25), 25);
+
+      (window as any).__gyroActive = true;
+
+      gsap.to(frame, {
+        rotateX: beta  * 0.18,
+        rotateY: gamma * 0.22,
+        transformPerspective: 1000,
+        duration: 0.7,
+        ease: 'power2.out',
+        overwrite: 'auto',
+      });
+
+      const imgs = frame.querySelectorAll<HTMLElement>(`.${styles.previewImg}`);
+      gsap.to(imgs, {
+        x: gamma * 0.25,
+        y: beta  * 0.15,
+        duration: 0.8,
+        ease: 'power2.out',
+        overwrite: 'auto',
+      });
+
+      const glare = frame.querySelector<HTMLElement>(`.${styles.previewGlare}`);
+      if (glare) {
+        const gx = ((gamma + 25) / 50) * 100;
+        const gy = ((beta  + 25) / 50) * 100;
+        glare.style.background = `radial-gradient(circle at ${gx}% ${gy}%, rgba(255,255,255,0.10) 0%, transparent 55%)`;
+        gsap.to(glare, { opacity: 0.6, duration: 0.3, overwrite: 'auto' });
+      }
+    };
+
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS && typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
+      // El permiso se solicita desde el primer tap al frame (ver onClick del previewFrame)
+      (window as any).__gyroPendingHandler = applyOrientation;
+    } else {
+      window.addEventListener('deviceorientation', applyOrientation, true);
+      return () => {
+        window.removeEventListener('deviceorientation', applyOrientation, true);
+        delete (window as any).__gyroActive;
+      };
+    }
+
+    return () => { delete (window as any).__gyroActive; };
+  }, []);
+
   // ── Open project detail page ────────────────────────────
   const openProject = useCallback((project: Project) => {
     lastRef.current = project;
@@ -305,7 +382,7 @@ export function ProjectsV2() {
             top:    targetRect.top,
             width:  targetRect.width,
             height: targetRect.height,
-            duration: 0.62,
+            duration: window.innerWidth < 1024 ? 0.52 : 0.62,
             ease:     'expo.out',
           }, 0.15)
           .call(() => {
@@ -382,6 +459,19 @@ export function ProjectsV2() {
             <div
               ref={previewFrameRef}
               className={styles.previewFrame}
+              onClick={() => {
+                // En iOS solicita permiso de gyroscopio; en mobile abre el proyecto activo
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                if (isIOS && typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
+                  (DeviceOrientationEvent as any).requestPermission().then((state: string) => {
+                    if (state === 'granted' && (window as any).__gyroPendingHandler) {
+                      window.addEventListener('deviceorientation', (window as any).__gyroPendingHandler, true);
+                      (window as any).__gyroActive = true;
+                    }
+                  });
+                }
+                if (window.innerWidth < 1024) openProject(active);
+              }}
             >
               <div className={styles.browserBar}>
                 <div className={styles.browserDots}>
@@ -451,7 +541,7 @@ export function ProjectsV2() {
           <span className={styles.heroCloneDot} data-color="green" />
         </div>
         <div className={styles.heroImgWrapper}>
-          <img ref={heroImgRef} src="" alt="" className={styles.heroImg} />
+          <img ref={heroImgRef} alt="" className={styles.heroImg} />
         </div>
       </div>
 

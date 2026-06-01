@@ -31,8 +31,8 @@ export function Stack() {
     // Escala menor en móviles para evitar colisiones
     const pillScale = isMobile ? 0.78 : 1.0;
 
-    const radiusX  = isMobile ? Math.min(window.innerWidth * 0.38, 140) : (isTablet ? 300 : 416);
-    const radiusY  = isMobile ? 120 : (isTablet ? 160 : 208);
+    const radiusX  = isMobile ? Math.min(window.innerWidth * 0.36, 130) : (isTablet ? 300 : 416);
+    const radiusY  = isMobile ? Math.min(window.innerWidth * 0.28, 105) : (isTablet ? 160 : 208);
 
     const titleCenter = sectionRef.current?.querySelector<HTMLElement>(`.${styles.titleCenter}`);
     const secTitle    = sectionRef.current?.querySelector<HTMLElement>(`.${styles.secondaryTitle}`);
@@ -43,7 +43,28 @@ export function Stack() {
     if (secTitle)                 gsap.set(secTitle, { autoAlpha: 0, y: 30 });
     if (secondaryStackRef.current) gsap.set(secondaryStackRef.current, { autoAlpha: 0, y: 30 });
 
-    const tl = gsap.timeline({ paused: true });
+    const orbitEnabled = { value: false };
+    const tl = gsap.timeline({
+      paused: true,
+      onComplete: () => {
+        orbitEnabled.value = true;
+        if (!isMobile) {
+          cardsRef.current.forEach((card, i) => {
+            const animateFloat = () => {
+              if (!card) return;
+              const baseY = Math.sin((i / techStack.length) * 2 * Math.PI - Math.PI / 2) * radiusY;
+              gsap.to(card, {
+                y: baseY + gsap.utils.random(-10, 10),
+                duration: gsap.utils.random(2.6, 5.2),
+                ease: 'sine.inOut',
+                onComplete: animateFloat,
+              });
+            };
+            setTimeout(animateFloat, gsap.utils.random(0, 1000));
+          });
+        }
+      },
+    });
 
     if (titleCenter) {
       tl.to(titleCenter, { autoAlpha: 1, scale: 1, duration: 1.0, ease: 'back.out(1.5)' });
@@ -57,21 +78,6 @@ export function Stack() {
       duration: 1.2,
       stagger: 0.1,
       ease: 'expo.out',
-      onComplete: () => {
-        cardsRef.current.forEach((card, i) => {
-          const animateFloat = () => {
-            if (!card) return;
-            const baseY = Math.sin((i / techStack.length) * 2 * Math.PI - Math.PI / 2) * radiusY;
-            gsap.to(card, {
-              y: baseY + gsap.utils.random(-10, 10),
-              duration: gsap.utils.random(2.6, 5.2),
-              ease: 'sine.inOut',
-              onComplete: animateFloat,
-            });
-          };
-          setTimeout(animateFloat, gsap.utils.random(0, 1000));
-        });
-      },
     }, '-=0.5');
 
     if (secTitle && secondaryStackRef.current) {
@@ -80,11 +86,33 @@ export function Stack() {
       }, '-=0.5');
     }
 
+    // Mobile: orbit en useGSAP scope — se crea una sola vez y se limpia al desmontar
+    if (isMobile) {
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 2.5,
+        onUpdate: (self) => {
+          if (!orbitEnabled.value) return;
+          const delta = self.progress * Math.PI * 1.5;
+          cardsRef.current.forEach((card, i) => {
+            if (!card) return;
+            const baseAngle = (i / techStack.length) * 2 * Math.PI - Math.PI / 2;
+            const a = baseAngle + delta;
+            gsap.set(card, {
+              x: Math.cos(a) * radiusX,
+              y: Math.sin(a) * radiusY,
+            });
+          });
+        },
+      });
+    }
 
     // Stack entra solo cuando ya se acomodó justo por debajo del Navbar
     ScrollTrigger.create({
       trigger: sectionRef.current,
-      start: 'top 15%',
+      start: window.innerWidth < 1024 ? 'top 80%' : 'top 15%',
       end: 'bottom 15%',
       onEnter: () => {
         if (!playedRef.current) {

@@ -38,7 +38,7 @@ export function Hero() {
 
   useGSAP(() => {
     const isMobile = window.innerWidth < 768;
-    const startY = isMobile ? (window.innerHeight * 0.1 + 100) : "20vh";
+    const startY = isMobile ? (window.innerHeight / 2 - 80) : "20vh";
     const startScale = isMobile ? 1.15 : 1.5;
     const endY = isMobile ? 10 : 30;
 
@@ -266,6 +266,8 @@ export function Hero() {
     const rCtx = rCanvas.getContext('2d');
     if (!nCtx || !rCtx) return;
 
+    const isMobile = window.innerWidth < 768;
+
     const resize = () => {
       nCanvas.width = nCanvas.offsetWidth;
       nCanvas.height = nCanvas.offsetHeight;
@@ -303,7 +305,7 @@ export function Hero() {
         }
         ctx.fill();
         
-        if (p.life > 0.5 && p.size > 1.5) {
+        if (!isMobile && p.life > 0.5 && p.size > 1.5) {
           ctx.shadowColor = `rgba(255, 167, 38, ${alpha})`;
           ctx.shadowBlur = 6;
           ctx.fill();
@@ -314,6 +316,12 @@ export function Hero() {
     };
 
     const animate = () => {
+      const nEmpty = nameParticlesRef.current.length === 0;
+      const rEmpty = roleParticlesRef.current.length === 0;
+      const hidden = nCanvas.style.display === 'none';
+
+      if (nEmpty && rEmpty && hidden) return;
+
       drawParticles(nCtx, nCanvas, nameParticlesRef.current);
       drawParticles(rCtx, rCanvas, roleParticlesRef.current);
       rafId = requestAnimationFrame(animate);

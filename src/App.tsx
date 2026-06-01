@@ -20,6 +20,15 @@ function App() {
   const activeIndexRef = useRef(0);
 
   useEffect(() => {
+    const onLoad = () => ScrollTrigger.refresh();
+    if (document.readyState === 'complete') {
+      setTimeout(onLoad, 100);
+    } else {
+      window.addEventListener('load', onLoad, { once: true });
+    }
+  }, []);
+
+  useEffect(() => {
     // Disable native scroll restoration to avoid weird jumps on reload
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';

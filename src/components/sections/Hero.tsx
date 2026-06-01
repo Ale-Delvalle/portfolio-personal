@@ -21,6 +21,7 @@ export function Hero() {
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
   const scrollTextRef = useRef<HTMLSpanElement>(null);
   const welcomeContainerRef = useRef<HTMLDivElement>(null);
+  const mobileAccentRef = useRef<HTMLDivElement>(null);
   
   // Canvas Sparks Refs
   const nameCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -104,47 +105,41 @@ export function Hero() {
     }, "moveUp");
 
     if (isMobile) {
-      // --- SECUENCIA PREMIUM AAA EXCLUSIVA MÓVIL ---
-      // 3) Imagen de perfil aparece con desplazamiento suave (Fade + Slide)
-      tl.fromTo(imageRef.current, 
-        { autoAlpha: 0, y: 30 },
-        { autoAlpha: 1, y: 0, duration: 0.8, ease: "power3.out" },
-        "-=0.4" // Se solapa sutilmente con el final de la subida
+      // --- SECUENCIA MOBILE REDISEÑADA ---
+      // 3) Imagen con glow sutil desde abajo
+      tl.fromTo(imageRef.current,
+        { autoAlpha: 0, scale: 0.92, y: 20 },
+        { autoAlpha: 1, scale: 1, y: 0, duration: 0.7, ease: "expo.out" },
+        "-=0.4"
       )
-      // 4) Bloques de texto de la derecha aparecen secuencialmente uno a uno
-      .from(rightTextRef.current ? rightTextRef.current.children : [], {
+      // 4) Línea naranja se dibuja de izquierda a derecha (simultáneo con imagen)
+      .fromTo(mobileAccentRef.current,
+        { scaleX: 0, autoAlpha: 0 },
+        { scaleX: 1, autoAlpha: 1, duration: 0.6, ease: "power2.out", transformOrigin: "left center" },
+        "-=0.55"
+      )
+      // 5) Botones aparecen en cascada desde abajo
+      .from(buttonsRef.current ? Array.from(buttonsRef.current.children) : [], {
         autoAlpha: 0,
-        y: 20,
-        duration: 0.6,
-        stagger: 0.25, // retraso elegante entre el primer y segundo bloque
-        ease: "power3.out"
-      }, ">-=0.2")
-      // 5) Grupo de botones aparece en bloque
-      .from(buttonsRef.current, {
-        autoAlpha: 0,
-        y: 20,
-        duration: 0.6,
-        ease: "power3.out"
-      }, ">-=0.1")
-      // 5.5) Bienvenido a mi portfolio reemplaza el role
+        y: 18,
+        scale: 0.95,
+        duration: 0.45,
+        stagger: 0.1,
+        ease: "back.out(1.4)"
+      }, ">-=0.15")
+      // 6) Role → Bienvenido
       .to(roleRef.current, {
         x: 50,
         autoAlpha: 0,
-        duration: 0.5,
+        duration: 0.45,
         ease: "power2.in"
       }, "moveUp+=2")
       .to(welcomeContainerRef.current, {
         x: 0,
         autoAlpha: 1,
-        duration: 0.5,
+        duration: 0.45,
         ease: "power2.out"
-      }, ">")
-      // 6) Indicador de Scroll
-      .fromTo(scrollIndicatorRef.current,
-        { autoAlpha: 0, y: -10 },
-        { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" },
-        ">-=0.2"
-      );
+      }, ">");
     } else {
       // --- SECUENCIA ORIGINAL PARA PC Y TABLET ---
       // 3) Imagen aparece con desplazamiento suave (Fade + Slide)
@@ -355,6 +350,7 @@ export function Hero() {
             <div ref={roleRef} className={styles.role}>Fullstack developer and backend specialist</div>
             <div ref={welcomeContainerRef} className={styles.welcomeText}>Bienvenido a mi portfolio</div>
           </div>
+          <div ref={mobileAccentRef} className={styles.mobileAccentLine} />
         </div>
 
         <div className={styles.textsContainer}>

@@ -81,6 +81,7 @@ export function ProjectsV2() {
   const heroImgRef      = useRef<HTMLImageElement>(null);
   const firstScreenRef  = useRef<HTMLDivElement>(null);
   const detailHeaderRef = useRef<HTMLDivElement>(null);
+  const mobileCardsRef  = useRef<(HTMLDivElement | null)[]>([]);
 
   const [activeId,  setActiveId]  = useState(1);
   const [selected,  setSelected]  = useState<Project | null>(null);
@@ -151,6 +152,40 @@ export function ProjectsV2() {
       );
     });
 
+    // Mobile: reveal secuencial con triggers independientes
+    if (window.innerWidth < 768) {
+      const mobileCards = mobileCardsRef.current.filter(Boolean) as HTMLDivElement[];
+      const mobileHdr   = mainRef.current?.querySelector<HTMLElement>(`.${styles.mobileHdr}`);
+      const mobileHLine = mainRef.current?.querySelector<HTMLElement>(`.${styles.mobileHdrLine}`);
+
+      // Header — trigger propio
+      if (mobileHdr) {
+        gsap.set(mobileHdr, { y: 22, autoAlpha: 0 });
+        ScrollTrigger.create({
+          trigger: mobileHdr,
+          start: 'top 90%',
+          onEnter: () => {
+            gsap.to(mobileHdr, { y: 0, autoAlpha: 1, duration: 0.7, ease: 'expo.out' });
+            if (mobileHLine) gsap.fromTo(mobileHLine, { scaleX: 0 },
+              { scaleX: 1, duration: 1.0, ease: 'expo.out', transformOrigin: 'left', delay: 0.12 });
+          },
+        });
+      }
+
+      // Cards — trigger en el carousel, stagger pronunciado para sentir la secuencia
+      const carousel = mainRef.current?.querySelector<HTMLElement>(`.${styles.mobileCarousel}`);
+      if (carousel && mobileCards.length) {
+        gsap.set(mobileCards, { y: 30, autoAlpha: 0 });
+        ScrollTrigger.create({
+          trigger: carousel,
+          start: 'top 88%',
+          onEnter: () => gsap.to(mobileCards, {
+            y: 0, autoAlpha: 1, duration: 0.55, stagger: 0.13, ease: 'expo.out',
+          }),
+        });
+      }
+    }
+
     // Mobile: inclinación del frame vinculada al scroll (fallback cuando no hay gyroscopio)
     if (window.innerWidth < 1024) {
       ScrollTrigger.create({
@@ -181,8 +216,8 @@ export function ProjectsV2() {
 
       if (window.innerWidth < 1024) {
         gsap.set(frame, { rotateX: 0, rotateY: 0 });
-        const imgs = frame.querySelectorAll<HTMLElement>(`.${styles.previewImg}`);
-        gsap.set(imgs, { x: 0, y: 0 });
+        const imgs = Array.from(frame.querySelectorAll<HTMLElement>(`.${styles.previewImg}`));
+        if (imgs.length) gsap.set(imgs, { x: 0, y: 0 });
         const glare = frame.querySelector<HTMLElement>(`.${styles.previewGlare}`);
         if (glare) gsap.set(glare, { opacity: 0 });
         return;
@@ -209,8 +244,8 @@ export function ProjectsV2() {
           overwrite: 'auto',
         });
 
-        const imgs = frame.querySelectorAll<HTMLElement>(`.${styles.previewImg}`);
-        gsap.to(imgs, {
+        const imgs = Array.from(frame.querySelectorAll<HTMLElement>(`.${styles.previewImg}`));
+        if (imgs.length) gsap.to(imgs, {
           x: (0.5 - x) * 25,
           y: (0.5 - y) * 17,
           duration: 0.5,
@@ -237,8 +272,8 @@ export function ProjectsV2() {
           overwrite: 'auto',
         });
 
-        const imgs = frame.querySelectorAll<HTMLElement>(`.${styles.previewImg}`);
-        gsap.to(imgs, {
+        const imgs = Array.from(frame.querySelectorAll<HTMLElement>(`.${styles.previewImg}`));
+        if (imgs.length) gsap.to(imgs, {
           x: (0.5 - wx) * 10,
           y: (0.5 - wy) * 7,
           duration: 0.9,
@@ -260,6 +295,8 @@ export function ProjectsV2() {
     if (window.innerWidth >= 1024) return;
 
     const applyOrientation = (e: DeviceOrientationEvent) => {
+      // En mobile (<768px) el previewFrame está oculto — no animar
+      if (window.innerWidth < 768) return;
       const frame = previewFrameRef.current;
       if (!frame) return;
 
@@ -278,8 +315,8 @@ export function ProjectsV2() {
         overwrite: 'auto',
       });
 
-      const imgs = frame.querySelectorAll<HTMLElement>(`.${styles.previewImg}`);
-      gsap.to(imgs, {
+      const imgs = Array.from(frame.querySelectorAll<HTMLElement>(`.${styles.previewImg}`));
+      if (imgs.length) gsap.to(imgs, {
         x: gamma * 0.25,
         y: beta  * 0.15,
         duration: 0.8,
@@ -324,7 +361,7 @@ export function ProjectsV2() {
     if (scrollAreaRef.current) scrollAreaRef.current.scrollTop = 0;
     gsap.set(detailRef.current, { x: 0 });
 
-    if (!sourceRect || !heroRef.current || !heroImgRef.current) {
+    if (!sourceRect || sourceRect.width === 0 || !heroRef.current || !heroImgRef.current) {
       const tl = gsap.timeline();
       tl.to(mainRef.current, { x: '-5%', autoAlpha: 0, duration: 0.4, ease: 'power3.in' })
         .fromTo(detailRef.current,
@@ -421,6 +458,42 @@ export function ProjectsV2() {
           MAIN VIEW — list + preview
           ════════════════════════════════════════════ */}
       <div ref={mainRef} className={styles.mainView}>
+
+        {/* ── Mobile carousel (oculto en desktop) ── */}
+        <div className={styles.mobileView}>
+          <div className={styles.mobileHdr}>
+            <div className={styles.headerLeft}>
+              <span className={styles.conceptDot} />
+              <span className={styles.sectionLabel}>PROYECTOS</span>
+            </div>
+            <span className={styles.mobileCounter}>05</span>
+          </div>
+          <div className={styles.mobileHdrLine} />
+
+          <div className={styles.mobileCarousel}>
+            {projects.map((project, i) => (
+              <div
+                key={project.id}
+                className={styles.mobileCard}
+                ref={(el) => { mobileCardsRef.current[i] = el; }}
+                onClick={() => openProject(project)}
+              >
+                <img src={project.image} alt={project.title} className={styles.mobileCardBg} />
+                <div className={styles.mobileCardOverlay} />
+                <div className={styles.mobileCardContent}>
+                  <span className={styles.mobileCardNum}>0{project.id}</span>
+                  <h3 className={styles.mobileCardTitle}>{project.title}</h3>
+                  <div className={styles.mobileCardTags}>
+                    {project.tags.map(tag => <span key={tag}>{tag}</span>)}
+                  </div>
+                </div>
+                <span className={styles.mobileCardArrow}>↗</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Desktop inner grid (oculto en mobile) ── */}
         <div className={styles.inner}>
 
           {/* Left: list */}
@@ -439,7 +512,7 @@ export function ProjectsV2() {
               {projects.map((project) => (
                 <div
                   key={project.id}
-                  className={styles.row}
+                  className={`${styles.row} ${activeId === project.id ? styles.rowActive : ''}`}
                   onMouseEnter={() => { setActiveId(project.id); startCarousel(); }}
                   onClick={() => { setActiveId(project.id); openProject(project); }}
                 >

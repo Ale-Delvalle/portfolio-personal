@@ -24,9 +24,65 @@ export function Stack() {
   const secondaryStackRef  = useRef<HTMLElement>(null);
   const playedRef          = useRef(false);
 
+  // Mobile grid refs
+  const mobileTitleRef = useRef<HTMLHeadingElement>(null);
+  const mobilePillsRef = useRef<(HTMLDivElement | null)[]>([]);
+
   useGSAP(() => {
     const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
-    const isMobile = window.innerWidth < 768;
+    const isMobile = window.innerWidth < 1024;
+
+    // ── MOBILE PATH: grid de pills con reveal secuencial por elemento ────
+    if (isMobile) {
+      const pills    = mobilePillsRef.current.filter(Boolean) as HTMLDivElement[];
+      const secTitle = sectionRef.current?.querySelector<HTMLElement>(`.${styles.secondaryTitle}`);
+
+      // Estados iniciales invisibles
+      gsap.set(mobileTitleRef.current, { autoAlpha: 0, y: 28 });
+      gsap.set(pills, { autoAlpha: 0, y: 22 });
+      if (secTitle)                  gsap.set(secTitle, { autoAlpha: 0, y: 20 });
+      if (secondaryStackRef.current) gsap.set(secondaryStackRef.current, { autoAlpha: 0, y: 20 });
+
+      // Título — trigger propio (aparece cuando el título entra en vista)
+      if (mobileTitleRef.current) {
+        ScrollTrigger.create({
+          trigger: mobileTitleRef.current,
+          start: 'top 88%',
+          onEnter: () => gsap.to(mobileTitleRef.current, {
+            autoAlpha: 1, y: 0, duration: 0.6, ease: 'expo.out',
+          }),
+        });
+      }
+
+      // Pills — reveal por filas de 2 (cada fila tiene su propio trigger)
+      const rowCount = Math.ceil(pills.length / 2);
+      for (let row = 0; row < rowCount; row++) {
+        const rowPills = pills.slice(row * 2, row * 2 + 2);
+        if (!rowPills[0]) continue;
+        ScrollTrigger.create({
+          trigger: rowPills[0],
+          start: 'top 92%',
+          onEnter: () => gsap.to(rowPills, {
+            autoAlpha: 1, y: 0, duration: 0.42, stagger: 0.08, ease: 'back.out(1.3)',
+          }),
+        });
+      }
+
+      // Tecnologías secundarias — trigger propio
+      if (secTitle) {
+        ScrollTrigger.create({
+          trigger: secTitle,
+          start: 'top 92%',
+          onEnter: () => gsap.to(
+            [secTitle, secondaryStackRef.current].filter(Boolean) as HTMLElement[],
+            { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.15, ease: 'expo.out' }
+          ),
+        });
+      }
+
+      return; // omitir lógica orbital del desktop
+    }
+    // ─────────────────────────────────────────────────────────────────────
     
     // Escala menor en móviles para evitar colisiones
     const pillScale = isMobile ? 0.78 : 1.0;
@@ -164,6 +220,7 @@ export function Stack() {
   return (
     <section id="stack" ref={sectionRef} className={`${styles.stackSection} hero-mesh-gradient`}>
 
+      {/* ── Desktop orbital (oculto en mobile) ── */}
       <div ref={circleContainerRef} className={styles.circleContainer}>
         <div className={styles.titleContainer}>
           <div className={`${styles.titleLayer} ${styles.titleCenter}`}>Stack</div>
@@ -190,6 +247,22 @@ export function Stack() {
             {tech.name}
           </div>
         ))}
+      </div>
+
+      {/* ── Mobile grid (oculto en desktop) ── */}
+      <div className={styles.mobilePillGrid}>
+        <h2 ref={mobileTitleRef} className={styles.mobilePillTitle}>Stack</h2>
+        <div className={styles.mobilePillsContainer}>
+          {techStack.map((tech, index) => (
+            <div
+              key={tech.id}
+              className={styles.mobilePill}
+              ref={(el) => { mobilePillsRef.current[index] = el; }}
+            >
+              {tech.name}
+            </div>
+          ))}
+        </div>
       </div>
 
       <h3 className={styles.secondaryTitle}>También he trabajado en algunos proyectos puntuales con:</h3>

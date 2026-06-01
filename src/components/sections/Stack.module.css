@@ -20,11 +20,6 @@
   margin: 0 auto;
 }
 
-@media (max-width: 767px) {
-  .circleContainer {
-    height: 360px;
-  }
-}
 
 .titleContainer {
   position: relative;
@@ -158,46 +153,94 @@
 }
 
 /* =========================================================
+   Mobile grid layout (oculto en desktop)
+   ========================================================= */
+.mobilePillGrid {
+  display: none;
+}
+
+.mobilePillTitle {
+  font-family: var(--font-headline);
+  font-size: clamp(3.5rem, 18vw, 5.5rem);
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0 0 2rem;
+  color: #ffffff;
+  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 24px rgba(255, 107, 0, 0.35);
+}
+
+.mobilePillsContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto;
+}
+
+.mobilePill {
+  background: #141416;
+  color: #ffffff;
+  border: 1px solid rgba(255, 167, 38, 0.35);
+  border-radius: 14px;
+  padding: 0.85rem 0.75rem;
+  font-family: var(--font-headline);
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-align: center;
+  box-shadow: 0 0 14px rgba(255, 107, 0, 0.12);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+  cursor: default;
+}
+
+.mobilePill:active {
+  transform: scale(0.96);
+}
+
+/* =========================================================
    Responsive Overrides for Stack Section
    ========================================================= */
 
 @media (max-width: 1023px) {
   .stackSection {
     height: auto !important;
-    min-height: 100vh;
-    min-height: 100svh;
     overflow: clip !important;
-    padding: 6rem 1.5rem 5rem 1.5rem !important;
-  }
-}
-
-@media (max-width: 767px) {
-  .titleLayer {
-    font-size: clamp(2.5rem, 10vw, 3.8rem) !important;
+    padding: 2.5rem 1.5rem 4rem 1.5rem !important;
   }
 
+  /* Ocultar orbital en mobile/tablet */
   .circleContainer {
-    height: 320px !important;
+    display: none !important;
   }
 
-  .techPill {
-    padding: 0.4rem 0.85rem !important;
-    font-size: 0.72rem !important;
+  /* Mostrar grid de pills */
+  .mobilePillGrid {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 0 1.5rem;
+    box-sizing: border-box;
   }
 
+  /* Secundario */
   .secondaryTitle {
-    font-size: 0.95rem !important;
-    padding: 0 0.5rem !important;
-    margin-top: 2.5rem !important;
+    font-size: 0.9rem !important;
+    padding: 0 0.75rem !important;
+    margin-top: 2rem !important;
+    text-align: center !important;
   }
 
   .secondaryStack {
-    gap: 0.75rem !important;
-    padding: 0 0.5rem !important;
+    gap: 0.65rem !important;
+    padding: 0 0.75rem !important;
+    justify-content: center !important;
   }
 
   .secondaryStack p {
-    font-size: 0.8rem !important;
-    padding: 0.35rem 0.75rem !important;
+    font-size: 0.78rem !important;
+    padding: 0.3rem 0.7rem !important;
   }
 }

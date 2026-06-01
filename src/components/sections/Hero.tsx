@@ -38,9 +38,12 @@ export function Hero() {
 
   useGSAP(() => {
     const isMobile = window.innerWidth < 768;
-    const startY = isMobile ? "10vh" : "20vh";
+    const startY = isMobile ? (window.innerHeight * 0.1 + 100) : "20vh";
     const startScale = isMobile ? 1.15 : 1.5;
     const endY = isMobile ? 10 : 30;
+
+    const wipeStart = isMobile ? "moveUp+=0.4" : "+=0.2";
+    const wipeDuration = isMobile ? 0.6 : 0.9;
 
     const tl = gsap.timeline({ onComplete: () => setIntroDone(true) });
 
@@ -98,45 +101,91 @@ export function Hero() {
       onStart: () => {
         window.dispatchEvent(new CustomEvent('hero-move-up'));
       }
-    }, "moveUp")
-    // 3) Imagen aparece con desplazamiento suave (Fade + Slide)
-    .fromTo(imageRef.current, 
-      { autoAlpha: 0, y: 50 },
-      { autoAlpha: 1, y: 0, duration: 1, ease: "power3.out" },
-      "-=0.5"
-    )
-    // 4) Textos y botones
-    .from([rightTextRef.current, buttonsRef.current], {
-      autoAlpha: 0,
-      y: 20,
-      duration: 0.8,
-      stagger: 0.15,
-      ease: "power3.out"
-    }, "-=1")
-    // 4.5) Bienvenido a mi portfolio reemplaza el role de izquierda a derecha
-    .to(roleRef.current, {
-      x: 50,
-      autoAlpha: 0,
-      duration: 0.5,
-      ease: "power2.in"
-    }, "moveUp+=2")
-    .to(welcomeContainerRef.current, {
-      x: 0,
-      autoAlpha: 1,
-      duration: 0.5,
-      ease: "power2.out"
-    }, ">")
-    // 5) Indicador de Scroll
-    .fromTo(scrollIndicatorRef.current,
-      { autoAlpha: 0, y: -10 },
-      { autoAlpha: 1, y: 0, duration: 1, ease: "power2.out" },
-      "-=0.5"
-    )
+    }, "moveUp");
+
+    if (isMobile) {
+      // --- SECUENCIA PREMIUM AAA EXCLUSIVA MÓVIL ---
+      // 3) Imagen de perfil aparece con desplazamiento suave (Fade + Slide)
+      tl.fromTo(imageRef.current, 
+        { autoAlpha: 0, y: 30 },
+        { autoAlpha: 1, y: 0, duration: 0.8, ease: "power3.out" },
+        "-=0.4" // Se solapa sutilmente con el final de la subida
+      )
+      // 4) Bloques de texto de la derecha aparecen secuencialmente uno a uno
+      .from(rightTextRef.current ? rightTextRef.current.children : [], {
+        autoAlpha: 0,
+        y: 20,
+        duration: 0.6,
+        stagger: 0.25, // retraso elegante entre el primer y segundo bloque
+        ease: "power3.out"
+      }, ">-=0.2")
+      // 5) Grupo de botones aparece en bloque
+      .from(buttonsRef.current, {
+        autoAlpha: 0,
+        y: 20,
+        duration: 0.6,
+        ease: "power3.out"
+      }, ">-=0.1")
+      // 5.5) Bienvenido a mi portfolio reemplaza el role
+      .to(roleRef.current, {
+        x: 50,
+        autoAlpha: 0,
+        duration: 0.5,
+        ease: "power2.in"
+      }, "moveUp+=2")
+      .to(welcomeContainerRef.current, {
+        x: 0,
+        autoAlpha: 1,
+        duration: 0.5,
+        ease: "power2.out"
+      }, ">")
+      // 6) Indicador de Scroll
+      .fromTo(scrollIndicatorRef.current,
+        { autoAlpha: 0, y: -10 },
+        { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" },
+        ">-=0.2"
+      );
+    } else {
+      // --- SECUENCIA ORIGINAL PARA PC Y TABLET ---
+      // 3) Imagen aparece con desplazamiento suave (Fade + Slide)
+      tl.fromTo(imageRef.current, 
+        { autoAlpha: 0, y: 50 },
+        { autoAlpha: 1, y: 0, duration: 1, ease: "power3.out" },
+        "-=0.5"
+      )
+      // 4) Textos y botones
+      .from([rightTextRef.current, buttonsRef.current], {
+        autoAlpha: 0,
+        y: 20,
+        duration: 0.8,
+        stagger: 0.15,
+        ease: "power3.out"
+      }, "-=1")
+      // 4.5) Bienvenido a mi portfolio reemplaza el role de izquierda a derecha
+      .to(roleRef.current, {
+        x: 50,
+        autoAlpha: 0,
+        duration: 0.5,
+        ease: "power2.in"
+      }, "moveUp+=2")
+      .to(welcomeContainerRef.current, {
+        x: 0,
+        autoAlpha: 1,
+        duration: 0.5,
+        ease: "power2.out"
+      }, ">")
+      // 5) Indicador de Scroll
+      .fromTo(scrollIndicatorRef.current,
+        { autoAlpha: 0, y: -10 },
+        { autoAlpha: 1, y: 0, duration: 1, ease: "power2.out" },
+        "-=0.5"
+      );
+    }
     // 6) Barrido del nombre: de degradado brillante a blanco, de derecha a izquierda
-    .addLabel("nameWipe", "+=0.2")
+    tl.addLabel("nameWipe", wipeStart)
     .fromTo(nameWhiteRef.current,
       { clipPath: 'inset(0 100% 0 0)' },
-      { clipPath: 'inset(0 0% 0 0)', textShadow: 'none', duration: 0.9, ease: 'power2.inOut' },
+      { clipPath: 'inset(0 0% 0 0)', textShadow: 'none', duration: wipeDuration, ease: 'power2.inOut' },
       "nameWipe"
     )
     .call(() => {
@@ -147,7 +196,7 @@ export function Hero() {
           ease: 'power2.inOut',
         });
       }
-    }, [], "nameWipe+=0.6");
+    }, [], "nameWipe+=" + (wipeDuration * 0.6));
 
     // --- MOUSE PARALLAX (Botón Contactame) ---
     xToBtn.current = gsap.quickTo(contactBtnRef.current, "x", { duration: 0.8, ease: "power3" });

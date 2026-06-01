@@ -609,6 +609,9 @@
   }
   .name, :global(:root[data-theme="dark"]) .nameWhiteOverlay {
     white-space: normal !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
   .role {
     white-space: normal !important;

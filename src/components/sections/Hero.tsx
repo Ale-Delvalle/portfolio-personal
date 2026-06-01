@@ -22,7 +22,8 @@ export function Hero() {
   const scrollTextRef = useRef<HTMLSpanElement>(null);
   const welcomeContainerRef = useRef<HTMLDivElement>(null);
   const mobileAccentRef = useRef<HTMLDivElement>(null);
-  
+  const introOverlayRef = useRef<HTMLDivElement>(null);
+
   // Canvas Sparks Refs
   const nameCanvasRef = useRef<HTMLCanvasElement>(null);
   const roleCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -52,13 +53,22 @@ export function Hero() {
         if (isMobile) {
           if (imageRef.current) gsap.set(imageRef.current, { clearProps: "all" });
           if (buttonsRef.current) gsap.set(Array.from(buttonsRef.current.children), { clearProps: "all" });
+          if (rightTextRef.current) gsap.set(rightTextRef.current, { clearProps: "all" });
         }
       }
     });
 
     gsap.set(nameContainerRef.current, { zIndex: 51, position: 'relative' });
-    gsap.set(nameContainerRef.current, { zIndex: 51, position: 'relative' });
     gsap.set(welcomeContainerRef.current, { x: -50, autoAlpha: 0 });
+
+    if (isMobile) {
+      gsap.set(imageRef.current, { autoAlpha: 0 });
+      gsap.set(rightTextRef.current, { autoAlpha: 0 });
+      gsap.set(mobileAccentRef.current, { scaleX: 0, opacity: 0 });
+      if (buttonsRef.current) {
+        gsap.set(Array.from(buttonsRef.current.children), { opacity: 0, y: 18, scale: 0.95 });
+      }
+    }
     // 1) Nombre y Rol aparecen en el centro de la pantalla
     tl.fromTo(nameContainerRef.current, 
       { autoAlpha: 0, y: startY, scale: startScale },
@@ -113,14 +123,20 @@ export function Hero() {
     }, "moveUp");
 
     if (isMobile) {
-      // --- SECUENCIA MOBILE REDISEÑADA ---
+      // --- SECUENCIA MOBILE ---
+      // Overlay naranja-marrón se desvanece cuando el nombre sube
+      tl.to(introOverlayRef.current, {
+        autoAlpha: 0,
+        duration: 0.8,
+        ease: "power2.out"
+      }, "moveUp")
       // 3) Imagen con glow sutil desde abajo
-      tl.fromTo(imageRef.current,
+      .fromTo(imageRef.current,
         { opacity: 0, scale: 0.92, y: 20 },
         { opacity: 1, scale: 1, y: 0, duration: 0.7, ease: "expo.out", clearProps: "opacity,transform" },
         "-=0.4"
       )
-      // 4) Línea naranja se dibuja de izquierda a derecha (simultáneo con imagen)
+      // 4) Línea naranja se dibuja de izquierda a derecha
       .fromTo(mobileAccentRef.current,
         { scaleX: 0, opacity: 0 },
         { scaleX: 1, opacity: 1, duration: 0.6, ease: "power2.out", transformOrigin: "left center" },
@@ -133,7 +149,13 @@ export function Hero() {
         { opacity: 1, y: 0, scale: 1, duration: 0.45, stagger: 0.1, ease: "back.out(1.4)", clearProps: "all" },
         ">-=0.15"
       )
-      // 6) Role → Bienvenido
+      // 6) Textos laterales aparecen junto con los botones
+      .fromTo(rightTextRef.current,
+        { autoAlpha: 0, y: 20 },
+        { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out" },
+        ">-=0.3"
+      )
+      // 7) Role → Bienvenido
       .to(roleRef.current, {
         x: 50,
         autoAlpha: 0,
@@ -337,6 +359,7 @@ export function Hero() {
 
   return (
     <main id="home" ref={mainRef} className={`${styles.main} hero-mesh-gradient`} onMouseMove={handleMouseMove} style={{ perspective: "1000px" }}>
+      <div ref={introOverlayRef} className={styles.introOverlay} />
       <div className={styles.content}>
         
         <div ref={nameContainerRef} className={styles.nameContainer}>

@@ -6,7 +6,9 @@
       "Skill(update-config)",
       "Skill(update-config:*)",
       "Bash(npm --version)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "PowerShell(Start-Sleep 3; $chromePath = \"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\"; $outFile = \"C:\\\\Users\\\\ozono\\\\AppData\\\\Local\\\\Temp\\\\hero_mobile3.png\"; Start-Process -FilePath $chromePath -ArgumentList \"--headless=new\",\"--screenshot=$outFile\",\"--window-size=390,844\",\"--virtual-time-budget=8000\",\"--hide-scrollbars\",\"http://localhost:5173\" -Wait -NoNewWindow; Start-Sleep 2; Test-Path $outFile)",
+      "PowerShell(Set-Location \"$env:TEMP\"; npm install --prefix . playwright 2>&1 | Select-Object -Last 3; node -e \"require\\('./node_modules/playwright'\\)\" 2>&1 | Select-Object -First 2)"
     ]
   }
 }

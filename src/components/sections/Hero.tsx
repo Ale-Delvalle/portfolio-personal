@@ -46,7 +46,15 @@ export function Hero() {
     const wipeStart = isMobile ? "moveUp+=0.4" : "+=0.2";
     const wipeDuration = isMobile ? 0.6 : 0.9;
 
-    const tl = gsap.timeline({ onComplete: () => setIntroDone(true) });
+    const tl = gsap.timeline({
+      onComplete: () => {
+        setIntroDone(true);
+        if (isMobile) {
+          if (imageRef.current) gsap.set(imageRef.current, { clearProps: "all" });
+          if (buttonsRef.current) gsap.set(Array.from(buttonsRef.current.children), { clearProps: "all" });
+        }
+      }
+    });
 
     gsap.set(nameContainerRef.current, { zIndex: 51, position: 'relative' });
     gsap.set(nameContainerRef.current, { zIndex: 51, position: 'relative' });
@@ -108,25 +116,23 @@ export function Hero() {
       // --- SECUENCIA MOBILE REDISEÑADA ---
       // 3) Imagen con glow sutil desde abajo
       tl.fromTo(imageRef.current,
-        { autoAlpha: 0, scale: 0.92, y: 20 },
-        { autoAlpha: 1, scale: 1, y: 0, duration: 0.7, ease: "expo.out" },
+        { opacity: 0, scale: 0.92, y: 20 },
+        { opacity: 1, scale: 1, y: 0, duration: 0.7, ease: "expo.out", clearProps: "opacity,transform" },
         "-=0.4"
       )
       // 4) Línea naranja se dibuja de izquierda a derecha (simultáneo con imagen)
       .fromTo(mobileAccentRef.current,
-        { scaleX: 0, autoAlpha: 0 },
-        { scaleX: 1, autoAlpha: 1, duration: 0.6, ease: "power2.out", transformOrigin: "left center" },
+        { scaleX: 0, opacity: 0 },
+        { scaleX: 1, opacity: 1, duration: 0.6, ease: "power2.out", transformOrigin: "left center" },
         "-=0.55"
       )
       // 5) Botones aparecen en cascada desde abajo
-      .from(buttonsRef.current ? Array.from(buttonsRef.current.children) : [], {
-        autoAlpha: 0,
-        y: 18,
-        scale: 0.95,
-        duration: 0.45,
-        stagger: 0.1,
-        ease: "back.out(1.4)"
-      }, ">-=0.15")
+      .fromTo(
+        buttonsRef.current ? Array.from(buttonsRef.current.children) : [],
+        { opacity: 0, y: 18, scale: 0.95 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.45, stagger: 0.1, ease: "back.out(1.4)", clearProps: "all" },
+        ">-=0.15"
+      )
       // 6) Role → Bienvenido
       .to(roleRef.current, {
         x: 50,

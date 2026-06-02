@@ -705,6 +705,75 @@
   }
 }
 
+/* =========================================================
+   Desktop Light Mode Overrides
+   Solo se activan cuando la intro ya terminó (data-intro-done).
+   Durante la intro el fondo es negro = mismos colores que dark mode.
+   ========================================================= */
+@media (min-width: 1024px) {
+  /* TextBlock glass claro (sin transición de intro, aparece al hacer scroll) */
+  :global([data-theme="light"][data-intro-done]) .textBlock {
+    background: rgba(248, 246, 242, 0.75);
+    border: 1px solid rgba(42, 36, 32, 0.1);
+    border-top: 1px solid rgba(42, 36, 32, 0.15);
+    border-left: 1px solid rgba(42, 36, 32, 0.08);
+    box-shadow: 0 10px 30px rgba(42, 36, 32, 0.08), inset 0 0 20px rgba(140, 67, 29, 0.02);
+  }
+
+  :global([data-theme="light"][data-intro-done]) .textBlock::before {
+    box-shadow: 0 0 8px rgba(140, 67, 29, 0.3);
+  }
+
+  :global([data-theme="light"][data-intro-done]) .textBlock:hover {
+    border-color: rgba(140, 67, 29, 0.18);
+    box-shadow: 0 0 28px rgba(140, 67, 29, 0.07), inset 0 0 16px rgba(140, 67, 29, 0.04);
+  }
+
+  /* Nombre: gradiente oscuro — solo post-intro */
+  :global([data-theme="light"][data-intro-done]) .name {
+    background: linear-gradient(135deg, #1A1410 0%, #5C3317 50%, #8C431D 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: none;
+    transition: filter 0.4s ease;
+  }
+
+  :global([data-theme="light"][data-intro-done]) .role,
+  :global([data-theme="light"][data-intro-done]) .welcomeText {
+    color: #2A2420;
+    transition: color 0.4s ease;
+  }
+
+  :global([data-theme="light"][data-intro-done]) .sideTitle,
+  :global([data-theme="light"][data-intro-done]) .sideTitleLarge {
+    color: #1A1410;
+    transition: color 0.4s ease;
+  }
+
+  :global([data-theme="light"][data-intro-done]) .sideDesc {
+    color: #3D2B1F;
+    transition: color 0.4s ease;
+  }
+
+  /* Botón primario */
+  :global([data-theme="light"][data-intro-done]) .primaryBtn {
+    color: #5C3317;
+    border: 1px solid rgba(140, 67, 29, 0.32);
+  }
+
+  :global([data-theme="light"][data-intro-done]) .primaryBtn:hover {
+    background: rgba(140, 67, 29, 0.07);
+    box-shadow: 0 0 22px rgba(140, 67, 29, 0.12);
+    border-color: #8C431D;
+  }
+
+  /* Scroll indicator */
+  :global([data-theme="light"][data-intro-done]) .scrollIndicator {
+    color: #8C431D;
+  }
+}
+
 @media (max-width: 480px) {
   .name {
     font-size: clamp(1.9rem, 9vw, 2.8rem) !important;

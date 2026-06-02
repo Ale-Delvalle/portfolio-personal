@@ -531,6 +531,63 @@
 }
 
 /* =========================================================
+   Desktop Light Mode Overrides
+   ========================================================= */
+@media (min-width: 1024px) {
+  :global([data-theme="light"]) .rowTitle {
+    color: rgba(26, 20, 16, 0.82);
+  }
+
+  :global([data-theme="light"]) .row:hover .rowTitle {
+    color: #1A1410;
+  }
+
+  :global([data-theme="light"]) .rowDesc {
+    color: rgba(42, 36, 32, 0.52);
+  }
+
+  :global([data-theme="light"]) .row {
+    border-bottom: 1px solid rgba(42, 36, 32, 0.1);
+  }
+
+  :global([data-theme="light"]) .previewFrame {
+    border: 1px solid rgba(140, 67, 29, 0.12);
+    box-shadow: 0 0 0 1px rgba(42, 36, 32, 0.04), 0 24px 60px rgba(42, 36, 32, 0.1);
+    background: #EDE9E2;
+  }
+
+  :global([data-theme="light"]) .browserBar {
+    background: rgba(42, 36, 32, 0.06);
+    border-bottom: 1px solid rgba(42, 36, 32, 0.08);
+  }
+
+  :global([data-theme="light"]) .browserUrl {
+    background: rgba(42, 36, 32, 0.04);
+    border: 1px solid rgba(42, 36, 32, 0.08);
+  }
+
+  :global([data-theme="light"]) .urlText {
+    color: rgba(42, 36, 32, 0.4);
+  }
+
+  :global([data-theme="light"]) .metaTitle {
+    color: rgba(42, 36, 32, 0.5);
+  }
+
+  :global([data-theme="light"]) .imgStack {
+    background: #E8E4DE;
+  }
+
+  :global([data-theme="light"]) .sectionLabel {
+    color: rgba(140, 67, 29, 0.55);
+  }
+
+  :global([data-theme="light"]) .headerLine {
+    background: linear-gradient(to right, rgba(140, 67, 29, 0.3), rgba(140, 67, 29, 0.08) 60%, transparent);
+  }
+}
+
+/* =========================================================
    Responsive Overrides for Projects Section
    ========================================================= */
 

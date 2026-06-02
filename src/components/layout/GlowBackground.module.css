@@ -18,6 +18,12 @@
   height: 100%;
 }
 
+@media (min-width: 1024px) {
+  :global([data-theme="light"]) .container {
+    background-color: #F8F6F2;
+  }
+}
+
 
 
 

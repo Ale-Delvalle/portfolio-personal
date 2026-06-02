@@ -170,6 +170,46 @@
 }
 
 /* =========================================================
+   Desktop Light Mode Overrides
+   ========================================================= */
+@media (min-width: 1024px) {
+  :global([data-theme="light"]) .titleCenter {
+    color: #1A1410;
+    text-shadow: none;
+  }
+
+  :global([data-theme="light"]) .techPill {
+    background: rgba(248, 246, 242, 0.88);
+    color: #2A2420;
+    border: 1px solid rgba(140, 67, 29, 0.18);
+    box-shadow: 0 0 12px rgba(140, 67, 29, 0.05);
+  }
+
+  :global([data-theme="light"]) .techPill:hover {
+    box-shadow: 0 0 18px rgba(140, 67, 29, 0.1);
+  }
+
+  :global([data-theme="light"]) .secondaryTitle {
+    color: #2A2420;
+  }
+
+  :global([data-theme="light"]) .secondaryStack {
+    color: #2A2420;
+  }
+
+  :global([data-theme="light"]) .secondaryStack p {
+    background: rgba(140, 67, 29, 0.06);
+    border: 1px solid rgba(140, 67, 29, 0.14);
+    color: #3D2B1F;
+  }
+
+  :global([data-theme="light"]) .secondaryStack p:hover {
+    background: rgba(140, 67, 29, 0.1);
+    border-color: rgba(140, 67, 29, 0.22);
+  }
+}
+
+/* =========================================================
    Responsive Overrides for Stack Section
    ========================================================= */
 

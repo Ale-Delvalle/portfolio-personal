@@ -31,6 +31,7 @@ export function GlowBackground() {
     let waveAlpha = 0;
     let orbAlpha = 1;
     let transitionStarted = false;
+    let introDoneSet = false;
 
     const getIsDark = () => {
       const attr = document.documentElement.getAttribute('data-theme');
@@ -108,6 +109,13 @@ export function GlowBackground() {
 
     const animate = () => {
       const isDarkTheme = getIsDark();
+      const isDesktopLight = !isDarkTheme && width >= 1024;
+
+      // Sincronizar data-intro-done con el estado real del tema
+      if (isDarkTheme && introDoneSet) {
+        document.documentElement.removeAttribute('data-intro-done');
+        introDoneSet = false;
+      }
 
       time += 16;
       globalTimer += 16;
@@ -116,14 +124,19 @@ export function GlowBackground() {
 
       if (transitionStarted) {
         waveAlpha = Math.min(1, waveAlpha + 0.015);
-        if (isDarkTheme) {
-          orbAlpha = Math.max(0, orbAlpha - 0.02);
-        } else {
-          orbAlpha = Math.min(1, orbAlpha + 0.02);
-        }
+        orbAlpha = Math.max(0, orbAlpha - 0.02);
       }
-      
-      ctx.fillStyle = '#000000';
+
+      // Desktop light: fondo transiciona de negro a crema a medida que los orbes se desvanecen
+      if (isDesktopLight && transitionStarted) {
+        const t = 1 - orbAlpha;
+        const r = Math.round(248 * t);
+        const g = Math.round(246 * t);
+        const b = Math.round(242 * t);
+        ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+      } else {
+        ctx.fillStyle = '#000000';
+      }
       ctx.fillRect(0, 0, width, height);
 
       const minDim = Math.min(width, height);
@@ -168,6 +181,36 @@ export function GlowBackground() {
       }
 
       // --- 3. DIBUJAR COMETAS / MECHAS ---
+      // Desktop light post-intro: fondo crema con glow cálido sutil en la base
+      if (isDesktopLight && orbAlpha === 0) {
+        if (!introDoneSet) {
+          document.documentElement.setAttribute('data-intro-done', 'true');
+          introDoneSet = true;
+        }
+        if (waveAlpha > 0) {
+          ctx.globalAlpha = waveAlpha * 0.1;
+          ctx.filter = 'blur(50px)';
+          ctx.beginPath();
+          ctx.moveTo(0, height);
+          for (let x = 0; x <= width; x += 10) {
+            const h = getGlowHeight(x, waveTime);
+            ctx.lineTo(x, height - h * 0.4);
+          }
+          ctx.lineTo(width, height);
+          ctx.closePath();
+          const lightGrad = ctx.createLinearGradient(0, height, 0, height - 80);
+          lightGrad.addColorStop(0, 'rgba(140, 67, 29, 0.7)');
+          lightGrad.addColorStop(0.6, 'rgba(140, 67, 29, 0.2)');
+          lightGrad.addColorStop(1, 'rgba(140, 67, 29, 0)');
+          ctx.fillStyle = lightGrad;
+          ctx.fill();
+          ctx.filter = 'none';
+          ctx.globalAlpha = 1;
+        }
+        rafId = requestAnimationFrame(animate);
+        return;
+      }
+
       comets.forEach((comet, index) => {
         const p0 = { x: comet.p0.x * width, y: comet.p0.y * height };
         const p1 = { x: comet.p1.x * width, y: comet.p1.y * height };
@@ -296,8 +339,8 @@ export function GlowBackground() {
 
 
 
-      // --- DIBUJAR WAVE INFERIOR (POST-INTRO) ---
-      if (waveAlpha > 0) {
+      // --- DIBUJAR WAVE INFERIOR (POST-INTRO, solo dark mode) ---
+      if (waveAlpha > 0 && !isDesktopLight) {
         ctx.globalAlpha = waveAlpha;
         ctx.filter = 'blur(20px)';
         ctx.beginPath();
@@ -332,6 +375,7 @@ export function GlowBackground() {
       window.removeEventListener('resize', setCanvasSize);
       window.removeEventListener('hero-move-up', handleTransition);
       cancelAnimationFrame(rafId);
+      document.documentElement.removeAttribute('data-intro-done');
     };
   }, []);
 

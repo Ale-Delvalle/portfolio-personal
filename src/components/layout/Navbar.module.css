@@ -301,6 +301,36 @@
   }
 }
 
+/* --- DESKTOP LIGHT MODE --- */
+@media (min-width: 1024px) {
+  :global([data-theme="light"]) .navbar {
+    background: rgba(248, 246, 242, 0.88);
+    border: 1px solid rgba(140, 67, 29, 0.18);
+    box-shadow: 0 4px 20px rgba(42, 36, 32, 0.07), 0 1px 0 rgba(140, 67, 29, 0.08);
+    --lc: #2A2420;
+  }
+
+  :global([data-theme="light"]) .link {
+    color: #3D2B1F;
+  }
+
+  :global([data-theme="light"]) .link:hover {
+    color: #8C431D;
+  }
+
+  :global([data-theme="light"]) .activeLink {
+    color: #8C431D;
+  }
+
+  :global([data-theme="light"]) .themeBtn {
+    color: #3D2B1F;
+  }
+
+  :global([data-theme="light"]) .themeBtn:hover {
+    color: #8C431D;
+  }
+}
+
 /* --- TABLET (768px - 1023px) --- */
 @media (min-width: 768px) and (max-width: 1023px) {
   .navbar {

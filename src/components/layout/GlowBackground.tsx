@@ -24,6 +24,7 @@ export function GlowBackground() {
     window.addEventListener('resize', setCanvasSize);
 
     let time = 0;
+    let orbTime = 0;
     let waveTime = 0;
     let rafId: number;
 
@@ -38,13 +39,6 @@ export function GlowBackground() {
       if (saved) return saved === 'dark';
       return window.matchMedia('(prefers-color-scheme: dark)').matches;
     };
-
-    let isDarkTheme = getIsDark();
-
-    const observer = new MutationObserver(() => {
-      isDarkTheme = getIsDark();
-    });
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
     const handleTransition = () => {
       transitionStarted = true;
@@ -113,9 +107,12 @@ export function GlowBackground() {
     };
 
     const animate = () => {
+      const isDarkTheme = getIsDark();
+
       time += 16;
       globalTimer += 16;
       waveTime += 0.007;
+      if (!transitionStarted) orbTime = time;
 
       if (transitionStarted) {
         waveAlpha = Math.min(1, waveAlpha + 0.015);
@@ -138,8 +135,8 @@ export function GlowBackground() {
         ctx.filter = 'blur(80px)'; 
 
         orbs.forEach((orb) => {
-          const x = width / 2 + Math.sin(time * orb.speedX + orb.phaseX) * (width * 0.4) + Math.cos(time * orb.speedX * 0.5) * (width * 0.1);
-          const y = height / 2 + Math.cos(time * orb.speedY + orb.phaseY) * (height * 0.4) + Math.sin(time * orb.speedY * 0.5) * (height * 0.1);
+          const x = width / 2 + Math.sin(orbTime * orb.speedX + orb.phaseX) * (width * 0.4) + Math.cos(orbTime * orb.speedX * 0.5) * (width * 0.1);
+          const y = height / 2 + Math.cos(orbTime * orb.speedY + orb.phaseY) * (height * 0.4) + Math.sin(orbTime * orb.speedY * 0.5) * (height * 0.1);
           
           const radius = minDim * orb.size;
 
@@ -153,7 +150,8 @@ export function GlowBackground() {
           ctx.fill();
         });
 
-        ctx.filter = 'none'; 
+        ctx.filter = 'none';
+        ctx.globalAlpha = 1;
         ctx.globalCompositeOperation = 'source-over';
       }
 
@@ -333,7 +331,6 @@ export function GlowBackground() {
     return () => {
       window.removeEventListener('resize', setCanvasSize);
       window.removeEventListener('hero-move-up', handleTransition);
-      observer.disconnect();
       cancelAnimationFrame(rafId);
     };
   }, []);

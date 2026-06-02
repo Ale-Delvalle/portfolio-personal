@@ -207,8 +207,6 @@ export function GlowBackground() {
           ctx.filter = 'none';
           ctx.globalAlpha = 1;
         }
-        rafId = requestAnimationFrame(animate);
-        return;
       }
 
       comets.forEach((comet, index) => {
@@ -259,7 +257,7 @@ export function GlowBackground() {
               const lightLength = 0.1; 
               const segments = 25; 
 
-              ctx.globalCompositeOperation = 'screen';
+              ctx.globalCompositeOperation = isDarkTheme ? 'screen' : 'source-over';
 
               for (let i = 0; i < segments; i++) {
                 const tCurrent = p - (i * lightLength / segments);
@@ -305,7 +303,7 @@ export function GlowBackground() {
       });
 
       // --- 4. ACTUALIZAR Y DIBUJAR PARTÍCULAS ---
-      ctx.globalCompositeOperation = 'screen';
+      ctx.globalCompositeOperation = isDarkTheme ? 'screen' : 'source-over';
       for (let i = particles.length - 1; i >= 0; i--) {
         let p = particles[i];
         p.x += p.vx;

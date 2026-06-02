@@ -789,3 +789,8 @@
     font-size: 0.82rem !important;
   }
 }
+
+/* Ocultar capa blanca del nombre en modo claro (desktop y mobile) */
+:global([data-theme="light"]) .nameWhiteOverlay {
+  display: none !important;
+}

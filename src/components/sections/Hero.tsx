@@ -62,7 +62,7 @@ export function Hero() {
     gsap.set(welcomeContainerRef.current, { x: -50, autoAlpha: 0 });
 
     if (isMobile) {
-      gsap.set(imageRef.current, { autoAlpha: 0 });
+      gsap.set(imageRef.current, { opacity: 0, scale: 0.92, y: 20 });
       gsap.set(rightTextRef.current, { autoAlpha: 0 });
       gsap.set(mobileAccentRef.current, { scaleX: 0, opacity: 0 });
       if (buttonsRef.current) {
@@ -130,30 +130,30 @@ export function Hero() {
         duration: 0.8,
         ease: "power2.out"
       }, "moveUp")
-      // 3) Imagen con glow sutil desde abajo
+      // 3) Foto: aparece justo cuando el overlay termina de desvanecerse (moveUp+0.8)
       .fromTo(imageRef.current,
         { opacity: 0, scale: 0.92, y: 20 },
         { opacity: 1, scale: 1, y: 0, duration: 0.7, ease: "expo.out", clearProps: "opacity,transform" },
-        "-=0.4"
+        "moveUp+=0.8"
       )
-      // 4) Línea naranja se dibuja de izquierda a derecha
+      // 4) Línea naranja: comienza cuando la foto ya está visible (moveUp+1.5)
       .fromTo(mobileAccentRef.current,
         { scaleX: 0, opacity: 0 },
-        { scaleX: 1, opacity: 1, duration: 0.6, ease: "power2.out", transformOrigin: "left center" },
-        "-=0.55"
+        { scaleX: 1, opacity: 1, duration: 0.5, ease: "power2.out", transformOrigin: "left center" },
+        "moveUp+=1.5"
       )
-      // 5) Botones aparecen en cascada desde abajo
+      // 5) Botones aparecen en cascada después de la foto
       .fromTo(
         buttonsRef.current ? Array.from(buttonsRef.current.children) : [],
         { opacity: 0, y: 18, scale: 0.95 },
         { opacity: 1, y: 0, scale: 1, duration: 0.45, stagger: 0.1, ease: "back.out(1.4)", clearProps: "all" },
-        ">-=0.15"
+        "moveUp+=1.6"
       )
-      // 6) Textos laterales aparecen junto con los botones
+      // 6) Textos laterales aparecen después de los botones
       .fromTo(rightTextRef.current,
         { autoAlpha: 0, y: 20 },
         { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out" },
-        ">-=0.3"
+        "moveUp+=1.7"
       )
       // 7) Role → Bienvenido
       .to(roleRef.current, {
@@ -167,7 +167,7 @@ export function Hero() {
         autoAlpha: 1,
         duration: 0.45,
         ease: "power2.out"
-      }, ">");
+      }, "moveUp+=2.45");
     } else {
       // --- SECUENCIA ORIGINAL PARA PC Y TABLET ---
       // 3) Imagen aparece con desplazamiento suave (Fade + Slide)

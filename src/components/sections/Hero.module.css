@@ -685,6 +685,14 @@
     border-radius: 12px !important;
   }
 
+  .sideTitle {
+    font-size: 1.35rem !important;
+  }
+
+  .sideDesc {
+    font-size: 0.9rem !important;
+  }
+
   /* ─── Scroll indicator en flujo normal ─── */
   .scrollIndicator {
     display: flex !important;

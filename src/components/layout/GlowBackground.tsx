@@ -31,6 +31,21 @@ export function GlowBackground() {
     let orbAlpha = 1;
     let transitionStarted = false;
 
+    const getIsDark = () => {
+      const attr = document.documentElement.getAttribute('data-theme');
+      if (attr) return attr === 'dark';
+      const saved = localStorage.getItem('theme');
+      if (saved) return saved === 'dark';
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    };
+
+    let isDarkTheme = getIsDark();
+
+    const observer = new MutationObserver(() => {
+      isDarkTheme = getIsDark();
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
     const handleTransition = () => {
       transitionStarted = true;
     };
@@ -104,7 +119,11 @@ export function GlowBackground() {
 
       if (transitionStarted) {
         waveAlpha = Math.min(1, waveAlpha + 0.015);
-        orbAlpha = Math.max(0, orbAlpha - 0.02);
+        if (isDarkTheme) {
+          orbAlpha = Math.max(0, orbAlpha - 0.02);
+        } else {
+          orbAlpha = Math.min(1, orbAlpha + 0.02);
+        }
       }
       
       ctx.fillStyle = '#000000';
@@ -314,6 +333,7 @@ export function GlowBackground() {
     return () => {
       window.removeEventListener('resize', setCanvasSize);
       window.removeEventListener('hero-move-up', handleTransition);
+      observer.disconnect();
       cancelAnimationFrame(rafId);
     };
   }, []);

@@ -34,6 +34,9 @@ export function GlowBackground() {
     let transitionStarted = false;
     let introDoneSet = false;
 
+    let scrollEnergy = 0;
+    let scrollOrbTime = 0;
+
     const getIsDark = () => {
       const attr = document.documentElement.getAttribute('data-theme');
       if (attr) return attr === 'dark';
@@ -46,7 +49,14 @@ export function GlowBackground() {
       transitionStarted = true;
     };
 
+    const handleScroll = () => {
+      if (transitionStarted) {
+        scrollEnergy = Math.min(1, scrollEnergy + 0.35);
+      }
+    };
+
     window.addEventListener('hero-move-up', handleTransition);
+    window.addEventListener('scroll', handleScroll);
 
     const orbs = [
       { color: 'rgba(255, 107, 0, 0.8)', size: 0.8, speedX: 0.0006, speedY: 0.0005, phaseX: 0, phaseY: 1 },
@@ -121,6 +131,8 @@ export function GlowBackground() {
       time += 16;
       globalTimer += 16;
       waveTime += 0.007;
+      scrollOrbTime += 16;
+      scrollEnergy = Math.max(0, scrollEnergy - 0.008);
       if (!transitionStarted) orbTime = time;
 
       if (transitionStarted) {
@@ -190,7 +202,7 @@ export function GlowBackground() {
           introDoneSet = true;
         }
         if (waveAlpha > 0) {
-          ctx.globalAlpha = waveAlpha * 0.1;
+          ctx.globalAlpha = waveAlpha * (0.1 + scrollEnergy * 0.25);
           ctx.filter = 'blur(50px)';
           ctx.beginPath();
           ctx.moveTo(0, height);
@@ -339,11 +351,37 @@ export function GlowBackground() {
 
 
 
+      // --- SCROLL ORBS (dark mode, re-aparecen durante el scroll) ---
+      if (!isLight && transitionStarted && scrollEnergy > 0.01) {
+        ctx.globalAlpha = scrollEnergy * 0.6;
+        ctx.globalCompositeOperation = 'screen';
+        ctx.filter = 'blur(80px)';
+
+        orbs.forEach((orb) => {
+          const x = width / 2 + Math.sin(scrollOrbTime * orb.speedX + orb.phaseX) * (width * 0.4) + Math.cos(scrollOrbTime * orb.speedX * 0.5) * (width * 0.1);
+          const y = height / 2 + Math.cos(scrollOrbTime * orb.speedY + orb.phaseY) * (height * 0.4) + Math.sin(scrollOrbTime * orb.speedY * 0.5) * (height * 0.1);
+          const radius = minDim * orb.size;
+          const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+          gradient.addColorStop(0, orb.color);
+          gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.arc(x, y, radius, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        ctx.filter = 'none';
+        ctx.globalAlpha = 1;
+        ctx.globalCompositeOperation = 'source-over';
+      }
+
       // --- ORBE HERO (POST-INTRO, solo dark mode) ---
       // Orbe única centrada en el top que ilumina el centro superior e inferior
       if (!isLight && heroOrbAlpha > 0) {
-        const orbX = width / 2;
-        const orbY = 0;
+        const scrollMoveX = Math.sin(scrollOrbTime * 0.0007) * (width * 0.18) * scrollEnergy;
+        const scrollMoveY = Math.cos(scrollOrbTime * 0.0005) * (height * 0.1) * scrollEnergy;
+        const orbX = width / 2 + scrollMoveX;
+        const orbY = scrollMoveY;
 
         // Respiración sutil para que no sea completamente estática
         const breathe = 1 + Math.sin(waveTime * 0.5) * 0.05;
@@ -391,6 +429,7 @@ export function GlowBackground() {
     return () => {
       window.removeEventListener('resize', setCanvasSize);
       window.removeEventListener('hero-move-up', handleTransition);
+      window.removeEventListener('scroll', handleScroll);
       cancelAnimationFrame(rafId);
       document.documentElement.removeAttribute('data-intro-done');
     };

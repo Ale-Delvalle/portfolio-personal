@@ -30,6 +30,7 @@ export function GlowBackground() {
 
     let waveAlpha = 0;
     let orbAlpha = 1;
+    let heroOrbAlpha = 0;
     let transitionStarted = false;
     let introDoneSet = false;
 
@@ -125,6 +126,7 @@ export function GlowBackground() {
       if (transitionStarted) {
         waveAlpha = Math.min(1, waveAlpha + 0.015);
         orbAlpha = Math.max(0, orbAlpha - 0.02);
+        heroOrbAlpha = Math.min(1, heroOrbAlpha + 0.012);
       }
 
       // Light theme: fondo transiciona de negro a crema a medida que los orbes se desvanecen
@@ -337,31 +339,48 @@ export function GlowBackground() {
 
 
 
-      // --- DIBUJAR WAVE INFERIOR (POST-INTRO, solo dark mode) ---
-      if (waveAlpha > 0 && !isLight) {
-        ctx.globalAlpha = waveAlpha;
-        ctx.filter = 'blur(20px)';
+      // --- ORBE HERO (POST-INTRO, solo dark mode) ---
+      // Orbe única centrada en el top que ilumina el centro superior e inferior
+      if (!isLight && heroOrbAlpha > 0) {
+        const orbX = width / 2;
+        const orbY = 0;
+
+        // Respiración sutil para que no sea completamente estática
+        const breathe = 1 + Math.sin(waveTime * 0.5) * 0.05;
+
+        ctx.globalAlpha = heroOrbAlpha * breathe;
+        ctx.globalCompositeOperation = 'screen';
+
+        // Capa 1: glow exterior amplio (ilumina el centro superior e inferior)
+        ctx.filter = 'blur(90px)';
+        const outerR = Math.max(width * 0.78, height * 1.05);
+        const outerGrad = ctx.createRadialGradient(orbX, orbY, 0, orbX, orbY, outerR);
+        outerGrad.addColorStop(0,    'rgba(200, 70, 0, 0.70)');
+        outerGrad.addColorStop(0.30, 'rgba(130, 42, 0, 0.38)');
+        outerGrad.addColorStop(0.60, 'rgba(60, 15, 0, 0.14)');
+        outerGrad.addColorStop(1,    'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = outerGrad;
         ctx.beginPath();
-        ctx.moveTo(0, height);
-
-        for (let x = 0; x <= width; x += 10) {
-          const h = getGlowHeight(x, waveTime);
-          ctx.lineTo(x, height - h);
-        }
-
-        ctx.lineTo(width, height);
-        ctx.closePath();
-
-        const gradient = ctx.createLinearGradient(0, height, 0, height - 182);
-        gradient.addColorStop(0, '#1a0a03');
-        gradient.addColorStop(0.3, '#E65100');
-        gradient.addColorStop(0.6, '#FFA726');
-        gradient.addColorStop(0.85, '#FFF59D');
-        gradient.addColorStop(1, 'rgba(255, 245, 157, 0)');
-
-        ctx.fillStyle = gradient;
+        ctx.arc(orbX, orbY, outerR, 0, Math.PI * 2);
         ctx.fill();
         ctx.filter = 'none';
+
+        // Capa 2: núcleo brillante concentrado en el top-center
+        ctx.filter = 'blur(55px)';
+        const innerR = Math.min(width, height) * 0.58;
+        const innerGrad = ctx.createRadialGradient(orbX, orbY, 0, orbX, orbY, innerR);
+        innerGrad.addColorStop(0,    'rgba(255, 130, 0, 0.95)');
+        innerGrad.addColorStop(0.20, 'rgba(230, 88, 0, 0.58)');
+        innerGrad.addColorStop(0.50, 'rgba(150, 48, 0, 0.24)');
+        innerGrad.addColorStop(1,    'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = innerGrad;
+        ctx.beginPath();
+        ctx.arc(orbX, orbY, innerR, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.filter = 'none';
+
+        ctx.globalAlpha = 1;
+        ctx.globalCompositeOperation = 'source-over';
       }
 
       ctx.globalAlpha = 1; // Restaurar alpha

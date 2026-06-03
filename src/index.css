@@ -30,18 +30,16 @@
   --glass-border: rgba(255, 255, 255, 0.1);
 }
 
-@media (min-width: 1024px) {
-  [data-theme="light"] {
-    --color-background: #F8F6F2;
-    --color-on-background: #2A2420;
-    --color-primary: #2A2420;
-    --color-on-surface: #3D2B1F;
-    --color-on-surface-variant: #5C4A3A;
-    --color-outline-variant: rgba(42, 36, 32, 0.18);
-    --color-surface: #EEEBE5;
-    --glass-bg: rgba(248, 246, 242, 0.82);
-    --glass-border: rgba(42, 36, 32, 0.1);
-  }
+[data-theme="light"] {
+  --color-background: #F8F6F2;
+  --color-on-background: #2A2420;
+  --color-primary: #2A2420;
+  --color-on-surface: #3D2B1F;
+  --color-on-surface-variant: #5C4A3A;
+  --color-outline-variant: rgba(42, 36, 32, 0.18);
+  --color-surface: #EEEBE5;
+  --glass-bg: rgba(248, 246, 242, 0.82);
+  --glass-border: rgba(42, 36, 32, 0.1);
 }
 
 html,

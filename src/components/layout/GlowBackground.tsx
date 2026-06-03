@@ -109,7 +109,7 @@ export function GlowBackground() {
 
     const animate = () => {
       const isDarkTheme = getIsDark();
-      const isDesktopLight = !isDarkTheme && width >= 1024;
+      const isLight = !isDarkTheme;
 
       // Sincronizar data-intro-done con el estado real del tema
       if (isDarkTheme && introDoneSet) {
@@ -127,8 +127,8 @@ export function GlowBackground() {
         orbAlpha = Math.max(0, orbAlpha - 0.02);
       }
 
-      // Desktop light: fondo transiciona de negro a crema a medida que los orbes se desvanecen
-      if (isDesktopLight && transitionStarted) {
+      // Light theme: fondo transiciona de negro a crema a medida que los orbes se desvanecen
+      if (isLight && transitionStarted) {
         const t = 1 - orbAlpha;
         const r = Math.round(248 * t);
         const g = Math.round(246 * t);
@@ -182,7 +182,7 @@ export function GlowBackground() {
 
       // --- 3. DIBUJAR COMETAS / MECHAS ---
       // Desktop light post-intro: fondo crema con glow cálido sutil en la base
-      if (isDesktopLight && orbAlpha === 0) {
+      if (isLight && orbAlpha === 0) {
         if (!introDoneSet) {
           document.documentElement.setAttribute('data-intro-done', 'true');
           introDoneSet = true;
@@ -338,7 +338,7 @@ export function GlowBackground() {
 
 
       // --- DIBUJAR WAVE INFERIOR (POST-INTRO, solo dark mode) ---
-      if (waveAlpha > 0 && !isDesktopLight) {
+      if (waveAlpha > 0 && !isLight) {
         ctx.globalAlpha = waveAlpha;
         ctx.filter = 'blur(20px)';
         ctx.beginPath();

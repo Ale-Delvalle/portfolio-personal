@@ -50,6 +50,9 @@ export function Hero() {
     const tl = gsap.timeline({
       onComplete: () => {
         setIntroDone(true);
+        if (introOverlayRef.current) {
+          introOverlayRef.current.style.display = 'none';
+        }
         if (isMobile) {
           if (imageRef.current) gsap.set(imageRef.current, { clearProps: "all" });
           if (buttonsRef.current) gsap.set(Array.from(buttonsRef.current.children), { clearProps: "all" });

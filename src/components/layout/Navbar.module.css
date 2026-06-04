@@ -122,7 +122,7 @@
   font-weight: 700;
   letter-spacing: 0.18em;
   text-decoration: none;
-  color: #8C431D;
+  color: #E8A060;
   white-space: nowrap;
   transition: opacity 0.2s ease, color 0.2s ease;
   background: none;
@@ -133,12 +133,12 @@
 
 .link:hover {
   opacity: 1;
-  color: #FFA726;
+  color: #FFD080;
 }
 
 .activeLink {
   opacity: 1;
-  color: #FFA726;
+  color: #FFD080;
   text-decoration: underline;
   text-decoration-color: currentColor;
   text-underline-offset: 3px;
@@ -149,7 +149,7 @@
 .themeBtn {
   background: none;
   border: none;
-  color: #8C431D;
+  color: #E8A060;
   cursor: pointer;
   padding: 0.3rem;
   padding-left: calc(var(--conn) + 0.625rem);
@@ -159,7 +159,7 @@
 }
 
 .themeBtn:hover {
-  color: #FFA726;
+  color: #FFD080;
 }
 
 /* Hamburguesa y Overlay de Menú Móvil */
@@ -173,11 +173,11 @@
   padding: 0;
   transition: transform 0.2s ease, color 0.2s ease;
   z-index: 2001;
-  color: #8C431D;
+  color: #E8A060;
 }
 
 .hamburgerBtn:hover {
-  color: #FFA726;
+  color: #FFD080;
 }
 
 .menuOverlay {
@@ -275,11 +275,12 @@
     align-items: center;
     gap: 2rem;
     padding: 0.75rem 2rem;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(12px);
+    background: rgba(4, 2, 1, 0.72);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-radius: 9999px;
-    border: 1px solid #8C431D;
-    box-shadow: 0 0 15px rgba(140, 67, 29, 0.6);
+    border: 1px solid rgba(200, 100, 40, 0.7);
+    box-shadow: 0 0 20px rgba(140, 67, 29, 0.55), inset 0 0 12px rgba(0, 0, 0, 0.4);
   }
 
   .navList {

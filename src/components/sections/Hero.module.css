@@ -308,10 +308,52 @@
 /* Buttons */
 .buttonGroup {
   display: flex;
-  gap: 2.5rem; /* 40px gap for parallax boundary limit */
+  gap: 1rem;
   margin-top: 0;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
+}
+
+.btnIcon {
+  width: 1em;
+  height: 1em;
+  margin-left: 0.45rem;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.socialGroup {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.6rem;
+  padding-left: 1.25rem;
+  border-left: 1px solid rgba(255, 167, 38, 0.2);
+  margin-left: 0.5rem;
+}
+
+.socialBtn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 167, 38, 0.45);
+  background: transparent;
+  color: #FFA726;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.socialBtn:hover {
+  background: rgba(255, 107, 0, 0.15);
+  box-shadow: 0 0 25px rgba(255, 107, 0, 0.4), inset 0 0 10px rgba(255, 107, 0, 0.2);
+  border-color: #FFA726;
+  transform: translateY(-2px);
 }
 
 .primaryBtn, .secondaryBtn {
@@ -684,6 +726,16 @@
     display: none !important;
   }
 
+  /* Social group: fila horizontal siempre */
+  .socialGroup {
+    flex-direction: row !important;
+    border-left: none !important;
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+    gap: 0.75rem !important;
+    padding-top: 0.25rem;
+  }
+
   .textBlock {
     padding: 0.9rem 1.1rem !important;
     border-radius: 12px !important;
@@ -780,6 +832,10 @@
     padding: 0.55rem 1rem !important;
     font-size: 0.82rem !important;
   }
+  .socialBtn {
+    width: 38px !important;
+    height: 38px !important;
+  }
 }
 
 /* Ocultar capa blanca del nombre en modo claro (desktop y mobile) */
@@ -798,4 +854,21 @@
   background: rgba(140, 67, 29, 0.07);
   box-shadow: 0 0 28px rgba(255, 107, 0, 0.5), inset 0 0 12px rgba(255, 107, 0, 0.25);
   border-color: #FFA726;
+}
+
+/* Social buttons en modo claro */
+:global([data-theme="light"][data-intro-done]) .socialBtn {
+  color: #5C3317;
+  border: 1px solid rgba(255, 167, 38, 0.45);
+  box-shadow: 0 0 25px rgba(255, 107, 0, 0.4), inset 0 0 10px rgba(255, 107, 0, 0.2);
+}
+
+:global([data-theme="light"][data-intro-done]) .socialBtn:hover {
+  background: rgba(140, 67, 29, 0.07);
+  box-shadow: 0 0 28px rgba(255, 107, 0, 0.5), inset 0 0 12px rgba(255, 107, 0, 0.25);
+  border-color: #FFA726;
+}
+
+:global([data-theme="light"][data-intro-done]) .socialGroup {
+  border-left-color: rgba(140, 67, 29, 0.2);
 }

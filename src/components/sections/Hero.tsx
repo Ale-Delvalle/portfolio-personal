@@ -436,15 +436,35 @@ export function Hero() {
 
           <div ref={rightTextRef} className={styles.rightColumn}>
             <div className={styles.textBlock}>
-              <h2 className={styles.sideTitle}>Mi perfil profesional</h2>
+              <div className={styles.cardHeader}>
+                <span className={styles.cardIcon}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
+                    <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+                  </svg>
+                </span>
+                <h2 className={styles.sideTitle}>Mi perfil profesional</h2>
+              </div>
               <p className={styles.sideDesc}>
-                Soy un full stack developer impulsado por la curiosidad y al aprendizaje. Aunque tengo un gusto especial por el backend he trabajado en el front end, tanto en PC y mobile.
+                Full stack developer con foco en backend. Diseño APIs con NestJS, construyo interfaces con React y TypeScript, y disfruto pensar en la arquitectura tanto como en el código.
               </p>
+              <div className={styles.tagRow}>
+                <span className={styles.tag}>NestJS</span>
+                <span className={styles.tag}>React</span>
+                <span className={styles.tag}>TypeScript</span>
+                <span className={styles.tag}>PostgreSQL</span>
+              </div>
             </div>
             <div className={styles.textBlock}>
-              <h2 className={styles.sideTitle}>Un poco de mi</h2>
+              <div className={styles.cardHeader}>
+                <span className={styles.cardIcon}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                </span>
+                <h2 className={styles.sideTitle}>Un poco de mí</h2>
+              </div>
               <p className={styles.sideDesc}>
-                Disfruto crear aplicaciones pero mucho más formar lazos humanos y profesionales, una buena comunicacion y un ambiente laboral ameno en pro de crecer y conseguir nuestros objetivos.
+                Me importan tanto el código como las personas. Disfruto los equipos con buena comunicación, desafíos reales y ganas de crecer juntos. Trabajo mejor donde hay confianza y objetivos claros.
               </p>
             </div>
           </div>

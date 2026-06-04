@@ -144,33 +144,67 @@
   }
 }
 
+/* Card header: icon + title inline */
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.65rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid rgba(255, 167, 38, 0.12);
+}
+
+.cardIcon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: rgba(255, 107, 0, 0.12);
+  border: 1px solid rgba(255, 167, 38, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #FFA726;
+}
+
+/* Skill tags row */
+.tagRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.8rem;
+}
+
+.tag {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #FFA726;
+  background: rgba(255, 107, 0, 0.1);
+  border: 1px solid rgba(255, 167, 38, 0.3);
+  border-radius: 999px;
+  padding: 0.22rem 0.7rem;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
 /* Typography & Colors */
 .sideTitle {
   font-family: var(--font-headline);
-  font-size: 1.8rem;
-  font-weight: 800;
+  font-size: 1.15rem;
+  font-weight: 700;
   color: #ffffff;
-  margin-top: 0;
-  margin-bottom: 0.5rem;
-}
-
-.sideTitleLarge {
-  font-family: var(--font-headline);
-  font-size: 1.8rem;
-  font-weight: 800;
-  color: #ffffff;
-  margin-top: 0;
-  margin-bottom: 0.5rem;
+  margin: 0;
+  line-height: 1.2;
 }
 
 .sideDesc {
   font-family: var(--font-body);
-  font-size: 1.05rem;
-  color: #ffffff;
-  font-weight: 300;
-  line-height: 1.5;
-  margin-top: 0;
-  margin-bottom: 0;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.78);
+  font-weight: 400;
+  line-height: 1.6;
+  margin: 0;
 }
 
 .nameContainer {
@@ -742,11 +776,21 @@
   }
 
   .sideTitle {
-    font-size: 1.35rem !important;
+    font-size: 1.05rem !important;
   }
 
   .sideDesc {
-    font-size: 0.9rem !important;
+    font-size: 0.88rem !important;
+  }
+
+  .cardIcon {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  .tag {
+    font-size: 0.68rem !important;
+    padding: 0.18rem 0.55rem !important;
   }
 
   /* ─── Scroll indicator en flujo normal ─── */
@@ -800,15 +844,30 @@
   transition: color 0.4s ease;
 }
 
-:global([data-theme="light"][data-intro-done]) .sideTitle,
-:global([data-theme="light"][data-intro-done]) .sideTitleLarge {
+:global([data-theme="light"][data-intro-done]) .sideTitle {
   color: #1A1410;
   transition: color 0.4s ease;
 }
 
 :global([data-theme="light"][data-intro-done]) .sideDesc {
-  color: #3D2B1F;
+  color: #4A3527;
   transition: color 0.4s ease;
+}
+
+:global([data-theme="light"][data-intro-done]) .cardHeader {
+  border-bottom-color: rgba(140, 67, 29, 0.14);
+}
+
+:global([data-theme="light"][data-intro-done]) .cardIcon {
+  background: rgba(140, 67, 29, 0.08);
+  border-color: rgba(140, 67, 29, 0.25);
+  color: #8C431D;
+}
+
+:global([data-theme="light"][data-intro-done]) .tag {
+  color: #5C3317;
+  background: rgba(140, 67, 29, 0.07);
+  border-color: rgba(140, 67, 29, 0.25);
 }
 
 

@@ -10,7 +10,6 @@ gsap.registerPlugin(ScrollTrigger);
 
 export function Hero() {
   const nameRef = useRef<HTMLDivElement>(null);
-  const nameWhiteRef = useRef<HTMLSpanElement>(null);
   const roleRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const rightTextRef = useRef<HTMLDivElement>(null);
@@ -43,9 +42,6 @@ export function Hero() {
     const startY = isMobile ? (window.innerHeight / 2 - 80) : "20vh";
     const startScale = isMobile ? 1.15 : 1.5;
     const endY = isMobile ? 10 : 30;
-
-    const wipeStart = isMobile ? "moveUp+=0.4" : "+=0.2";
-    const wipeDuration = isMobile ? 0.6 : 0.9;
 
     const tl = gsap.timeline({
       onComplete: () => {
@@ -207,26 +203,7 @@ export function Hero() {
         "-=0.5"
       );
     }
-    const isLightTheme = document.documentElement.getAttribute('data-theme') === 'light';
 
-    // 6) Barrido del nombre: de degradado brillante a blanco, de derecha a izquierda
-    if (!isLightTheme) {
-      tl.addLabel("nameWipe", wipeStart)
-      .fromTo(nameWhiteRef.current,
-        { clipPath: 'inset(0 100% 0 0)' },
-        { clipPath: 'inset(0 0% 0 0)', textShadow: 'none', duration: wipeDuration, ease: 'power2.inOut' },
-        "nameWipe"
-      )
-      .call(() => {
-        if (document.documentElement.getAttribute('data-theme') === 'dark' && nameRef.current) {
-          gsap.to(nameRef.current, {
-            filter: 'drop-shadow(0 4px 20px rgba(255, 107, 0, 0))',
-            duration: 0.4,
-            ease: 'power2.inOut',
-          });
-        }
-      }, [], "nameWipe+=" + (wipeDuration * 0.6));
-    }
 
     // --- MOUSE PARALLAX (Botón Contactame) ---
     xToBtn.current = gsap.quickTo(contactBtnRef.current, "x", { duration: 0.8, ease: "power3" });
@@ -375,9 +352,6 @@ export function Hero() {
               <canvas ref={nameCanvasRef} className={styles.introSparksCanvas} />
             </div>
             Alexis Delvalle
-            <span ref={nameWhiteRef} className={styles.nameWhiteOverlay} aria-hidden="true">
-              Alexis Delvalle
-            </span>
           </div>
           <div className={styles.roleContainer}>
             <div className={styles.introSparksContainer}>

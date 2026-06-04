@@ -1,14 +1,15 @@
 .section {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 0 2rem;
   position: relative;
   overflow: hidden;
 }
 
-/* ── Name ── */
+/* ── Heading ── */
 .heading {
   font-family: "Alex Brush", cursive;
   font-size: clamp(1.5rem, 11vw, 9.375rem);
@@ -25,35 +26,13 @@
   margin: 0;
 }
 
-/* ── Scroll indicator (desktop only) ── */
-.scrollIndicator {
-  margin-top: 2.5rem;
-  display: flex;
-  align-items: center;
-  color: #FFB347;
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  pointer-events: none;
-}
-
-.scrollChar {
-  display: inline-block;
-  opacity: 0.8;
-}
-
-/* ── Paragraphs: absolute in lower area on desktop ── */
+/* ── Paragraphs ── */
 .paragraphsWrapper {
-  position: absolute;
-  bottom: 8vh;
-  left: 50%;
-  transform: translateX(-50%);
+  margin-top: 2rem;
   width: 70vw;
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: 2rem;
   align-items: center;
   text-align: center;
 }
@@ -78,28 +57,51 @@
   width: 100%;
 }
 
-/* ── Mobile: natural scroll layout ── */
+/* ── Scroll indicator ── */
+.scrollIndicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  color: #FFB347;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0;
+}
+
+.scrollChar {
+  display: inline-block;
+  opacity: 0.8;
+}
+
+/* ── Mobile ── */
 @media (max-width: 1023px) {
+  .scrollIndicator {
+    display: none;
+  }
+
   .section {
-    min-height: auto;
+    height: auto;
     padding: 6rem 1.5rem 5rem;
     gap: 2.5rem;
-    justify-content: flex-start;
     align-items: center;
   }
 
   .heading {
     font-size: clamp(2.5rem, 12vw, 5rem);
-    margin-top: 8vh;
-  }
-
-  .scrollIndicator {
-    display: none;
   }
 
   .paragraphsWrapper {
-    position: static;
-    transform: none;
+    margin-top: 0;
     width: 90vw;
     text-align: center;
   }
@@ -128,8 +130,4 @@
 
 :global([data-theme="light"]) .p2 {
   color: rgba(30, 20, 10, 0.6);
-}
-
-:global([data-theme="light"]) .scrollIndicator {
-  color: #8C431D;
 }

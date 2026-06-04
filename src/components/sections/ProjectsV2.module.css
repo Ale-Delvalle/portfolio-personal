@@ -42,6 +42,11 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 1.1rem;
+  padding-left: calc(3rem + clamp(0.75rem, 2vw, 2rem));
+}
+
+.header .conceptDot {
+  display: none;
 }
 
 .headerLeft {
@@ -60,12 +65,17 @@
 }
 
 .sectionLabel {
-  font-size: 0.67rem;
-  font-weight: 700;
-  letter-spacing: 0.3em;
-  color: rgba(255, 167, 38, 0.65);
-  font-family: 'Inter', sans-serif;
-  text-transform: uppercase;
+  font-family: "Alex Brush", cursive;
+  font-size: 5rem;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  background: linear-gradient(135deg, #ffffff 0%, #FFD180 55%, #FF6B00 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: drop-shadow(0 4px 24px rgba(255, 107, 0, 0.35));
 }
 
 .counter {
@@ -579,6 +589,29 @@
 
 :global([data-theme="light"]) .sectionLabel {
   color: rgba(140, 67, 29, 0.55);
+}
+
+/* ── Scroll indicator ── */
+.scrollIndicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  color: #FFB347;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.scrollChar {
+  display: inline-block;
+  opacity: 0.8;
 }
 
 :global([data-theme="light"]) .headerLine {

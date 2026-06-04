@@ -81,7 +81,10 @@ export function ProjectsV2() {
   const heroImgRef      = useRef<HTMLImageElement>(null);
   const firstScreenRef  = useRef<HTMLDivElement>(null);
   const detailHeaderRef = useRef<HTMLDivElement>(null);
-  const mobileCardsRef  = useRef<(HTMLDivElement | null)[]>([]);
+  const mobileCardsRef     = useRef<(HTMLDivElement | null)[]>([]);
+  const scrollIndicatorRef = useRef<HTMLDivElement>(null);
+  const scrollTextRef      = useRef<HTMLSpanElement>(null);
+  const scrollTlRef        = useRef<gsap.core.Timeline | null>(null);
 
   const [activeId,  setActiveId]  = useState(1);
   const [selected,  setSelected]  = useState<Project | null>(null);
@@ -105,6 +108,40 @@ export function ProjectsV2() {
     }
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, [selected, startCarousel]);
+
+  const startScrollBounce = useCallback(() => {
+    if (scrollTlRef.current) scrollTlRef.current.kill();
+    gsap.set(scrollTextRef.current, { y: 0 });
+    scrollTlRef.current = gsap.timeline({ repeat: -1, repeatDelay: 2, repeatRefresh: true });
+    scrollTlRef.current
+      .to(scrollTextRef.current, { y: -12, duration: 0.3,  yoyo: true, repeat: 9, ease: 'power2.out' })
+      .to(scrollTextRef.current, { y: -6,  duration: 0.25, yoyo: true, repeat: 1, ease: 'power2.out' })
+      .to(scrollTextRef.current, { y: -2,  duration: 0.15, yoyo: true, repeat: 1, ease: 'power2.out' });
+  }, []);
+
+  // ── Scroll indicator via section-entered event ──────────
+  useEffect(() => {
+    const delayedCallRef = { current: null as gsap.core.Tween | null };
+
+    const handler = (e: CustomEvent<{ id: string }>) => {
+      if (e.detail.id === 'proyectos') {
+        delayedCallRef.current = gsap.delayedCall(1.8, () => {
+          gsap.to(scrollIndicatorRef.current, {
+            autoAlpha: 1, duration: 0.8, ease: 'power2.out',
+            onComplete: startScrollBounce,
+          });
+        });
+      } else {
+        if (delayedCallRef.current) { delayedCallRef.current.kill(); delayedCallRef.current = null; }
+        if (scrollTlRef.current) { scrollTlRef.current.kill(); scrollTlRef.current = null; }
+        gsap.killTweensOf(scrollIndicatorRef.current);
+        gsap.to(scrollIndicatorRef.current, { autoAlpha: 0, duration: 0.3 });
+      }
+    };
+
+    window.addEventListener('section-entered', handler as EventListener);
+    return () => window.removeEventListener('section-entered', handler as EventListener);
+  }, [startScrollBounce]);
 
   // ── Section entrance animations (main view only) ────────
   useGSAP(() => {
@@ -151,6 +188,9 @@ export function ProjectsV2() {
         { y: 0, autoAlpha: 1, duration: 0.85, delay: 0.12 + i * 0.09, ease: 'expo.out', scrollTrigger: trigger }
       );
     });
+
+    // Estado inicial oculto del indicador de scroll
+    gsap.set(scrollIndicatorRef.current, { autoAlpha: 0 });
 
     // Mobile: reveal secuencial con triggers independientes
     if (window.innerWidth < 768) {
@@ -357,6 +397,8 @@ export function ProjectsV2() {
     setSelected(project);
     document.body.style.overflow = 'hidden';
     gsap.killTweensOf([mainRef.current, detailRef.current, heroRef.current]);
+    if (scrollTlRef.current) { scrollTlRef.current.kill(); scrollTlRef.current = null; }
+    gsap.to(scrollIndicatorRef.current, { autoAlpha: 0, duration: 0.3 });
 
     if (scrollAreaRef.current) scrollAreaRef.current.scrollTop = 0;
     gsap.set(detailRef.current, { x: 0 });
@@ -445,7 +487,14 @@ export function ProjectsV2() {
         { x: '0%', autoAlpha: 1, duration: 0.55, ease: 'expo.out' },
         '-=0.08'
       )
-      .call(() => { setSelected(null); document.body.style.overflow = ''; });
+      .call(() => {
+      setSelected(null);
+      document.body.style.overflow = '';
+      gsap.to(scrollIndicatorRef.current, {
+        autoAlpha: 1, duration: 0.6, delay: 0.3, ease: 'power2.out',
+        onComplete: startScrollBounce,
+      });
+    });
   }, []);
 
   const active   = projects.find(p => p.id === activeId)!;
@@ -464,9 +513,8 @@ export function ProjectsV2() {
           <div className={styles.mobileHdr}>
             <div className={styles.headerLeft}>
               <span className={styles.conceptDot} />
-              <span className={styles.sectionLabel}>PROYECTOS</span>
+              <span className={styles.sectionLabel}>Mis proyectos</span>
             </div>
-            <span className={styles.mobileCounter}>05</span>
           </div>
           <div className={styles.mobileHdrLine} />
 
@@ -501,9 +549,8 @@ export function ProjectsV2() {
             <div className={styles.header}>
               <div className={styles.headerLeft}>
                 <span className={styles.conceptDot} />
-                <span className={styles.sectionLabel}>PROYECTOS</span>
+                <span className={styles.sectionLabel}>Mis proyectos</span>
               </div>
-              <span className={styles.counter}>05</span>
             </div>
 
             <div className={styles.headerLine} />
@@ -616,6 +663,16 @@ export function ProjectsV2() {
         <div className={styles.heroImgWrapper}>
           <img ref={heroImgRef} alt="" className={styles.heroImg} />
         </div>
+      </div>
+
+      <div ref={scrollIndicatorRef} className={styles.scrollIndicator}>
+        <span ref={scrollTextRef} style={{ display: 'inline-block' }}>
+          {'Scroll'.split('').map((char, i) => (
+            <span key={i} className={styles.scrollChar} style={{ display: 'inline-block' }}>
+              {char}
+            </span>
+          ))}
+        </span>
       </div>
 
     </section>

@@ -1,10 +1,7 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useCallback, useEffect } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './About.module.css';
-
-gsap.registerPlugin(ScrollTrigger);
 
 export function About() {
   const sectionRef         = useRef<HTMLElement>(null);
@@ -13,80 +10,89 @@ export function About() {
   const p2Ref              = useRef<HTMLParagraphElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
   const scrollTextRef      = useRef<HTMLSpanElement>(null);
+  const scrollTlRef        = useRef<gsap.core.Timeline | null>(null);
+  const seqTlRef           = useRef<gsap.core.Timeline | null>(null);
 
+  // Initial hidden state (CSS ya tiene opacity:0 para el indicador)
   useGSAP(() => {
-    const isMobile = window.innerWidth < 1024;
-
-    if (!isMobile) {
-      // Desktop: name only visible; paragraphs hidden until scroll steps
-      gsap.set([p1Ref.current, p2Ref.current], { autoAlpha: 0, y: 40 });
-      gsap.set(scrollIndicatorRef.current, { autoAlpha: 1 });
-
-      // Bouncing scroll animation (same cadence as Hero)
-      const scrollTl = gsap.timeline({ repeat: -1, repeatDelay: 2, delay: 0.5, repeatRefresh: true });
-      scrollTl
-        .to(scrollTextRef.current, { y: -12, duration: 0.3, yoyo: true, repeat: 9,  ease: 'power2.out' })
-        .to(scrollTextRef.current, { y: -6,  duration: 0.25, yoyo: true, repeat: 1, ease: 'power2.out' })
-        .to(scrollTextRef.current, { y: -2,  duration: 0.15, yoyo: true, repeat: 1, ease: 'power2.out' });
-    } else {
-      // Mobile: natural scroll — reveal with ScrollTrigger
-      gsap.set(scrollIndicatorRef.current, { autoAlpha: 0 });
-      gsap.set([p1Ref.current, p2Ref.current], { autoAlpha: 0, y: 40 });
-
-      [p1Ref.current, p2Ref.current].forEach((el, i) => {
-        ScrollTrigger.create({
-          trigger: el,
-          start: 'top 88%',
-          once: true,
-          onEnter: () => {
-            gsap.to(el, { autoAlpha: 1, y: 0, duration: 0.85, delay: i * 0.25, ease: 'power3.out' });
-          },
-        });
-      });
-    }
+    gsap.set([headingRef.current, p1Ref.current, p2Ref.current], { autoAlpha: 0, y: 30 });
   }, { scope: sectionRef });
 
-  // Listen for desktop scroll-step events dispatched by App.tsx
-  useEffect(() => {
-    const handleStep = (e: CustomEvent<{ step: number; instant?: boolean }>) => {
-      const { step, instant } = e.detail;
-      const dur     = instant ? 0 : 0.85;
-      const fadeDur = instant ? 0 : 0.4;
-
-      if (step === 0) {
-        gsap.to(scrollIndicatorRef.current, { autoAlpha: 1, y: 0,   duration: fadeDur });
-        gsap.to(p1Ref.current,              { autoAlpha: 0, y: 40,  duration: fadeDur });
-        gsap.to(p2Ref.current,              { autoAlpha: 0, y: 40,  duration: fadeDur });
-      } else if (step === 1) {
-        gsap.to(scrollIndicatorRef.current, { autoAlpha: 0, y: -10, duration: fadeDur });
-        gsap.to(p1Ref.current,              { autoAlpha: 1, y: 0,   duration: dur, ease: 'power3.out' });
-        gsap.to(p2Ref.current,              { autoAlpha: 0, y: 40,  duration: instant ? 0 : fadeDur });
-      } else if (step === 2) {
-        gsap.to(scrollIndicatorRef.current, { autoAlpha: 0, y: -10, duration: instant ? 0 : fadeDur });
-        gsap.to(p1Ref.current,              { autoAlpha: 1, y: 0,   duration: instant ? 0 : dur, ease: 'power3.out' });
-        gsap.to(p2Ref.current,              { autoAlpha: 1, y: 0,   duration: dur, ease: 'power3.out' });
-      }
-    };
-
-    window.addEventListener('about-step', handleStep as EventListener);
-    return () => window.removeEventListener('about-step', handleStep as EventListener);
+  // Bounce animation — identical to Hero
+  const startScrollBounce = useCallback(() => {
+    if (scrollTlRef.current) scrollTlRef.current.kill();
+    gsap.set(scrollTextRef.current, { y: 0 });
+    scrollTlRef.current = gsap.timeline({ repeat: -1, repeatDelay: 2, repeatRefresh: true });
+    scrollTlRef.current
+      .to(scrollTextRef.current, { y: -12, duration: 0.3,  yoyo: true, repeat: 9,  ease: 'power2.out' })
+      .to(scrollTextRef.current, { y: -6,  duration: 0.25, yoyo: true, repeat: 1,  ease: 'power2.out' })
+      .to(scrollTextRef.current, { y: -2,  duration: 0.15, yoyo: true, repeat: 1,  ease: 'power2.out' });
   }, []);
+
+  const playAll = useCallback(() => {
+    if (seqTlRef.current) seqTlRef.current.kill();
+    if (scrollTlRef.current) scrollTlRef.current.kill();
+    gsap.killTweensOf([headingRef.current, p1Ref.current, p2Ref.current, scrollTextRef.current]);
+
+    gsap.set([headingRef.current, p1Ref.current, p2Ref.current], { autoAlpha: 0, y: 30 });
+    gsap.set(scrollTextRef.current, { y: 0 });
+
+    seqTlRef.current = gsap.timeline()
+      .to(headingRef.current, { autoAlpha: 1, y: 0, duration: 0.8, ease: 'power3.out' })
+      .to(p1Ref.current,      { autoAlpha: 1, y: 0, duration: 1.2, ease: 'power3.out' }, '+=0.1')
+      .to(p2Ref.current,      { autoAlpha: 1, y: 0, duration: 1.2, ease: 'power3.out' }, '+=0.5');
+
+    // Scroll indicator: fade in + bounce (como ProjectsV2)
+    gsap.delayedCall(3.0, () => {
+      gsap.to(scrollIndicatorRef.current, {
+        opacity: 1, duration: 0.8, ease: 'power2.out',
+        onComplete: startScrollBounce,
+      });
+    });
+  }, [startScrollBounce]);
+
+  const resetAll = useCallback(() => {
+    if (seqTlRef.current) { seqTlRef.current.kill(); seqTlRef.current = null; }
+    if (scrollTlRef.current) { scrollTlRef.current.kill(); scrollTlRef.current = null; }
+    gsap.killTweensOf([headingRef.current, p1Ref.current, p2Ref.current, scrollTextRef.current, scrollIndicatorRef.current]);
+    gsap.set([headingRef.current, p1Ref.current, p2Ref.current], { autoAlpha: 0, y: 30 });
+    gsap.set(scrollTextRef.current, { y: 0 });
+    gsap.set(scrollIndicatorRef.current, { opacity: 0 });
+  }, []);
+
+  // Desktop: section-entered event
+  useEffect(() => {
+    const handler = (e: CustomEvent<{ id: string }>) => {
+      if (e.detail.id === 'about') playAll();
+      else resetAll();
+    };
+    window.addEventListener('section-entered', handler as EventListener);
+    return () => window.removeEventListener('section-entered', handler as EventListener);
+  }, [playAll, resetAll]);
+
+  // Mobile / fallback: IntersectionObserver
+  useEffect(() => {
+    const played = { value: false };
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !played.value) {
+          played.value = true;
+          playAll();
+        } else if (!entry.isIntersecting) {
+          played.value = false;
+        }
+      },
+      { threshold: 0.3 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, [playAll]);
 
   return (
     <section id="about" ref={sectionRef} className={styles.section}>
       <h1 ref={headingRef} className={styles.heading}>
-        Alexis Delvalle
+        About me
       </h1>
-
-      <div ref={scrollIndicatorRef} className={styles.scrollIndicator}>
-        <span ref={scrollTextRef} style={{ display: 'inline-block' }}>
-          {'Scroll'.split('').map((char, i) => (
-            <span key={i} className={styles.scrollChar} style={{ display: 'inline-block' }}>
-              {char}
-            </span>
-          ))}
-        </span>
-      </div>
 
       <div className={styles.paragraphsWrapper}>
         <p ref={p1Ref} className={styles.p1}>
@@ -102,6 +108,16 @@ export function About() {
           ejecutar tareas. Disfruto los entornos con buena comunicación,
           confianza y objetivos que valen la pena.
         </p>
+      </div>
+
+      <div ref={scrollIndicatorRef} className={styles.scrollIndicator}>
+        <span ref={scrollTextRef} style={{ display: 'inline-block' }}>
+          {'Scroll'.split('').map((char, i) => (
+            <span key={i} className={styles.scrollChar} style={{ display: 'inline-block' }}>
+              {char}
+            </span>
+          ))}
+        </span>
       </div>
     </section>
   );

@@ -19,7 +19,6 @@ function App() {
   const { theme, toggleTheme } = useTheme();
   const isAnimating   = useRef(false);
   const activeIndexRef = useRef(0);
-  const aboutStepRef  = useRef(0);
 
   useEffect(() => {
     const onLoad = () => ScrollTrigger.refresh();
@@ -42,8 +41,6 @@ function App() {
     const initialScroll = window.scrollY;
     activeIndexRef.current = Math.round(initialScroll / window.innerHeight);
 
-    const ABOUT_MAX_STEP = 2;
-
     const handleWheel = (e: WheelEvent) => {
       if (window.innerWidth < 1024) return;
       if (isAnimating.current) return;
@@ -54,38 +51,11 @@ function App() {
         e.preventDefault();
       }
 
-      // About sub-steps: reveal paragraphs one by one before leaving the section
-      if (sections[activeIndexRef.current] === 'about') {
-        if (direction > 0 && aboutStepRef.current < ABOUT_MAX_STEP) {
-          aboutStepRef.current++;
-          window.dispatchEvent(new CustomEvent('about-step', { detail: { step: aboutStepRef.current } }));
-          isAnimating.current = true;
-          setTimeout(() => { isAnimating.current = false; }, 700);
-          return;
-        }
-        if (direction < 0 && aboutStepRef.current > 0) {
-          aboutStepRef.current--;
-          window.dispatchEvent(new CustomEvent('about-step', { detail: { step: aboutStepRef.current } }));
-          isAnimating.current = true;
-          setTimeout(() => { isAnimating.current = false; }, 700);
-          return;
-        }
-      }
-
       let nextIndex = activeIndexRef.current + direction;
       if (nextIndex < 0) nextIndex = 0;
       if (nextIndex >= sections.length) nextIndex = sections.length - 1;
 
       if (activeIndexRef.current === nextIndex) return;
-
-      // When navigating TO about, reset to the appropriate state
-      if (sections[nextIndex] === 'about') {
-        const goingForward = nextIndex > activeIndexRef.current;
-        aboutStepRef.current = goingForward ? 0 : ABOUT_MAX_STEP;
-        window.dispatchEvent(new CustomEvent('about-step', {
-          detail: { step: aboutStepRef.current, instant: true }
-        }));
-      }
 
       navigateToSection(sections[activeIndexRef.current], sections[nextIndex]);
     };
@@ -121,12 +91,15 @@ function App() {
             setTimeout(() => {
               // 3) Justo por debajo del Navbar se renderiza la siguiente sección
               nextEl.scrollIntoView({ behavior: 'instant', block: 'start' });
-              
+
               // Refrescar ScrollTrigger para que las animaciones internas se disparen
               ScrollTrigger.refresh();
-              
+
               // Asegurarnos de que la nueva sección sea visible
               gsap.set(nextEl, { autoAlpha: 1 });
+
+              // Notificar a las secciones qué sección acaba de volverse activa
+              window.dispatchEvent(new CustomEvent('section-entered', { detail: { id: nextSectionId } }));
               
               // Liberar el bloqueo
               setTimeout(() => {
@@ -152,10 +125,6 @@ function App() {
           activeIndexRef.current = sections.indexOf(targetId);
         }
       } else {
-        if (targetId === 'about') {
-          aboutStepRef.current = 0;
-          window.dispatchEvent(new CustomEvent('about-step', { detail: { step: 0, instant: true } }));
-        }
         navigateToSection(sections[activeIndexRef.current], targetId);
       }
     };

@@ -9,6 +9,7 @@ interface NavbarProps {
 
 const NAV_ITEMS = [
   { label: 'Home',      target: 'home'      },
+  { label: 'About',     target: 'about'     },
   { label: 'Proyectos', target: 'proyectos' },
   { label: 'Stack',     target: 'stack'     },
 ] as const;

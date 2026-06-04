@@ -419,7 +419,7 @@ export function Hero() {
                 <h2 className={styles.sideTitle}>Mi perfil profesional</h2>
               </div>
               <p className={styles.sideDesc}>
-                Full stack developer con foco en backend. Diseño APIs con NestJS, construyo interfaces con React y TypeScript, y disfruto pensar en la arquitectura tanto como en el código.
+                Me dedico principalmente al backend y sigo aprendiendo en el camino. Trabajo con NestJS, React y TypeScript, y cada proyecto me ayuda a entender mejor cómo diseñar sistemas que funcionen bien de verdad.
               </p>
               <div className={styles.tagRow}>
                 <span className={styles.tag}>NestJS</span>
@@ -438,7 +438,7 @@ export function Hero() {
                 <h2 className={styles.sideTitle}>Un poco de mí</h2>
               </div>
               <p className={styles.sideDesc}>
-                Me importan tanto el código como las personas. Disfruto los equipos con buena comunicación, desafíos reales y ganas de crecer juntos. Trabajo mejor donde hay confianza y objetivos claros.
+                Empecé de cero con mucho autodidactismo. Me gustan los problemas que al principio no tienen respuesta obvia, y disfruto los equipos donde hay buena comunicación y ganas genuinas de crecer juntos.
               </p>
             </div>
           </div>

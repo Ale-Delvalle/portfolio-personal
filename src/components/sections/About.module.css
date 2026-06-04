@@ -1,0 +1,135 @@
+.section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Name ── */
+.heading {
+  font-family: "Alex Brush", cursive;
+  font-size: clamp(1.5rem, 11vw, 9.375rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  text-align: center;
+  background: linear-gradient(135deg, #ffffff 0%, #FFD180 55%, #FF6B00 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: drop-shadow(0 4px 24px rgba(255, 107, 0, 0.35));
+  margin: 0;
+}
+
+/* ── Scroll indicator (desktop only) ── */
+.scrollIndicator {
+  margin-top: 2.5rem;
+  display: flex;
+  align-items: center;
+  color: #FFB347;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  pointer-events: none;
+}
+
+.scrollChar {
+  display: inline-block;
+  opacity: 0.8;
+}
+
+/* ── Paragraphs: absolute in lower area on desktop ── */
+.paragraphsWrapper {
+  position: absolute;
+  bottom: 8vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70vw;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  align-items: center;
+  text-align: center;
+}
+
+.p1 {
+  font-family: var(--font-body);
+  font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.7;
+  margin: 0;
+  width: 100%;
+}
+
+.p2 {
+  font-family: var(--font-body);
+  font-size: clamp(0.9rem, 1.4vw, 1.05rem);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.8;
+  margin: 0;
+  width: 100%;
+}
+
+/* ── Mobile: natural scroll layout ── */
+@media (max-width: 1023px) {
+  .section {
+    min-height: auto;
+    padding: 6rem 1.5rem 5rem;
+    gap: 2.5rem;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .heading {
+    font-size: clamp(2.5rem, 12vw, 5rem);
+    margin-top: 8vh;
+  }
+
+  .scrollIndicator {
+    display: none;
+  }
+
+  .paragraphsWrapper {
+    position: static;
+    transform: none;
+    width: 90vw;
+    text-align: center;
+  }
+
+  .p1 {
+    font-size: clamp(1rem, 3.5vw, 1.2rem);
+  }
+
+  .p2 {
+    font-size: clamp(0.875rem, 3vw, 1rem);
+  }
+}
+
+/* ── Light mode ── */
+:global([data-theme="light"]) .heading {
+  background: linear-gradient(135deg, #1A1410 0%, #5C3317 50%, #8C431D 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: none;
+}
+
+:global([data-theme="light"]) .p1 {
+  color: rgba(30, 20, 10, 0.9);
+}
+
+:global([data-theme="light"]) .p2 {
+  color: rgba(30, 20, 10, 0.6);
+}
+
+:global([data-theme="light"]) .scrollIndicator {
+  color: #8C431D;
+}

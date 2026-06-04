@@ -3,6 +3,7 @@ import { useTheme } from './hooks/useTheme';
 import { Navbar } from './components/layout/Navbar';
 import { GlowBackground } from './components/layout/GlowBackground';
 import { Hero } from './components/sections/Hero';
+import { About } from './components/sections/About';
 import { Stack } from './components/sections/Stack';
 // import { Projects } from './components/sections/Projects';
 // import { ProjectsV1 } from './components/sections/ProjectsV1';
@@ -16,8 +17,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 function App() {
   const { theme, toggleTheme } = useTheme();
-  const isAnimating = useRef(false);
+  const isAnimating   = useRef(false);
   const activeIndexRef = useRef(0);
+  const aboutStepRef  = useRef(0);
 
   useEffect(() => {
     const onLoad = () => ScrollTrigger.refresh();
@@ -34,11 +36,13 @@ function App() {
       history.scrollRestoration = 'manual';
     }
 
-    const sections = ['home', 'proyectos', 'stack'];
+    const sections = ['home', 'about', 'proyectos', 'stack'];
     
     // Maintain the active index across events
     const initialScroll = window.scrollY;
     activeIndexRef.current = Math.round(initialScroll / window.innerHeight);
+
+    const ABOUT_MAX_STEP = 2;
 
     const handleWheel = (e: WheelEvent) => {
       if (window.innerWidth < 1024) return;
@@ -50,11 +54,38 @@ function App() {
         e.preventDefault();
       }
 
+      // About sub-steps: reveal paragraphs one by one before leaving the section
+      if (sections[activeIndexRef.current] === 'about') {
+        if (direction > 0 && aboutStepRef.current < ABOUT_MAX_STEP) {
+          aboutStepRef.current++;
+          window.dispatchEvent(new CustomEvent('about-step', { detail: { step: aboutStepRef.current } }));
+          isAnimating.current = true;
+          setTimeout(() => { isAnimating.current = false; }, 700);
+          return;
+        }
+        if (direction < 0 && aboutStepRef.current > 0) {
+          aboutStepRef.current--;
+          window.dispatchEvent(new CustomEvent('about-step', { detail: { step: aboutStepRef.current } }));
+          isAnimating.current = true;
+          setTimeout(() => { isAnimating.current = false; }, 700);
+          return;
+        }
+      }
+
       let nextIndex = activeIndexRef.current + direction;
       if (nextIndex < 0) nextIndex = 0;
       if (nextIndex >= sections.length) nextIndex = sections.length - 1;
 
       if (activeIndexRef.current === nextIndex) return;
+
+      // When navigating TO about, reset to the appropriate state
+      if (sections[nextIndex] === 'about') {
+        const goingForward = nextIndex > activeIndexRef.current;
+        aboutStepRef.current = goingForward ? 0 : ABOUT_MAX_STEP;
+        window.dispatchEvent(new CustomEvent('about-step', {
+          detail: { step: aboutStepRef.current, instant: true }
+        }));
+      }
 
       navigateToSection(sections[activeIndexRef.current], sections[nextIndex]);
     };
@@ -121,6 +152,10 @@ function App() {
           activeIndexRef.current = sections.indexOf(targetId);
         }
       } else {
+        if (targetId === 'about') {
+          aboutStepRef.current = 0;
+          window.dispatchEvent(new CustomEvent('about-step', { detail: { step: 0, instant: true } }));
+        }
         navigateToSection(sections[activeIndexRef.current], targetId);
       }
     };
@@ -166,6 +201,7 @@ function App() {
       <GlowBackground />
       <Navbar theme={theme} toggleTheme={toggleTheme} />
       <Hero />
+      <About />
       {/* <Projects /> */}
       {/* <ProjectsV1 /> */}
       <ProjectsV2 />

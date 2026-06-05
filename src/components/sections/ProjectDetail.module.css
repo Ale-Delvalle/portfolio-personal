@@ -89,13 +89,18 @@
 }
 
 .detailTitle {
-  font-size: clamp(2.2rem, 5vw, 4.5rem);
-  font-weight: 900;
-  color: #ffffff;
+  font-family: "Alex Brush", cursive;
+  font-size: clamp(2.8rem, 6vw, 5.5rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
   margin: 0;
-  line-height: 1.0;
-  letter-spacing: -0.04em;
-  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #ffffff 0%, #FFD180 55%, #FF6B00 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: drop-shadow(0 4px 24px rgba(255, 107, 0, 0.35));
 }
 
 .detailDesc {
@@ -461,4 +466,13 @@
   .collageItem:nth-child(n) { grid-column: span 1; grid-row: span 1; }
   .collageItem:nth-child(1) { grid-column: span 2; grid-row: span 1; }
   .lightboxNav { width: 2.4rem; height: 2.4rem; font-size: 1rem; }
+}
+
+/* ── Light mode ── */
+:global([data-theme="light"]) .detailTitle {
+  background: linear-gradient(135deg, #1A1410 0%, #5C3317 50%, #8C431D 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: none;
 }

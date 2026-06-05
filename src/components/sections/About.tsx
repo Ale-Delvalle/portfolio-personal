@@ -89,7 +89,7 @@ export function About() {
   }, [playAll]);
 
   return (
-    <section id="about" ref={sectionRef} className={styles.section}>
+    <section id="about" ref={sectionRef} className={styles.section} data-section-trigger>
       <h1 ref={headingRef} className={styles.heading}>
         About me
       </h1>

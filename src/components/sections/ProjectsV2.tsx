@@ -531,7 +531,7 @@ export function ProjectsV2() {
   const detail   = selected ?? lastRef.current;
 
   return (
-    <section id="proyectos" ref={sectionRef} className={styles.section}>
+    <section id="proyectos" ref={sectionRef} className={styles.section} data-section-trigger>
 
       {/* ════════════════════════════════════════════
           MAIN VIEW — list + preview

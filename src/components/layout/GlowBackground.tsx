@@ -36,6 +36,7 @@ export function GlowBackground() {
 
     let scrollEnergy = 0;
     let scrollOrbTime = 0;
+    let mobileOrbRamp = 0;
 
     const getIsDark = () => {
       const attr = document.documentElement.getAttribute('data-theme');
@@ -49,14 +50,28 @@ export function GlowBackground() {
       transitionStarted = true;
     };
 
+    const isMobile = () => window.innerWidth < 1024;
+
     const handleScroll = () => {
-      if (transitionStarted) {
+      if (transitionStarted && !isMobile()) {
         scrollEnergy = Math.min(1, scrollEnergy + 0.35);
       }
     };
 
     window.addEventListener('hero-move-up', handleTransition);
     window.addEventListener('scroll', handleScroll);
+
+    // Mobile dark mode: disparar una vez por sección cuando el 40% es visible
+    const titleObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && isMobile() && getIsDark()) {
+          mobileOrbRamp = 56; // ~56 frames ≈ 1s de fade-in
+          titleObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('[data-section-trigger]').forEach(el => titleObserver.observe(el));
 
     const orbs = [
       { color: 'rgba(255, 107, 0, 0.8)', size: 0.8, speedX: 0.0006, speedY: 0.0005, phaseX: 0, phaseY: 1 },
@@ -132,7 +147,12 @@ export function GlowBackground() {
       globalTimer += 16;
       waveTime += 0.007;
       scrollOrbTime += 16;
-      scrollEnergy = Math.max(0, scrollEnergy - 0.008);
+      if (mobileOrbRamp > 0) {
+        scrollEnergy = Math.min(1, scrollEnergy + 0.018);
+        mobileOrbRamp = Math.max(0, mobileOrbRamp - 1);
+      } else {
+        scrollEnergy = Math.max(0, scrollEnergy - 0.008);
+      }
       if (!transitionStarted) orbTime = time;
 
       if (transitionStarted) {
@@ -430,6 +450,7 @@ export function GlowBackground() {
       window.removeEventListener('resize', setCanvasSize);
       window.removeEventListener('hero-move-up', handleTransition);
       window.removeEventListener('scroll', handleScroll);
+      titleObserver.disconnect();
       cancelAnimationFrame(rafId);
       document.documentElement.removeAttribute('data-intro-done');
     };

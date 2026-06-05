@@ -218,7 +218,7 @@ export function Stack() {
   }, { scope: sectionRef });
 
   return (
-    <section id="stack" ref={sectionRef} className={`${styles.stackSection} hero-mesh-gradient`}>
+    <section id="stack" ref={sectionRef} className={`${styles.stackSection} hero-mesh-gradient`} data-section-trigger>
 
       {/* ── Desktop orbital (oculto en mobile) ── */}
       <div ref={circleContainerRef} className={styles.circleContainer}>

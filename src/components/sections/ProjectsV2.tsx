@@ -111,8 +111,9 @@ export function ProjectsV2() {
   const [activeId,  setActiveId]  = useState(1);
   const [selected,  setSelected]  = useState<Project | null>(null);
   // keeps content in DOM during close animation
-  const lastRef     = useRef<Project | null>(null);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const lastRef          = useRef<Project | null>(null);
+  const intervalRef      = useRef<ReturnType<typeof setInterval> | null>(null);
+  const isNavigatingRef  = useRef(false);
 
   // ── Auto-advance carousel every 10s ────────────────────
   const startCarousel = useCallback(() => {
@@ -130,6 +131,41 @@ export function ProjectsV2() {
     }
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, [selected, startCarousel]);
+
+  // ── Intercept navbar navigation while detail is open ───
+  useEffect(() => {
+    if (!selected) return;
+
+    const handleNavigate = (e: Event) => {
+      // Let the re-dispatch pass through to App.tsx
+      if (isNavigatingRef.current) return;
+
+      e.stopImmediatePropagation();
+      const targetId = (e as CustomEvent<{ id: string }>).detail.id;
+      isNavigatingRef.current = true;
+
+      gsap.killTweensOf([detailRef.current, mainRef.current]);
+
+      gsap.to(detailRef.current, {
+        autoAlpha: 0,
+        duration: 0.32,
+        ease: 'power3.in',
+        onComplete: () => {
+          setSelected(null);
+          document.body.style.overflow = '';
+          // Restore main view silently so Projects looks correct on return
+          gsap.set(mainRef.current, { x: '0%', autoAlpha: 1 });
+          setTimeout(() => {
+            window.dispatchEvent(new CustomEvent('navigate', { detail: { id: targetId } }));
+            isNavigatingRef.current = false;
+          }, 40);
+        },
+      });
+    };
+
+    window.addEventListener('navigate', handleNavigate);
+    return () => window.removeEventListener('navigate', handleNavigate);
+  }, [selected]);
 
   const startScrollBounce = useCallback(() => {
     if (scrollTlRef.current) scrollTlRef.current.kill();

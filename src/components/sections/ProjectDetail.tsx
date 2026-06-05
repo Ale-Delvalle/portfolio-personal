@@ -3,6 +3,15 @@ import type { RefObject } from 'react';
 import styles from './ProjectDetail.module.css';
 import type { Project } from './ProjectsV2';
 
+function ArrowLeftIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M19 12H5" />
+      <path d="M12 5l-7 7 7 7" />
+    </svg>
+  );
+}
+
 type Props = {
   detail: Project | null;
   goBack: () => void;
@@ -97,10 +106,15 @@ export function ProjectDetail({ detail, goBack, outerRef, scrollRef, firstScreen
             <div className={styles.scrollPad} />
           </div>
 
-          {/* ── Back buttons ── */}
+          {/* ── Mobile back button (top-left, only visible on mobile) ── */}
+          <button className={styles.mobileBackBtn} onClick={goBack} aria-label="Volver a proyectos">
+            <ArrowLeftIcon />
+          </button>
+
+          {/* ── Desktop back button (bottom-right) ── */}
           <div className={styles.backBtnWrapper}>
             <button className={styles.backBtn} onClick={goBack}>
-              <span className={styles.backArrow}>←</span>
+              <ArrowLeftIcon />
               Volver a la sección de proyectos
             </button>
           </div>

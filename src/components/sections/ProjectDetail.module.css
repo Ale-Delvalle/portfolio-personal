@@ -25,7 +25,33 @@
 .scrollPad { height: 8rem; }
 
 
-/* ── Back button pinned to bottom-right ── */
+/* ── Mobile back button (top-left, hidden on desktop) ── */
+.mobileBackBtn {
+  display: none;
+  position: absolute;
+  top: 1.25rem;
+  left: 1.25rem;
+  z-index: 10;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(12px);
+  transition: background 0.22s ease, border-color 0.22s ease, transform 0.22s ease;
+}
+
+.mobileBackBtn:hover {
+  background: rgba(255, 107, 0, 0.18);
+  border-color: rgba(255, 167, 38, 0.5);
+  transform: translateX(-3px);
+}
+
+/* ── Desktop back button (bottom-right) ── */
 .backBtnWrapper {
   position: absolute;
   bottom: 2rem;
@@ -41,30 +67,28 @@
   border: 1px solid rgba(255, 167, 38, 0.38);
   border-radius: 10px;
   cursor: pointer;
-  color: #FFA726;
+  color: #ffffff;
   font-size: 1.05rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.01em;
   font-family: 'Inter', sans-serif;
   padding: 0.8rem 1.8rem;
-  transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease, color 0.25s ease;
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
   backdrop-filter: blur(10px);
+}
+
+.backBtn svg {
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  flex-shrink: 0;
 }
 
 .backBtn:hover {
   background: rgba(255, 107, 0, 0.24);
   border-color: rgba(255, 167, 38, 0.65);
   transform: translateX(-4px);
-  color: #ffffff;
 }
 
-.backArrow {
-  display: inline-block;
-  font-size: 1.25rem;
-  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.backBtn:hover .backArrow { transform: translateX(-5px); }
+.backBtn:hover svg { transform: translateX(-4px); }
 
 /* =========================================================
    HEADER
@@ -72,7 +96,7 @@
 .detailHeader {
   width: 70%;
   margin: 0 auto;
-  padding: 5rem 0 2.5rem;
+  padding: calc(5rem + 70px) 0 2.5rem;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -430,7 +454,7 @@
    Responsive
    ========================================================= */
 @media (max-width: 1024px) {
-  .detailHeader  { width: 88%; padding-top: 5rem; }
+  .detailHeader  { width: 88%; padding-top: calc(5rem + 60px); }
   .galleryLabel  { width: 88%; }
   .collage       { width: 88%; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 170px; }
   .backBtnWrapper { bottom: 1.5rem; right: 1.5rem; }
@@ -444,16 +468,8 @@
   .collageItem:nth-child(1) { grid-column: span 2; }
   .collageItem:nth-child(6) { grid-column: span 2; }
   .galleryLabel { width: 94%; }
-  .backBtn { font-size: 0.85rem !important; padding: 0.65rem 1.2rem !important; }
-  .backBtnWrapper {
-    position: relative !important;
-    bottom: auto !important;
-    right: auto !important;
-    margin: 3rem auto 0 auto !important;
-    display: flex !important;
-    justify-content: center !important;
-    z-index: 10 !important;
-  }
+  .mobileBackBtn { display: flex; }
+  .backBtnWrapper { display: none; }
   .lightboxImg  { max-width: 95vw; max-height: 65vh; }
   .lightboxImgWrapper { max-width: 95vw; }
   .lightboxPrev { left: 0.5rem; }

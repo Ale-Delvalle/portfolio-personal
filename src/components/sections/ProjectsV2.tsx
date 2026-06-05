@@ -5,11 +5,33 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-import imgEcommerce from '../../assets/projects/ecommerce.png';
-import imgHnp from '../../assets/projects/hnp.png';
-import imgPortfolio from '../../assets/projects/portfolio-basico.jpg';
-import imgTurnos from '../../assets/projects/sistema-turnos.jpg';
-import imgPeliculas from '../../assets/projects/web-peliculas.jpg';
+import ec1 from '../../assets/projects/screenshots/E-commerce/1.png';
+import ec2 from '../../assets/projects/screenshots/E-commerce/2.png';
+import ec3 from '../../assets/projects/screenshots/E-commerce/3.png';
+import ec4 from '../../assets/projects/screenshots/E-commerce/4.png';
+import ec5 from '../../assets/projects/screenshots/E-commerce/5.png';
+import ec6 from '../../assets/projects/screenshots/E-commerce/6.png';
+import ec7 from '../../assets/projects/screenshots/E-commerce/7.png';
+import ec8 from '../../assets/projects/screenshots/E-commerce/8.png';
+
+import hnp1 from '../../assets/projects/screenshots/H-n-P/1.png';
+import hnp2 from '../../assets/projects/screenshots/H-n-P/2.png';
+import hnp3 from '../../assets/projects/screenshots/H-n-P/3.png';
+import hnp4 from '../../assets/projects/screenshots/H-n-P/4.png';
+
+import pb1 from '../../assets/projects/screenshots/Portfolio-basico/1.jpg';
+import pb2 from '../../assets/projects/screenshots/Portfolio-basico/2.jpg';
+
+import st1 from '../../assets/projects/screenshots/Sistema-de-turnos/1.png';
+import st2 from '../../assets/projects/screenshots/Sistema-de-turnos/2.png';
+import st3 from '../../assets/projects/screenshots/Sistema-de-turnos/3.png';
+import st4 from '../../assets/projects/screenshots/Sistema-de-turnos/4.png';
+
+import wp1 from '../../assets/projects/screenshots/Web-de-peliculas/1.png';
+import wp2 from '../../assets/projects/screenshots/Web-de-peliculas/2.png';
+import wp3 from '../../assets/projects/screenshots/Web-de-peliculas/3.png';
+import wp4 from '../../assets/projects/screenshots/Web-de-peliculas/4.png';
+import wp5 from '../../assets/projects/screenshots/Web-de-peliculas/5.png';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -30,8 +52,8 @@ const projects: Project[] = [
     description: 'Plataforma de compras con carrito, pagos integrados y panel de administración completo.',
     year: '2024',
     tags: ['React', 'Node.js'],
-    image: imgEcommerce,
-    screenshots: [imgEcommerce],
+    image: ec1,
+    screenshots: [ec1, ec2, ec3, ec4, ec5, ec6, ec7, ec8],
   },
   {
     id: 2,
@@ -39,8 +61,8 @@ const projects: Project[] = [
     description: 'Aplicación empresarial con autenticación segura y gestión de recursos.',
     year: '2024',
     tags: ['TypeScript', 'NestJS'],
-    image: imgHnp,
-    screenshots: [imgHnp],
+    image: hnp1,
+    screenshots: [hnp1, hnp2, hnp3, hnp4],
   },
   {
     id: 3,
@@ -48,8 +70,8 @@ const projects: Project[] = [
     description: 'Sitio personal con animaciones fluidas y diseño completamente responsive.',
     year: '2023',
     tags: ['React', 'CSS'],
-    image: imgPortfolio,
-    screenshots: [imgPortfolio],
+    image: pb1,
+    screenshots: [pb1, pb2],
   },
   {
     id: 4,
@@ -57,8 +79,8 @@ const projects: Project[] = [
     description: 'Gestión de citas con calendario interactivo y notificaciones en tiempo real.',
     year: '2024',
     tags: ['PostgreSQL', 'Express'],
-    image: imgTurnos,
-    screenshots: [imgTurnos],
+    image: st1,
+    screenshots: [st1, st2, st3, st4],
   },
   {
     id: 5,
@@ -66,8 +88,8 @@ const projects: Project[] = [
     description: 'Catálogo de películas consumiendo APIs externas con filtros avanzados.',
     year: '2023',
     tags: ['React', 'API REST'],
-    image: imgPeliculas,
-    screenshots: [imgPeliculas],
+    image: wp1,
+    screenshots: [wp1, wp2, wp3, wp4, wp5],
   },
 ];
 

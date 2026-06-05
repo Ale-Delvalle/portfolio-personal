@@ -262,7 +262,6 @@
   justify-content: center;
   opacity: 0;
   transition: opacity 0.25s ease;
-  background: rgba(255, 107, 0, 0.08);
 }
 
 .collageItem:hover .collageOverlay { opacity: 1; }

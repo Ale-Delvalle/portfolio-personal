@@ -98,14 +98,10 @@ export function ProjectDetail({ detail, goBack, outerRef, scrollRef, firstScreen
           </div>
 
           {/* ── Back buttons ── */}
-          <button className={styles.backArrowBtn} onClick={goBack} aria-label="Volver a proyectos">
-            ←
-          </button>
-
           <div className={styles.backBtnWrapper}>
             <button className={styles.backBtn} onClick={goBack}>
               <span className={styles.backArrow}>←</span>
-              Volver a proyectos
+              Volver a la sección de proyectos
             </button>
           </div>
 

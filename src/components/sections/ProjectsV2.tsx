@@ -413,87 +413,59 @@ export function ProjectsV2() {
   // ── Open project detail page ────────────────────────────
   const openProject = useCallback((project: Project) => {
     lastRef.current = project;
-
-    const sourceRect = previewFrameRef.current?.getBoundingClientRect();
-
     setSelected(project);
     document.body.style.overflow = 'hidden';
-    gsap.killTweensOf([mainRef.current, detailRef.current, heroRef.current]);
+
+    gsap.killTweensOf([mainRef.current, detailRef.current]);
     if (scrollTlRef.current) { scrollTlRef.current.kill(); scrollTlRef.current = null; }
-    gsap.to(scrollIndicatorRef.current, { autoAlpha: 0, duration: 0.3 });
+    gsap.to(scrollIndicatorRef.current, { autoAlpha: 0, duration: 0.25 });
 
     if (scrollAreaRef.current) scrollAreaRef.current.scrollTop = 0;
     gsap.set(detailRef.current, { x: 0 });
 
-    if (!sourceRect || sourceRect.width === 0 || !heroRef.current || !heroImgRef.current) {
-      const tl = gsap.timeline();
-      tl.to(mainRef.current, { x: '-5%', autoAlpha: 0, duration: 0.4, ease: 'power3.in' })
-        .fromTo(detailRef.current,
-          { x: '5%', autoAlpha: 0 },
-          { x: '0%', autoAlpha: 1, duration: 0.58, ease: 'expo.out' },
-          '-=0.1'
-        );
-      return;
-    }
+    // Fade the main list out
+    gsap.to(mainRef.current, { x: '-4%', autoAlpha: 0, duration: 0.32, ease: 'power3.in' });
 
-    const hero    = heroRef.current;
-    const heroImg = heroImgRef.current;
-
-    heroImg.src = project.image;
-    gsap.set(hero, {
-      display: 'flex',
-      left:    sourceRect.left,
-      top:     sourceRect.top,
-      width:   sourceRect.width,
-      height:  sourceRect.height,
-    });
-
+    // Wait two frames so React has rendered the detail content
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        const firstScreen = firstScreenRef.current;
-        const header      = detailHeaderRef.current;
+        const header  = detailHeaderRef.current;
+        const collage = firstScreenRef.current;
 
-        if (!firstScreen || !header) {
-          gsap.set(hero, { display: 'none' });
-          const tl = gsap.timeline();
-          tl.to(mainRef.current, { x: '-5%', autoAlpha: 0, duration: 0.4, ease: 'power3.in' })
-            .fromTo(detailRef.current,
-              { x: '5%', autoAlpha: 0 },
-              { x: '0%', autoAlpha: 1, duration: 0.58, ease: 'expo.out' },
-              '-=0.1'
-            );
-          return;
+        // Pre-hide elements that will stagger in
+        if (header) gsap.set(Array.from(header.children), { y: 18, autoAlpha: 0 });
+        if (collage) {
+          const label = collage.previousElementSibling;
+          if (label) gsap.set(label, { y: 8, autoAlpha: 0 });
+          gsap.set(Array.from(collage.querySelectorAll('button')), { y: 22, autoAlpha: 0 });
         }
 
-        const targetRect = firstScreen.getBoundingClientRect();
-
-        gsap.set(header,      { autoAlpha: 0 });
-        gsap.set(firstScreen, { opacity: 0 });
-
-        const tl = gsap.timeline();
-        tl
-          .to(mainRef.current, { x: '-5%', autoAlpha: 0, duration: 0.45, ease: 'power3.in' }, 0)
-          .fromTo(detailRef.current,
-            { autoAlpha: 0 },
-            { autoAlpha: 1, duration: 0.45, ease: 'power2.inOut' },
-            0.1
-          )
-          .to(hero, {
-            left:   targetRect.left,
-            top:    targetRect.top,
-            width:  targetRect.width,
-            height: targetRect.height,
-            duration: window.innerWidth < 1024 ? 0.52 : 0.62,
-            ease:     'expo.out',
-          }, 0.15)
-          .call(() => {
-            gsap.set(firstScreen, { opacity: 1 });
-            gsap.set(hero, { display: 'none' });
-          })
-          .fromTo(header,
-            { y: 20, autoAlpha: 0 },
-            { y: 0, autoAlpha: 1, duration: 0.5, ease: 'expo.out' }
-          );
+        // Reveal detail overlay, then stagger elements in
+        gsap.fromTo(
+          detailRef.current,
+          { autoAlpha: 0 },
+          {
+            autoAlpha: 1,
+            duration: 0.38,
+            ease: 'power2.out',
+            onComplete: () => {
+              if (header) {
+                gsap.to(Array.from(header.children), {
+                  y: 0, autoAlpha: 1, duration: 0.55, stagger: 0.09, ease: 'expo.out',
+                });
+              }
+              if (collage) {
+                const label = collage.previousElementSibling;
+                if (label) {
+                  gsap.to(label, { y: 0, autoAlpha: 1, duration: 0.45, delay: 0.22, ease: 'expo.out' });
+                }
+                gsap.to(Array.from(collage.querySelectorAll('button')), {
+                  y: 0, autoAlpha: 1, duration: 0.5, stagger: 0.055, delay: 0.3, ease: 'expo.out',
+                });
+              }
+            },
+          }
+        );
       });
     });
   }, []);

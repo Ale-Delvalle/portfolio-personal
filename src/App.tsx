@@ -44,6 +44,8 @@ function App() {
     const handleWheel = (e: WheelEvent) => {
       if (window.innerWidth < 1024) return;
       if (isAnimating.current) return;
+      // Let the detail overlay scroll freely when it's open
+      if (document.body.style.overflow === 'hidden') return;
       const direction = Math.sign(e.deltaY);
       if (direction === 0) return;
 
@@ -140,6 +142,7 @@ function App() {
     };
     const handleTouchMove = (e: TouchEvent) => {
       if (window.innerWidth < 1024) return;
+      if (document.body.style.overflow === 'hidden') return;
       if (isAnimating.current) {
         e.preventDefault();
         return;

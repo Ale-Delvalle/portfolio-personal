@@ -262,23 +262,7 @@
   margin-top: 0.25rem;
 }
 
-.welcomeText {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: var(--font-headline);
-  font-size: clamp(1rem, 2.5vw, 1.8rem);
-  font-weight: 800;
-  color: #ffffff;
-  white-space: nowrap;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-}
+
 
 .name {
   position: relative;
@@ -678,9 +662,7 @@
     font-size: 1.05rem !important;
   }
 
-  .welcomeText {
-    font-size: 1.05rem !important;
-  }
+
 
   /* ─── Línea naranja visible en mobile ─── */
   .mobileAccentLine {
@@ -838,8 +820,7 @@
   transition: filter 0.4s ease;
 }
 
-:global([data-theme="light"][data-intro-done]) .role,
-:global([data-theme="light"][data-intro-done]) .welcomeText {
+:global([data-theme="light"][data-intro-done]) .role {
   color: #2A2420;
   transition: color 0.4s ease;
 }

@@ -19,7 +19,6 @@ export function Hero() {
   const buttonsRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
   const scrollTextRef = useRef<HTMLSpanElement>(null);
-  const welcomeContainerRef = useRef<HTMLDivElement>(null);
   const mobileAccentRef = useRef<HTMLDivElement>(null);
   const introOverlayRef = useRef<HTMLDivElement>(null);
 
@@ -58,7 +57,6 @@ export function Hero() {
     });
 
     gsap.set(nameContainerRef.current, { zIndex: 51, position: 'relative' });
-    gsap.set(welcomeContainerRef.current, { x: -50, autoAlpha: 0 });
 
     if (isMobile) {
       gsap.set(imageRef.current, { opacity: 0, scale: 0.92, y: 20 });
@@ -153,20 +151,7 @@ export function Hero() {
         { autoAlpha: 0, y: 20 },
         { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out" },
         "moveUp+=1.7"
-      )
-      // 7) Role → Bienvenido
-      .to(roleRef.current, {
-        x: 50,
-        autoAlpha: 0,
-        duration: 0.45,
-        ease: "power2.in"
-      }, "moveUp+=2")
-      .to(welcomeContainerRef.current, {
-        x: 0,
-        autoAlpha: 1,
-        duration: 0.45,
-        ease: "power2.out"
-      }, "moveUp+=2.45");
+      );
     } else {
       // --- SECUENCIA ORIGINAL PARA PC Y TABLET ---
       // 3) Imagen aparece con desplazamiento suave (Fade + Slide)
@@ -183,19 +168,6 @@ export function Hero() {
         stagger: 0.15,
         ease: "power3.out"
       }, "-=1")
-      // 4.5) Bienvenido a mi portfolio reemplaza el role de izquierda a derecha
-      .to(roleRef.current, {
-        x: 50,
-        autoAlpha: 0,
-        duration: 0.5,
-        ease: "power2.in"
-      }, "moveUp+=2")
-      .to(welcomeContainerRef.current, {
-        x: 0,
-        autoAlpha: 1,
-        duration: 0.5,
-        ease: "power2.out"
-      }, ">")
       // 5) Indicador de Scroll
       .fromTo(scrollIndicatorRef.current,
         { autoAlpha: 0, y: -10 },
@@ -357,8 +329,7 @@ export function Hero() {
             <div className={styles.introSparksContainer}>
               <canvas ref={roleCanvasRef} className={styles.introSparksCanvas} />
             </div>
-            <div ref={roleRef} className={styles.role}>Fullstack developer and backend specialist</div>
-            <div ref={welcomeContainerRef} className={styles.welcomeText}>Bienvenido a mi portfolio</div>
+            <div ref={roleRef} className={styles.role}>Fullstack developer</div>
           </div>
           <div ref={mobileAccentRef} className={styles.mobileAccentLine} />
         </div>

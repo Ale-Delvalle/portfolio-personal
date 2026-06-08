@@ -390,7 +390,7 @@ export function Hero() {
                 <h2 className={styles.sideTitle}>Mi perfil profesional</h2>
               </div>
               <p className={styles.sideDesc}>
-                Me dedico principalmente al backend y sigo aprendiendo en el camino. Trabajo con NestJS, React y TypeScript, y cada proyecto me ayuda a entender mejor cómo diseñar sistemas que funcionen bien de verdad.
+                Diseño APIs REST, modelos de datos relacionales y sistemas de autenticación con NestJS, TypeScript y PostgreSQL. Full stack con React, React Native y CSS.
               </p>
               <div className={styles.tagRow}>
                 <span className={styles.tag}>NestJS</span>
@@ -406,10 +406,10 @@ export function Hero() {
                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                   </svg>
                 </span>
-                <h2 className={styles.sideTitle}>Un poco de mí</h2>
+                <h2 className={styles.sideTitle}>¿Cómo trabajo?</h2>
               </div>
               <p className={styles.sideDesc}>
-                Empecé de cero con mucho autodidactismo. Me gustan los problemas que al principio no tienen respuesta obvia, y disfruto los equipos donde hay buena comunicación y ganas genuinas de crecer juntos.
+                Comunicación abierta y activa, empatía, SCRUM, documentación y buenas practicas.
               </p>
             </div>
           </div>

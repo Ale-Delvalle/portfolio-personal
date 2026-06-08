@@ -329,7 +329,7 @@ export function Hero() {
             <div className={styles.introSparksContainer}>
               <canvas ref={roleCanvasRef} className={styles.introSparksCanvas} />
             </div>
-            <div ref={roleRef} className={styles.role}>Fullstack developer</div>
+            <div ref={roleRef} className={styles.role}>Full Stack Developer · Backend con NestJS & TypeScript · Human first.</div>
           </div>
           <div ref={mobileAccentRef} className={styles.mobileAccentLine} />
         </div>

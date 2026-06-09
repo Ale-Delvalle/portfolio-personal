@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import type { RefObject } from 'react';
 import styles from './ProjectDetail.module.css';
-import type { Project } from './ProjectsV2';
+import type { Project } from './Projects';
 
 function ArrowLeftIcon() {
   return (

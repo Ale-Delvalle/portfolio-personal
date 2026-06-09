@@ -5,10 +5,7 @@ import { GlowBackground } from './components/layout/GlowBackground';
 import { Hero } from './components/sections/Hero';
 import { About } from './components/sections/About';
 import { Stack } from './components/sections/Stack';
-// import { Projects } from './components/sections/Projects';
-// import { ProjectsV1 } from './components/sections/ProjectsV1';
-import { ProjectsV2 } from './components/sections/ProjectsV2';
-
+import { Projects } from './components/sections/Projects';
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -44,8 +41,21 @@ function App() {
     const handleWheel = (e: WheelEvent) => {
       if (window.innerWidth < 1024) return;
       if (isAnimating.current) return;
-      // Let the detail overlay scroll freely when it's open
-      if (document.body.style.overflow === 'hidden') return;
+      
+      // Si la galería está abierta, evitamos que cualquier scroll fuera del contenedor propague y mueva el fondo
+      if (document.body.style.overflow === 'hidden') {
+        const path = e.composedPath();
+        const isScrollArea = path.some(el => {
+          if (el instanceof HTMLElement) {
+            return el.className.includes('detailScrollArea');
+          }
+          return false;
+        });
+        if (!isScrollArea) {
+          e.preventDefault();
+        }
+        return;
+      }
       const direction = Math.sign(e.deltaY);
       if (direction === 0) return;
 
@@ -63,6 +73,8 @@ function App() {
     };
 
     const handleScroll = () => {
+      // Si la galería o algún overlay está abierto, ignoramos
+      if (document.body.style.overflow === 'hidden') return;
       // Si estamos en medio de una transición nuestra, ignoramos
       if (isAnimating.current) return;
 
@@ -174,9 +186,7 @@ function App() {
       <Navbar theme={theme} toggleTheme={toggleTheme} />
       <Hero />
       <About />
-      {/* <Projects /> */}
-      {/* <ProjectsV1 /> */}
-      <ProjectsV2 />
+      <Projects />
       <Stack />
     </>
   );

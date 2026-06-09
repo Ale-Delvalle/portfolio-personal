@@ -398,10 +398,13 @@ export function Hero() {
                 Diseño APIs REST, modelos de datos relacionales y sistemas de autenticación con NestJS, TypeScript y PostgreSQL. Full stack con React, React Native y CSS.
               </p>
               <div className={styles.tagRow}>
-                <span className={styles.tag}>NestJS</span>
-                <span className={styles.tag}>React</span>
-                <span className={styles.tag}>TypeScript</span>
+                <span className={styles.tag}>NodeJS</span>
                 <span className={styles.tag}>PostgreSQL</span>
+                <span className={styles.tag}>MongoDB</span>
+                <span className={styles.tag}>React</span>
+                <span className={styles.tag}>React Native</span>
+                <span className={styles.tag}>CSS</span>
+                <span className={styles.tag}>Docker</span>
               </div>
             </div>
             <div className={styles.textBlock}>

@@ -720,21 +720,27 @@
   }
 
   .primaryBtn, .secondaryBtn {
-    width: 100% !important;
-    max-width: 280px !important;
+    width: auto !important;
     padding: 0.75rem 1.5rem !important;
     font-size: 0.9rem !important;
   }
 
   .btn3dContainer {
-    width: 100% !important;
-    max-width: 280px !important;
+    width: auto !important;
     display: flex !important;
     justify-content: center !important;
   }
 
+  :global([data-theme="dark"]) .btn3dContainer {
+    order: 3;
+  }
+
+  :global([data-theme="dark"]) .socialGroup {
+    order: 4;
+  }
+
   .btn3dContainer button {
-    width: 100% !important;
+    width: auto !important;
   }
 
   /* Sin capas 3D en mobile (performance) */

@@ -9,10 +9,10 @@ interface NavbarProps {
 }
 
 const NAV_ITEMS = [
-  { label: 'Home',      target: 'home'      },
-  { label: 'About',     target: 'about'     },
-  { label: 'Proyectos', target: 'proyectos' },
-  { label: 'Stack',     target: 'stack'     },
+  { label: 'Home',          target: 'home'      },
+  { label: 'Acerca de mi',  target: 'about'     },
+  { label: 'Proyectos',     target: 'proyectos' },
+  { label: 'Stack',         target: 'stack'     },
 ] as const;
 
 export function Navbar({ /* theme, toggleTheme */ }: NavbarProps) {

@@ -395,7 +395,7 @@ export function Hero() {
                 <h2 className={styles.sideTitle}>Mi perfil profesional</h2>
               </div>
               <p className={styles.sideDesc}>
-                Diseño APIs REST, modelos de datos relacionales y sistemas de autenticación con NestJS, TypeScript y PostgreSQL. Full stack con React, React Native y CSS.
+                Estoy enfocado en el desarrollo backend, y desarrollo aplicaciones full stack de principio a fin: desde el diseño del modelo de datos y la API REST hasta la integración de servicios externos y el cliente web.
               </p>
               <div className={styles.tagRow}>
                 <span className={styles.tag}>NodeJS</span>

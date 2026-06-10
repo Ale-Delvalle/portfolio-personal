@@ -45,12 +45,16 @@ export function Stack() {
 
       // Título — trigger propio (aparece cuando el título entra en vista)
       if (mobileTitleRef.current) {
-        ScrollTrigger.create({
-          trigger: mobileTitleRef.current,
-          start: 'top 88%',
-          onEnter: () => gsap.to(mobileTitleRef.current, {
-            autoAlpha: 1, y: 0, duration: 0.6, ease: 'expo.out',
-          }),
+        gsap.to(mobileTitleRef.current, {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.6,
+          ease: 'expo.out',
+          scrollTrigger: {
+            trigger: mobileTitleRef.current,
+            start: 'top 88%',
+            toggleActions: 'play none none none',
+          },
         });
       }
 
@@ -59,25 +63,37 @@ export function Stack() {
       for (let row = 0; row < rowCount; row++) {
         const rowPills = pills.slice(row * 2, row * 2 + 2);
         if (!rowPills[0]) continue;
-        ScrollTrigger.create({
-          trigger: rowPills[0],
-          start: 'top 92%',
-          onEnter: () => gsap.to(rowPills, {
-            autoAlpha: 1, y: 0, duration: 0.42, stagger: 0.08, ease: 'back.out(1.3)',
-          }),
+        gsap.to(rowPills, {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.42,
+          stagger: 0.08,
+          ease: 'back.out(1.3)',
+          scrollTrigger: {
+            trigger: rowPills[0],
+            start: 'top 92%',
+            toggleActions: 'play none none none',
+          },
         });
       }
 
       // Tecnologías secundarias — trigger propio
       if (secTitle) {
-        ScrollTrigger.create({
-          trigger: secTitle,
-          start: 'top 92%',
-          onEnter: () => gsap.to(
-            [secTitle, secondaryStackRef.current].filter(Boolean) as HTMLElement[],
-            { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.15, ease: 'expo.out' }
-          ),
-        });
+        gsap.to(
+          [secTitle, secondaryStackRef.current].filter(Boolean) as HTMLElement[],
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.5,
+            stagger: 0.15,
+            ease: 'expo.out',
+            scrollTrigger: {
+              trigger: secTitle,
+              start: 'top 92%',
+              toggleActions: 'play none none none',
+            },
+          }
+        );
       }
 
       return; // omitir lógica orbital del desktop
@@ -103,6 +119,7 @@ export function Stack() {
     const tl = gsap.timeline({
       paused: true,
       onComplete: () => {
+        playedRef.current = true;
         orbitEnabled.value = true;
         if (!isMobile) {
           cardsRef.current.forEach((card, i) => {
@@ -170,9 +187,13 @@ export function Stack() {
       trigger: sectionRef.current,
       start: window.innerWidth < 1024 ? 'top 80%' : 'top 15%',
       end: 'bottom 15%',
+      onRefresh: (self) => {
+        if ((self.isActive || self.progress > 0) && !playedRef.current) {
+          tl.play();
+        }
+      },
       onEnter: () => {
         if (!playedRef.current) {
-          playedRef.current = true;
           tl.play();
         } else {
           // Segunda vez en adelante: animación de entrada tipo ProjectsV2

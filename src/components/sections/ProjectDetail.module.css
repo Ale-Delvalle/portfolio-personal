@@ -5,7 +5,7 @@
   position: fixed;
   inset: 0;
   z-index: 1000;
-  background: #060606;
+  background: transparent;
   overflow: hidden;
   visibility: hidden;
   opacity: 0;

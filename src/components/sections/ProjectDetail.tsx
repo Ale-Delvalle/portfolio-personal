@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import type { RefObject } from 'react';
 import styles from './ProjectDetail.module.css';
 import type { Project } from './Projects';
+import { GlowBackground } from '../layout/GlowBackground';
 
 function ArrowLeftIcon() {
   return (
@@ -50,6 +51,7 @@ export function ProjectDetail({ detail, goBack, outerRef, scrollRef, firstScreen
 
   return (
     <div ref={outerRef} className={styles.detailView}>
+      <GlowBackground isGallery={true} />
       {detail && (
         <>
           <div ref={scrollRef} className={styles.detailScrollArea}>

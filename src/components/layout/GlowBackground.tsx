@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react';
 import styles from './GlowBackground.module.css';
 
-export function GlowBackground() {
+export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = {}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -28,15 +28,17 @@ export function GlowBackground() {
     let waveTime = 0;
     let rafId: number;
 
-    let waveAlpha = 0;
-    let orbAlpha = 1;
-    let heroOrbAlpha = 0;
-    let transitionStarted = false;
-    let introDoneSet = false;
+    let waveAlpha = isGallery ? 1 : 0;
+    let orbAlpha = isGallery ? 0 : 1;
+    let heroOrbAlpha = isGallery ? 1 : 0;
+    let transitionStarted = isGallery;
+    let introDoneSet = isGallery;
 
     let scrollEnergy = 0;
     let scrollOrbTime = 0;
     let mobileOrbRamp = 0;
+    let scrollTimeoutId: any = null;
+    let isScrolling = false;
 
     const getIsDark = () => {
       const attr = document.documentElement.getAttribute('data-theme');
@@ -53,13 +55,21 @@ export function GlowBackground() {
     const isMobile = () => window.innerWidth < 1024;
 
     const handleScroll = () => {
-      if (transitionStarted && !isMobile()) {
-        scrollEnergy = Math.min(1, scrollEnergy + 0.35);
+      if (transitionStarted && (!isMobile() || isGallery)) {
+        if (!isGallery) {
+          scrollEnergy = Math.min(1, scrollEnergy + 0.35);
+        } else {
+          isScrolling = true;
+          if (scrollTimeoutId) window.clearTimeout(scrollTimeoutId);
+          scrollTimeoutId = window.setTimeout(() => {
+            isScrolling = false;
+          }, 300);
+        }
       }
     };
 
     window.addEventListener('hero-move-up', handleTransition);
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, true);
 
     // Mobile dark mode: disparar una vez por sección cuando el 40% es visible
     const titleObserver = new IntersectionObserver((entries) => {
@@ -146,8 +156,12 @@ export function GlowBackground() {
       time += 16;
       globalTimer += 16;
       waveTime += 0.007;
-      scrollOrbTime += 16;
-      if (mobileOrbRamp > 0) {
+      if (!isGallery || isScrolling) {
+        scrollOrbTime += 16;
+      }
+      if (isGallery) {
+        scrollEnergy = Math.min(1, scrollEnergy + 0.015);
+      } else if (mobileOrbRamp > 0) {
         scrollEnergy = Math.min(1, scrollEnergy + 0.018);
         mobileOrbRamp = Math.max(0, mobileOrbRamp - 1);
       } else {
@@ -372,7 +386,7 @@ export function GlowBackground() {
 
 
       // --- SCROLL ORBS (dark mode, re-aparecen durante el scroll) ---
-      if (!isLight && transitionStarted && scrollEnergy > 0.01) {
+      if (!isLight && transitionStarted && scrollEnergy > 0.01 && !isGallery) {
         ctx.globalAlpha = scrollEnergy * 0.6;
         ctx.globalCompositeOperation = 'screen';
         ctx.filter = 'blur(80px)';
@@ -397,7 +411,7 @@ export function GlowBackground() {
 
       // --- ORBE HERO (POST-INTRO, solo dark mode) ---
       // Orbe única centrada en el top que ilumina el centro superior e inferior
-      if (!isLight && heroOrbAlpha > 0) {
+      if (!isLight && heroOrbAlpha > 0 && !isGallery) {
         const scrollMoveX = Math.sin(scrollOrbTime * 0.0007) * (width * 0.18) * scrollEnergy;
         const scrollMoveY = Math.cos(scrollOrbTime * 0.0005) * (height * 0.1) * scrollEnergy;
         const orbX = width / 2 + scrollMoveX;
@@ -449,12 +463,15 @@ export function GlowBackground() {
     return () => {
       window.removeEventListener('resize', setCanvasSize);
       window.removeEventListener('hero-move-up', handleTransition);
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', handleScroll, true);
+      if (scrollTimeoutId) window.clearTimeout(scrollTimeoutId);
       titleObserver.disconnect();
       cancelAnimationFrame(rafId);
-      document.documentElement.removeAttribute('data-intro-done');
+      if (!isGallery) {
+        document.documentElement.removeAttribute('data-intro-done');
+      }
     };
-  }, []);
+  }, [isGallery]);
 
   return (
     <div className={styles.container}>

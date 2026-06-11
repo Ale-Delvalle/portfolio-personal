@@ -38,9 +38,11 @@ gsap.registerPlugin(ScrollTrigger);
 export type Project = {
   id: number;
   title: string;
+  listTitle?: string;
   description: string;
-  year: string;
+  year?: string;
   tags: string[];
+  features?: string[];
   image: string;
   screenshots: string[];
 };
@@ -48,46 +50,75 @@ export type Project = {
 const projects: Project[] = [
   {
     id: 1,
-    title: 'E-Commerce',
-    description: 'Plataforma de compras con carrito, pagos integrados y panel de administración completo.',
-    year: '2024',
-    tags: ['React', 'Node.js'],
+    title: 'Astro Tech — E-Commerce',
+    listTitle: 'Astro Tech',
+    description: 'Plataforma de e-commerce full stack con carrito de compras, panel de administración y autenticación JWT.',
+    tags: ['NestJS', 'TypeScript', 'PostgreSQL', 'TypeORM', 'JWT', 'Next.js', 'Zustand', 'React Query', 'Zod', 'Docker', 'Swagger'],
+    features: [
+      'API REST con NestJS y TypeScript, arquitectura modular por dominio',
+      'Autenticación JWT con control de acceso basado en roles (RBAC)',
+      'Base de datos relacional con PostgreSQL y TypeORM',
+      'Integración con Cloudinary para almacenamiento de imágenes en la nube',
+      'Documentación de API con Swagger/OpenAPI',
+      'Frontend en Next.js con App Router, estado global con Zustand y data fetching con React Query',
+      'Validación de schemas con Zod integrado con react-hook-form',
+      'Containerización con Docker Compose'
+    ],
     image: ec1,
     screenshots: [ec1, ec2, ec3, ec4, ec5, ec6, ec7, ec8],
   },
   {
     id: 2,
-    title: 'H n P',
+    title: 'Hearts & Paws',
     description: 'Aplicación empresarial con autenticación segura y gestión de recursos.',
-    year: '2024',
     tags: ['TypeScript', 'NestJS'],
     image: hnp1,
     screenshots: [hnp1, hnp2, hnp3, hnp4],
   },
   {
     id: 3,
-    title: 'Portfolio Básico',
-    description: 'Sitio personal con animaciones fluidas y diseño completamente responsive.',
-    year: '2023',
-    tags: ['React', 'CSS'],
+    title: 'Punto de partida',
+    description: 'Primer proyecto personal desarrollado con tecnologías web fundamentales, sin frameworks ni librerías externas.',
+    tags: ['HTML5', 'CSS3', 'JavaScript ES6+', 'Jasmine'],
+    features: [
+      'Página web estática con perfil personal y gestor de actividades favoritas',
+      'Frontend puro con HTML5, CSS3 y JavaScript ES6+ vanilla — sin bundler ni framework',
+      'Patrón Repository para gestión de datos en memoria',
+      'Grid responsivo con CSS Grid sin media queries',
+      'Tests unitarios con Jasmine'
+    ],
     image: pb1,
     screenshots: [pb1, pb2],
   },
   {
     id: 4,
-    title: 'Sistema de Turnos',
-    description: 'Gestión de citas con calendario interactivo y notificaciones en tiempo real.',
-    year: '2024',
-    tags: ['PostgreSQL', 'Express'],
+    title: 'Clínica San Sebastián',
+    description: 'Sistema de gestión de turnos médicos con autenticación, validaciones de negocio y panel de usuario.',
+    tags: ['TypeScript', 'Node.js', 'Express', 'PostgreSQL', 'TypeORM', 'React', 'Vite', 'Formik'],
+    features: [
+      'API REST con Express y TypeScript, arquitectura de 4 capas: router → controller → service → repository',
+      'Base de datos relacional con PostgreSQL y TypeORM',
+      'Autenticación con usuario y contraseña, sesión persistida con React Context API',
+      'Validaciones de negocio: turnos con mínimo 48h de anticipación, solo días hábiles y horario laboral',
+      'Frontend en React con Vite, React Router y Formik para gestión de formularios',
+      'Rutas protegidas con redirección automática si no hay sesión activa'
+    ],
     image: st1,
     screenshots: [st1, st2, st3, st4],
   },
   {
     id: 5,
-    title: 'Web de Películas',
-    description: 'Catálogo de películas consumiendo APIs externas con filtros avanzados.',
-    year: '2023',
-    tags: ['React', 'API REST'],
+    title: 'Pelisplay',
+    description: 'Aplicación full stack de gestión de películas con carrusel 3D inmersivo, construida con Node.js y MongoDB.',
+    tags: ['Node.js', 'Express', 'MongoDB', 'Mongoose', 'JavaScript', 'GSAP', 'Webpack', 'Jest'],
+    features: [
+      'API REST con Node.js y Express, arquitectura de 3 capas: controller → service → model',
+      'Base de datos NoSQL con MongoDB y Mongoose',
+      'Catálogo con vista en carrusel 3D animado con GSAP y vista en grilla',
+      'CRUD completo: agregar y eliminar películas con confirmación modal',
+      'Frontend empaquetado con Webpack, peticiones HTTP con Axios',
+      'Tests unitarios con Jest'
+    ],
     image: wp1,
     screenshots: [wp1, wp2, wp3, wp4, wp5],
   },
@@ -563,7 +594,7 @@ export function Projects() {
                 <div className={styles.mobileCardOverlay} />
                 <div className={styles.mobileCardContent}>
                   <span className={styles.mobileCardNum}>0{project.id}</span>
-                  <h3 className={styles.mobileCardTitle}>{project.title}</h3>
+                  <h3 className={styles.mobileCardTitle}>{project.listTitle || project.title}</h3>
                   <div className={styles.mobileCardTags}>
                     {project.tags.map(tag => <span key={tag}>{tag}</span>)}
                   </div>
@@ -598,7 +629,7 @@ export function Projects() {
                 >
                   <span className={styles.rowNum}>0{project.id}</span>
                   <div className={styles.rowInfo}>
-                    <h3 className={styles.rowTitle}>{project.title}</h3>
+                    <h3 className={styles.rowTitle}>{project.listTitle || project.title}</h3>
                     <p className={styles.rowDesc}>{project.description}</p>
                   </div>
                   <span className={styles.rowArrow}>↗</span>
@@ -633,7 +664,15 @@ export function Projects() {
                   <span className={styles.dot} data-color="green" />
                 </div>
                 <div className={styles.browserUrl}>
-                  <span className={styles.urlText}>{active.title.toLowerCase().replace(/\s/g, '-')}.dev</span>
+                  <span className={styles.urlText}>
+                    {(active.listTitle || active.title)
+                      .toLowerCase()
+                      .normalize("NFD")
+                      .replace(/[\u0300-\u036f]/g, "")
+                      .replace(/[^a-z0-9]/g, '-')
+                      .replace(/-+/g, '-')
+                    }.dev
+                  </span>
                 </div>
               </div>
               <div className={styles.imgStack}>
@@ -667,7 +706,7 @@ export function Projects() {
                     key={project.id}
                     className={`${styles.metaTitle} ${activeId === project.id ? styles.metaTitleVisible : ''}`}
                   >
-                    {project.title}
+                    {project.listTitle || project.title}
                   </span>
                 ))}
               </div>

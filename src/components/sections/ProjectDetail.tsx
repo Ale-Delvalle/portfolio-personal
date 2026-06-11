@@ -59,8 +59,21 @@ export function ProjectDetail({ detail, goBack, outerRef, scrollRef, firstScreen
               <div className={styles.titleAccent} />
               <h2 className={styles.detailTitle}>{detail.title}</h2>
               <p className={styles.detailDesc}>{detail.description}</p>
+              
+              {detail.features && detail.features.length > 0 && (
+                <div className={styles.detailFeatures}>
+                  <h4 className={styles.featuresTitle}>Características principales</h4>
+                  <ul className={styles.featuresList}>
+                    {detail.features.map((feature, i) => (
+                      <li key={i} className={styles.featureItem}>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
               <div className={styles.detailMeta}>
-                <span className={styles.detailYear}>{detail.year}</span>
                 <div className={styles.detailTags}>
                   {detail.tags.map(tag => (
                     <span key={tag} className={styles.detailTag}>{tag}</span>

@@ -139,6 +139,7 @@
   width: 100%;
   max-width: 100%;
   text-align: left;
+  white-space: pre-wrap;
 }
 
 .detailFeatures {

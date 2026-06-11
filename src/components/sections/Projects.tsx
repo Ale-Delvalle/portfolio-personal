@@ -70,8 +70,21 @@ const projects: Project[] = [
   {
     id: 2,
     title: 'Hearts & Paws',
-    description: 'Aplicación empresarial con autenticación segura y gestión de recursos.',
-    tags: ['TypeScript', 'NestJS'],
+    listTitle: 'Hearts & Paws',
+    description: 'Proyecto grupal · 6 personas · SoyHenry\nPlataforma para ONGs de rescate animal que conecta organizaciones protectoras con adoptantes. Gestiona adopciones, donaciones con pasarela de pago y mensajería en tiempo real. Trabajé en el desarrollo del backend junto a un equipo de 3 personas.',
+    tags: ['NestJS', 'TypeScript', 'PostgreSQL', 'Prisma', 'JWT', 'Stripe', 'Socket.io', 'Cloudinary', 'Google Cloud Vision', 'Nodemailer', 'Jest'],
+    features: [
+      'API REST modular con NestJS y TypeScript, arquitectura por dominio de negocio',
+      'Base de datos relacional con PostgreSQL y Prisma ORM, incluyendo migraciones y esquema tipado',
+      'Autenticación híbrida: JWT local con cookies HttpOnly y soporte para tokens de Supabase Auth',
+      'Control de acceso por roles (RBAC) con guards y decoradores personalizados',
+      'Integración con Stripe para procesamiento de donaciones, con webhook seguro y control de duplicidad',
+      'Moderación automática de imágenes con Sightengine y Google Cloud Vision — imágenes sensibles se almacenan pixeladas en Cloudinary',
+      'Mensajería en tiempo real con WebSockets (Socket.io) con salas por conversación y persistencia en base de datos',
+      'Notificaciones por email concurrentes con Nodemailer y Resend usando Promise.all',
+      'Sanitización XSS y validación global de DTOs con whitelist estricta',
+      'Tests unitarios y de integración con Jest y Supertest'
+    ],
     image: hnp1,
     screenshots: [hnp1, hnp2, hnp3, hnp4],
   },

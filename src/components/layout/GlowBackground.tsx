@@ -272,30 +272,29 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
           ctx.stroke();
         }
 
-        if (comet.isParticles) {
-          if (!transitionStarted) return; // Solo empieza cuando termina la intro
-          const p = ((time + 2000) % 22000) / comet.duration;
-
-          if (p >= 0 && p <= 1) {
-            let emissionRate = 3; 
-            if (p < 0.1 || p > 0.9) emissionRate = 0.5;
-
-            if (Math.random() < emissionRate) {
-              const head = getBezierPoint(p, p0, p1, p2, p3);
-              const count = Math.floor(Math.random() * 3) + 1;
-              for(let i=0; i<count; i++) {
-                particles.push({
-                  x: head.x + (Math.random() - 0.5) * 15,
-                  y: head.y + (Math.random() - 0.5) * 15,
-                  vx: (Math.random() - 0.5) * 0.8,
-                  vy: (Math.random() * -1) - 0.2,
-                  life: 1.0 + Math.random() * 0.5,
-                  size: Math.random() * 2.5 + 0.5
-                });
-              }
-            }
-          }
-        } else {
+        // if (comet.isParticles) {
+        //   if (!transitionStarted) return;
+        //   const p = ((time + 2000) % 22000) / comet.duration;
+        //   if (p >= 0 && p <= 1) {
+        //     let emissionRate = 3;
+        //     if (p < 0.1 || p > 0.9) emissionRate = 0.5;
+        //     if (Math.random() < emissionRate) {
+        //       const head = getBezierPoint(p, p0, p1, p2, p3);
+        //       const count = Math.floor(Math.random() * 3) + 1;
+        //       for(let i=0; i<count; i++) {
+        //         particles.push({
+        //           x: head.x + (Math.random() - 0.5) * 15,
+        //           y: head.y + (Math.random() - 0.5) * 15,
+        //           vx: (Math.random() - 0.5) * 0.8,
+        //           vy: (Math.random() * -1) - 0.2,
+        //           life: 1.0 + Math.random() * 0.5,
+        //           size: Math.random() * 2.5 + 0.5
+        //         });
+        //       }
+        //     }
+        //   }
+        // } else {
+        if (!comet.isParticles) {
           if (currentBurstIndices.includes(index)) {
             const burstPos = currentBurstIndices.indexOf(index); 
             const startOffset = burstPos * 1000; 
@@ -350,38 +349,31 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
         }
       });
 
-      // --- 4. ACTUALIZAR Y DIBUJAR PARTÍCULAS ---
-      ctx.globalCompositeOperation = isDarkTheme ? 'screen' : 'source-over';
-      for (let i = particles.length - 1; i >= 0; i--) {
-        let p = particles[i];
-        p.x += p.vx;
-        p.y += p.vy;
-        p.life -= 0.008; 
-        
-        if (p.life <= 0) {
-          particles.splice(i, 1);
-          continue;
-        }
-
-        const alpha = Math.min(1, p.life);
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        
-        if (p.size > 2) {
-          ctx.fillStyle = `rgba(255, 200, 100, ${alpha})`;
-        } else {
-          ctx.fillStyle = `rgba(255, 107, 0, ${alpha})`;
-        }
-        ctx.fill();
-        
-        if (p.life > 0.5 && p.size > 1.5) {
-          ctx.shadowColor = `rgba(255, 167, 38, ${alpha})`;
-          ctx.shadowBlur = 6;
-          ctx.fill();
-          ctx.shadowBlur = 0;
-        }
-      }
-      ctx.globalCompositeOperation = 'source-over';
+      // --- 4. ACTUALIZAR Y DIBUJAR PARTÍCULAS (desactivado) ---
+      // ctx.globalCompositeOperation = isDarkTheme ? 'screen' : 'source-over';
+      // for (let i = particles.length - 1; i >= 0; i--) {
+      //   let p = particles[i];
+      //   p.x += p.vx;
+      //   p.y += p.vy;
+      //   p.life -= 0.008;
+      //   if (p.life <= 0) { particles.splice(i, 1); continue; }
+      //   const alpha = Math.min(1, p.life);
+      //   ctx.beginPath();
+      //   ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      //   if (p.size > 2) {
+      //     ctx.fillStyle = `rgba(255, 200, 100, ${alpha})`;
+      //   } else {
+      //     ctx.fillStyle = `rgba(255, 107, 0, ${alpha})`;
+      //   }
+      //   ctx.fill();
+      //   if (p.life > 0.5 && p.size > 1.5) {
+      //     ctx.shadowColor = `rgba(255, 167, 38, ${alpha})`;
+      //     ctx.shadowBlur = 6;
+      //     ctx.fill();
+      //     ctx.shadowBlur = 0;
+      //   }
+      // }
+      // ctx.globalCompositeOperation = 'source-over';
 
 
 

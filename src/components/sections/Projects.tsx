@@ -71,7 +71,7 @@ const projects: Project[] = [
     id: 2,
     title: 'Hearts & Paws',
     listTitle: 'Hearts & Paws',
-    description: 'Proyecto grupal · 6 personas · SoyHenry\nPlataforma para ONGs de rescate animal que conecta organizaciones protectoras con adoptantes. Gestiona adopciones, donaciones con pasarela de pago y mensajería en tiempo real. Trabajé en el desarrollo del backend junto a un equipo de 3 personas.',
+    description: 'Proyecto grupal · Educativo \nPlataforma para ONGs de rescate animal que conecta organizaciones protectoras con adoptantes. Gestiona adopciones, donaciones con pasarela de pago y mensajería en tiempo real. Trabajé en un grupo conformado por 6 personas, en donde participé del equipo de backend.',
     tags: ['NestJS', 'TypeScript', 'PostgreSQL', 'Prisma', 'JWT', 'Stripe', 'Socket.io', 'Cloudinary', 'Google Cloud Vision', 'Nodemailer', 'Jest'],
     features: [
       'API REST modular con NestJS y TypeScript, arquitectura por dominio de negocio',

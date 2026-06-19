@@ -4,7 +4,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import pleaseImg from '../../assets/please.png';
-import profileImg from '../../assets/foto-transparente.png';
+import profileImg from '../../assets/foto-de-perfil-hero.png';
 import cvFile from '../../assets/Delvalle-Alexis-CV-full-stack-developer.docx?url';
 
 gsap.registerPlugin(ScrollTrigger);

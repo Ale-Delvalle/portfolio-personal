@@ -75,27 +75,31 @@
 
 .imageWrapper {
   width: 100%;
-  max-height: 35vh;
+  max-width: 230px;
+  max-height: 38vh;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
   position: relative;
+  background: radial-gradient(ellipse at 50% 25%, #D4936A 0%, #B87040 55%, #8C4E20 100%);
+  border-top-left-radius: 50%;
+  border-top-right-radius: 50%;
+  border-bottom-left-radius: 18px;
+  border-bottom-right-radius: 18px;
+  overflow: hidden;
+  padding: 0;
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.45),
+    0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 .profileImage {
   width: 100%;
   height: 100%;
-  max-height: 35vh;
+  max-height: 33vh;
   object-fit: contain;
   position: relative;
   z-index: 2;
-  animation: floatProfile 6s ease-in-out infinite;
-}
-
-@keyframes floatProfile {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-12px); }
-  100% { transform: translateY(0px); }
 }
 
 
@@ -676,31 +680,23 @@
   }
 
   .imageWrapper {
-    width: 170px !important;
-    height: 170px !important;
+    width: 190px !important;
+    height: auto !important;
+    aspect-ratio: 3 / 4 !important;
     max-height: unset !important;
+    max-width: unset !important;
     position: relative !important;
     margin: 0 auto !important;
-    border-radius: 50% !important;
+    border-top-left-radius: 50% !important;
+    border-top-right-radius: 50% !important;
+    border-bottom-left-radius: 18px !important;
+    border-bottom-right-radius: 18px !important;
     overflow: hidden !important;
-  }
-
-  .imageWrapper {
-    border: 2px solid rgba(255, 107, 0, 0.3);
-    box-shadow: 0 0 28px rgba(255, 107, 0, 0.18);
-  }
-
-  .imageWrapper::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 75%;
-    height: 22px;
-    background: radial-gradient(ellipse, rgba(255, 107, 0, 0.32) 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
+    padding: 0 !important;
+    background: radial-gradient(ellipse at 50% 25%, #D4936A 0%, #B87040 55%, #8C4E20 100%) !important;
+    box-shadow:
+      0 12px 40px rgba(0, 0, 0, 0.45),
+      0 4px 16px rgba(0, 0, 0, 0.3) !important;
   }
 
   .profileImage {
@@ -708,7 +704,7 @@
     height: 100% !important;
     max-height: unset !important;
     object-fit: contain !important;
-    object-position: center top !important;
+    object-position: center center !important;
   }
 
   /* ─── Botones en columna vertical ─── */
@@ -798,6 +794,14 @@
    Solo se activan cuando la intro ya terminó (data-intro-done).
    Durante la intro el fondo es negro = mismos colores que dark mode.
    ========================================================= */
+/* Image frame en modo claro — mismo arco, mismo color cálido */
+:global([data-theme="light"][data-intro-done]) .imageWrapper {
+  background: radial-gradient(ellipse at 50% 25%, #D4936A 0%, #B87040 55%, #8C4E20 100%);
+  box-shadow:
+    0 12px 40px rgba(42, 36, 32, 0.3),
+    0 4px 16px rgba(42, 36, 32, 0.15);
+}
+
 /* TextBlock glass claro (sin transición de intro, aparece al hacer scroll) */
 :global([data-theme="light"][data-intro-done]) .textBlock {
   background: rgba(248, 246, 242, 0.75);

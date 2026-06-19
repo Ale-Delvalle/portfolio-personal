@@ -73,33 +73,141 @@
   }
 }
 
-.imageWrapper {
+/* Contenedor principal de la imagen que permite efectos 3D de paralaje */
+.imageContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
   width: 100%;
   max-width: 230px;
   max-height: 38vh;
+  perspective: 1200px;
+  transform-style: preserve-3d;
+  z-index: 5;
+}
+
+/* Aura de luz trasera (Rim Light / Contraluz) que sobresale del arco */
+.backGlow {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -20%) translateZ(-20px);
+  width: 125%;
+  height: 125%;
+  background: radial-gradient(circle at center, rgba(255, 107, 0, 0.45) 0%, rgba(255, 167, 38, 0.18) 45%, rgba(0, 0, 0, 0) 70%);
+  border-radius: 50%;
+  filter: blur(35px);
+  pointer-events: none;
+  z-index: 1;
+  animation: backGlowPulse 4.5s infinite alternate ease-in-out;
+}
+
+@keyframes backGlowPulse {
+  0% {
+    opacity: 0.8;
+    transform: translate(-50%, -20%) translateZ(-20px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -20%) translateZ(-20px) scale(1.08);
+  }
+}
+
+/* Contenedor del arco con fondo de vidrio semi-transparente */
+.imageWrapper {
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: flex-end;
   position: relative;
-  background: radial-gradient(ellipse at 50% 25%, #D4936A 0%, #B87040 55%, #8C4E20 100%);
+  background: rgba(15, 12, 10, 0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-top-left-radius: 50%;
   border-top-right-radius: 50%;
   border-bottom-left-radius: 18px;
   border-bottom-right-radius: 18px;
   overflow: hidden;
   padding: 0;
+  border: 1px solid rgba(255, 167, 38, 0.28);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.35);
   box-shadow:
-    0 12px 40px rgba(0, 0, 0, 0.45),
-    0 4px 16px rgba(0, 0, 0, 0.3);
+    0 15px 45px rgba(0, 0, 0, 0.5),
+    inset 0 0 25px rgba(255, 107, 0, 0.12);
+  z-index: 2;
+  transform-style: preserve-3d;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
+/* Partículas flotantes cinematográficas */
+.particlesContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+  overflow: hidden;
+}
+
+.cinematicParticle {
+  position: absolute;
+  bottom: -10px;
+  width: 3px;
+  height: 3px;
+  background: #FFA726;
+  border-radius: 50%;
+  filter: drop-shadow(0 0 4px #FF6B00);
+  opacity: 0;
+  animation: floatUp 6s infinite linear;
+}
+
+/* Offsets y retardos para las 12 partículas */
+.cinematicParticle:nth-child(1) { left: 15%; width: 2px; height: 2px; animation-duration: 5s; animation-delay: 0s; }
+.cinematicParticle:nth-child(2) { left: 30%; width: 3px; height: 3px; animation-duration: 7s; animation-delay: 1.5s; }
+.cinematicParticle:nth-child(3) { left: 45%; width: 1.5px; height: 1.5px; animation-duration: 4.5s; animation-delay: 0.5s; }
+.cinematicParticle:nth-child(4) { left: 60%; width: 2.5px; height: 2.5px; animation-duration: 6.5s; animation-delay: 2s; }
+.cinematicParticle:nth-child(5) { left: 75%; width: 3.5px; height: 3.5px; animation-duration: 8s; animation-delay: 1s; }
+.cinematicParticle:nth-child(6) { left: 85%; width: 2px; height: 2px; animation-duration: 5.5s; animation-delay: 3s; }
+.cinematicParticle:nth-child(7) { left: 20%; width: 2.5px; height: 2.5px; animation-duration: 6s; animation-delay: 2.5s; }
+.cinematicParticle:nth-child(8) { left: 40%; width: 3px; height: 3px; animation-duration: 7.5s; animation-delay: 0.8s; }
+.cinematicParticle:nth-child(9) { left: 55%; width: 1.5px; height: 1.5px; animation-duration: 5s; animation-delay: 3.5s; }
+.cinematicParticle:nth-child(10) { left: 70%; width: 2px; height: 2px; animation-duration: 6.2s; animation-delay: 1.2s; }
+.cinematicParticle:nth-child(11) { left: 10%; width: 3px; height: 3px; animation-duration: 6.8s; animation-delay: 4s; }
+.cinematicParticle:nth-child(12) { left: 90%; width: 2px; height: 2px; animation-duration: 5.2s; animation-delay: 2.2s; }
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.7;
+  }
+  90% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-240px) translateX(15px) scale(0.4);
+    opacity: 0;
+  }
+}
+
+/* Imagen de perfil con filtro cinematográfico e iluminación */
 .profileImage {
   width: 100%;
   height: 100%;
   max-height: 33vh;
   object-fit: contain;
   position: relative;
-  z-index: 2;
+  z-index: 4;
+  transform: translateZ(20px) scale(1.03);
+  filter: brightness(1.05) contrast(1.06) drop-shadow(0 5px 15px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 12px rgba(255, 107, 0, 0.22));
+  pointer-events: none;
+  transition: filter 0.3s ease;
 }
 
 
@@ -679,7 +787,8 @@
     align-items: center !important;
   }
 
-  .imageWrapper {
+  /* Adaptar contenedor de imagen en mobile */
+  .imageContainer {
     width: 190px !important;
     height: auto !important;
     aspect-ratio: 3 / 4 !important;
@@ -687,13 +796,23 @@
     max-width: unset !important;
     position: relative !important;
     margin: 0 auto !important;
+  }
+
+  .imageWrapper {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: unset !important;
+    max-width: unset !important;
+    position: relative !important;
+    margin: 0 !important;
     border-top-left-radius: 50% !important;
     border-top-right-radius: 50% !important;
     border-bottom-left-radius: 18px !important;
     border-bottom-right-radius: 18px !important;
     overflow: hidden !important;
     padding: 0 !important;
-    background: radial-gradient(ellipse at 50% 25%, #D4936A 0%, #B87040 55%, #8C4E20 100%) !important;
+    background: rgba(15, 12, 10, 0.45) !important;
+    border: 1px solid rgba(255, 167, 38, 0.28) !important;
     box-shadow:
       0 12px 40px rgba(0, 0, 0, 0.45),
       0 4px 16px rgba(0, 0, 0, 0.3) !important;
@@ -794,12 +913,27 @@
    Solo se activan cuando la intro ya terminó (data-intro-done).
    Durante la intro el fondo es negro = mismos colores que dark mode.
    ========================================================= */
-/* Image frame en modo claro — mismo arco, mismo color cálido */
+/* Estilos de cristal claro y aura suave en modo claro */
 :global([data-theme="light"][data-intro-done]) .imageWrapper {
-  background: radial-gradient(ellipse at 50% 25%, #D4936A 0%, #B87040 55%, #8C4E20 100%);
+  background: rgba(248, 246, 242, 0.45);
+  border-color: rgba(140, 67, 29, 0.25);
+  border-top-color: rgba(255, 255, 255, 0.6);
   box-shadow:
-    0 12px 40px rgba(42, 36, 32, 0.3),
-    0 4px 16px rgba(42, 36, 32, 0.15);
+    0 15px 40px rgba(42, 36, 32, 0.12),
+    inset 0 0 20px rgba(140, 67, 29, 0.05);
+}
+
+:global([data-theme="light"][data-intro-done]) .backGlow {
+  background: radial-gradient(circle at center, rgba(140, 67, 29, 0.28) 0%, rgba(255, 167, 38, 0.1) 45%, rgba(0, 0, 0, 0) 70%);
+}
+
+:global([data-theme="light"][data-intro-done]) .profileImage {
+  filter: brightness(1.02) contrast(1.03) drop-shadow(0 5px 12px rgba(42, 36, 32, 0.2)) drop-shadow(0 0 8px rgba(140, 67, 29, 0.15));
+}
+
+:global([data-theme="light"][data-intro-done]) .cinematicParticle {
+  background: #8C431D;
+  filter: drop-shadow(0 0 3px rgba(140, 67, 29, 0.4));
 }
 
 /* TextBlock glass claro (sin transición de intro, aparece al hacer scroll) */

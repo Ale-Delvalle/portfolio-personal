@@ -4,7 +4,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import pleaseImg from '../../assets/please.png';
-import profileImg from '../../assets/foto-de-perfil-hero.png';
+import profileImg from '../../assets/foto.png';
 import cvFile from '../../assets/Delvalle-Alexis-CV-full-stack-developer.docx?url';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -34,6 +34,11 @@ export function Hero() {
   const yToBtn = useRef<any>(null);
   const rotXBtn = useRef<any>(null);
   const rotYBtn = useRef<any>(null);
+
+  // Cinematic profile image refs
+  const glowRef = useRef<HTMLDivElement>(null);
+  const profileImageRef = useRef<HTMLImageElement>(null);
+  const imageContainerRef = useRef<HTMLDivElement>(null);
 
   const [introDone, setIntroDone] = useState(false);
 
@@ -337,8 +342,16 @@ export function Hero() {
 
         <div className={styles.textsContainer}>
           <div className={styles.leftColumn}>
-            <div ref={imageRef} className={styles.imageWrapper}>
-              <img src={profileImg} alt="Alexis Delvalle" className={styles.profileImage} />
+            <div ref={imageContainerRef} className={styles.imageContainer}>
+              <div ref={glowRef} className={styles.backGlow} />
+              <div ref={imageRef} className={styles.imageWrapper}>
+                <div className={styles.particlesContainer}>
+                  {Array.from({ length: 12 }).map((_, i) => (
+                    <span key={i} className={styles.cinematicParticle} />
+                  ))}
+                </div>
+                <img ref={profileImageRef} src={profileImg} alt="Alexis Delvalle" className={styles.profileImage} />
+              </div>
             </div>
             <div ref={buttonsRef} className={styles.buttonGroup}>
               <button

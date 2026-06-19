@@ -65,7 +65,7 @@ export function Hero() {
     gsap.set(nameContainerRef.current, { zIndex: 51, position: 'relative' });
 
     if (isMobile) {
-      gsap.set(imageRef.current, { opacity: 0, scale: 0.92, y: 20 });
+      gsap.set(imageRef.current, { opacity: 0, scale: 0.92, y: -80 });
       gsap.set(rightTextRef.current, { autoAlpha: 0 });
       gsap.set(mobileAccentRef.current, { scaleX: 0, opacity: 0 });
       if (buttonsRef.current) {
@@ -135,8 +135,8 @@ export function Hero() {
       }, "moveUp")
       // 3) Foto: aparece justo cuando el overlay termina de desvanecerse (moveUp+0.8)
       .fromTo(imageRef.current,
-        { opacity: 0, scale: 0.92, y: 20 },
-        { opacity: 1, scale: 1, y: 0, duration: 0.7, ease: "expo.out", clearProps: "opacity,transform" },
+        { opacity: 0, scale: 0.92, y: -80 },
+        { opacity: 1, scale: 1, y: 0, duration: 0.85, ease: "power3.out", clearProps: "opacity,transform" },
         "moveUp+=0.8"
       )
       // 4) Línea naranja: comienza cuando la foto ya está visible (moveUp+1.5)
@@ -160,10 +160,10 @@ export function Hero() {
       );
     } else {
       // --- SECUENCIA ORIGINAL PARA PC Y TABLET ---
-      // 3) Imagen aparece con desplazamiento suave (Fade + Slide)
+      // 3) Imagen aparece con desplazamiento desde arriba hacia abajo (Fade + Slide)
       tl.fromTo(imageRef.current, 
-        { autoAlpha: 0, y: 50 },
-        { autoAlpha: 1, y: 0, duration: 1, ease: "power3.out" },
+        { autoAlpha: 0, y: -150 },
+        { autoAlpha: 1, y: 0, duration: 1.2, ease: "power3.out" },
         "-=0.5"
       )
       // 4) Textos y botones

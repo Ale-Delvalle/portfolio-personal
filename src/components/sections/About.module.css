@@ -90,6 +90,7 @@
 
   .heading {
     font-size: clamp(2.2rem, 10vw, 4.5rem);
+    padding-bottom: 0.25em;
   }
 
   .paragraphsWrapper {

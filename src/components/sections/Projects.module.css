@@ -630,6 +630,10 @@
     overscroll-behavior: none;
   }
 
+  .sectionLabel {
+    padding-bottom: 0.25em;
+  }
+
   .mainView {
     position: relative !important;
     inset: auto !important;

@@ -685,6 +685,11 @@
     order: 1 !important;
     max-width: 100% !important;
   }
+
+  .sectionLabel {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 }
 
 @media (max-width: 600px) {

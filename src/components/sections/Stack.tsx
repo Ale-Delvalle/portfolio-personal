@@ -58,7 +58,7 @@ export function Stack() {
       elements.forEach((el) => {
         ScrollTrigger.create({
           trigger: el,
-          start: 'top 88%',
+          start: 'bottom bottom-=10',
           once: true,
           onEnter: () => {
             gsap.to(el, {

@@ -306,7 +306,7 @@ export function Projects() {
         gsap.set(mobileHdr, { y: 22, autoAlpha: 0 });
         ScrollTrigger.create({
           trigger: mobileHdr,
-          start: 'top 90%',
+          start: 'bottom bottom-=10',
           onEnter: () => {
             gsap.to(mobileHdr, { y: 0, autoAlpha: 1, duration: 0.7, ease: 'expo.out' });
             if (mobileHLine) gsap.fromTo(mobileHLine, { scaleX: 0 },
@@ -321,7 +321,7 @@ export function Projects() {
         mobileCards.forEach((card) => {
           ScrollTrigger.create({
             trigger: card,
-            start: 'top 88%',
+            start: 'bottom bottom-=10',
             once: true,
             onEnter: () => gsap.to(card, {
               y: 0, autoAlpha: 1, duration: 0.55, ease: 'expo.out',

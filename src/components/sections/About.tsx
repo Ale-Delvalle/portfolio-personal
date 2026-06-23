@@ -114,7 +114,7 @@ export function About() {
             obs.disconnect();
           }
         },
-        { threshold: 0.15 }
+        { threshold: 1.0, rootMargin: '0px 0px -10px 0px' }
       );
       obs.observe(el);
       return obs;

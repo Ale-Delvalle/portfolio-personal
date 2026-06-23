@@ -315,16 +315,18 @@ export function Projects() {
         });
       }
 
-      // Cards — trigger en el carousel, stagger pronunciado para sentir la secuencia
-      const carousel = mainRef.current?.querySelector<HTMLElement>(`.${styles.mobileCarousel}`);
-      if (carousel && mobileCards.length) {
+      // Cards — cada card se revela al entrar individualmente al viewport
+      if (mobileCards.length) {
         gsap.set(mobileCards, { y: 30, autoAlpha: 0 });
-        ScrollTrigger.create({
-          trigger: carousel,
-          start: 'top 88%',
-          onEnter: () => gsap.to(mobileCards, {
-            y: 0, autoAlpha: 1, duration: 0.55, stagger: 0.13, ease: 'expo.out',
-          }),
+        mobileCards.forEach((card) => {
+          ScrollTrigger.create({
+            trigger: card,
+            start: 'top 88%',
+            once: true,
+            onEnter: () => gsap.to(card, {
+              y: 0, autoAlpha: 1, duration: 0.55, ease: 'expo.out',
+            }),
+          });
         });
       }
     }

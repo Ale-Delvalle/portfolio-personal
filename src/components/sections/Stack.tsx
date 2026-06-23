@@ -34,21 +34,47 @@ export function Stack() {
       });
     };
 
-    ScrollTrigger.create({
-      trigger: sectionRef.current,
-      start: 'top 80%',
-      once: true,
-      onEnter: () => {
-        const tl = gsap.timeline({ onComplete: startFloat });
-        tl.to([titleRef.current, row1Ref.current, row2Ref.current], {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.72,
-          stagger: 0.18,
-          ease: 'expo.out',
+    if (window.innerWidth >= 1024) {
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: 'top 80%',
+        once: true,
+        onEnter: () => {
+          const tl = gsap.timeline({ onComplete: startFloat });
+          tl.to([titleRef.current, row1Ref.current, row2Ref.current], {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.72,
+            stagger: 0.18,
+            ease: 'expo.out',
+          });
+        },
+      });
+    } else {
+      // Mobile: cada elemento se revela al entrar individualmente al viewport
+      const elements = [titleRef.current, row1Ref.current, row2Ref.current].filter(Boolean) as HTMLElement[];
+      let revealed = 0;
+
+      elements.forEach((el) => {
+        ScrollTrigger.create({
+          trigger: el,
+          start: 'top 88%',
+          once: true,
+          onEnter: () => {
+            gsap.to(el, {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.72,
+              ease: 'expo.out',
+              onComplete: () => {
+                revealed++;
+                if (revealed >= elements.length) startFloat();
+              },
+            });
+          },
         });
-      },
-    });
+      });
+    }
   }, { scope: sectionRef });
 
   return (

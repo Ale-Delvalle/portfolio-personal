@@ -75,8 +75,9 @@ export function About() {
     return () => window.removeEventListener('section-entered', handler as EventListener);
   }, [playAll, resetAll]);
 
-  // Mobile / fallback: IntersectionObserver
+  // Desktop fallback: anima todo cuando la sección entra al viewport
   useEffect(() => {
+    if (window.innerWidth < 1024) return;
     const played = { value: false };
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -92,6 +93,35 @@ export function About() {
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, [playAll]);
+
+  // Mobile: cada elemento se revela individualmente al entrar al viewport
+  useEffect(() => {
+    if (window.innerWidth >= 1024) return;
+    const elements = [
+      headingRef.current,
+      p1Ref.current,
+      p2Ref.current,
+      p3Ref.current,
+      p4Ref.current,
+      p5Ref.current,
+    ].filter(Boolean) as HTMLElement[];
+
+    const observers = elements.map((el) => {
+      const obs = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            gsap.to(el, { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power3.out' });
+            obs.disconnect();
+          }
+        },
+        { threshold: 0.15 }
+      );
+      obs.observe(el);
+      return obs;
+    });
+
+    return () => observers.forEach(o => o.disconnect());
+  }, []);
 
   return (
     <section id="about" ref={sectionRef} className={styles.section} data-section-trigger>

@@ -232,6 +232,65 @@
   margin: 0 auto 2rem auto;
 }
 
+/* =========================================================
+   REPO BUTTONS (inside detailHeader)
+   ========================================================= */
+.repoButtons {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 0.25rem;
+}
+
+.repoBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  text-decoration: none;
+  position: relative;
+  padding-bottom: 3px;
+  transition: color 0.22s ease;
+}
+
+.repoBtn::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: linear-gradient(90deg, #FF6B00, #FFA726);
+  border-radius: 1px;
+  transition: width 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.repoBtn:hover {
+  color: #FFA726;
+}
+
+.repoBtn:hover::after {
+  width: 100%;
+}
+
+.repoBtnArrow {
+  font-size: 0.72rem;
+  opacity: 0.5;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+  font-style: normal;
+}
+
+.repoBtn:hover .repoBtnArrow {
+  opacity: 1;
+  transform: translate(2px, -2px);
+}
+
 .galleryLabelLine {
   flex: 1;
   height: 1px;

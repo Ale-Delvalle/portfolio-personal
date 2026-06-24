@@ -45,6 +45,9 @@ export type Project = {
   features?: string[];
   image: string;
   screenshots: string[];
+  repoUrl?: string;
+  repoFrontUrl?: string;
+  repoBackUrl?: string;
 };
 
 const projects: Project[] = [
@@ -66,6 +69,8 @@ const projects: Project[] = [
     ],
     image: ec1,
     screenshots: [ec1, ec2, ec3, ec4, ec5, ec6, ec7, ec8],
+    repoFrontUrl: 'https://github.com/Ale-Delvalle/pi4-e-commerce-front',
+    repoBackUrl: 'https://github.com/Ale-Delvalle/pi4-e-commerce',
   },
   {
     id: 2,
@@ -87,6 +92,7 @@ const projects: Project[] = [
     ],
     image: hnp1,
     screenshots: [hnp1, hnp2, hnp3, hnp4],
+    repoUrl: 'https://github.com/Ale-Delvalle/backend-hearts-and-paws',
   },
   {
     id: 3,
@@ -118,6 +124,7 @@ const projects: Project[] = [
     ],
     image: st1,
     screenshots: [st1, st2, st3, st4],
+    repoUrl: 'https://github.com/Ale-Delvalle/pi3-turnos',
   },
   {
     id: 5,
@@ -134,6 +141,7 @@ const projects: Project[] = [
     ],
     image: wp1,
     screenshots: [wp1, wp2, wp3, wp4, wp5],
+    repoUrl: 'https://github.com/Ale-Delvalle/pi2-movie-club',
   },
 ];
 

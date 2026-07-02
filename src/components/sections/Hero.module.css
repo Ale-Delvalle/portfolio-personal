@@ -92,7 +92,7 @@
   position: absolute;
   top: 10%;
   left: 50%;
-  transform: translate(-50%, -20%) translateZ(-20px);
+  transform: translate3d(-50%, -20%, -20px);
   width: 125%;
   height: 125%;
   background: radial-gradient(circle at center, rgba(255, 107, 0, 0.45) 0%, rgba(255, 167, 38, 0.18) 45%, rgba(0, 0, 0, 0) 70%);
@@ -101,6 +101,7 @@
   pointer-events: none;
   z-index: 1;
   animation: backGlowPulse 4.5s infinite alternate ease-in-out;
+  will-change: transform, opacity;
 }
 
 @keyframes backGlowPulse {
@@ -546,7 +547,7 @@
   content: '';
   position: absolute;
   top: 0;
-  left: -150%;
+  left: 0;
   width: 50%;
   height: 100%;
   background: linear-gradient(
@@ -555,14 +556,15 @@
     rgba(255, 255, 255, 0.4) 50%,
     rgba(255, 255, 255, 0) 100%
   );
-  transform: skewX(-25deg);
+  transform: translate3d(-150%, 0, 0) skewX(-25deg);
   animation: shimmer 8s infinite;
+  will-change: transform;
 }
 
 @keyframes shimmer {
-  0% { left: -150%; }
-  40% { left: 200%; }
-  100% { left: 200%; }
+  0% { transform: translate3d(-150%, 0, 0) skewX(-25deg); }
+  40% { transform: translate3d(250%, 0, 0) skewX(-25deg); }
+  100% { transform: translate3d(250%, 0, 0) skewX(-25deg); }
 }
 
 .secondaryBtn:hover {
@@ -708,6 +710,10 @@
    ========================================================= */
 
 @media (max-width: 1023px) {
+  .backGlow {
+    animation: none !important;
+    transform: translate3d(-50%, -20%, -20px) scale(1) !important;
+  }
   .main {
     height: auto !important;
     /* sin min-height: la sección ocupa lo que su contenido necesita */

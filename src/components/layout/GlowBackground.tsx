@@ -83,6 +83,8 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
 
     document.querySelectorAll('[data-section-trigger]').forEach(el => titleObserver.observe(el));
 
+    const mobile = isMobile();
+
     const orbs = [
       { color: 'rgba(255, 107, 0, 0.8)', size: 0.8, speedX: 0.0006, speedY: 0.0005, phaseX: 0, phaseY: 1 },
       { color: 'rgba(255, 167, 38, 0.6)', size: 0.9, speedX: 0.0004, speedY: 0.0003, phaseX: 2, phaseY: 3 },
@@ -90,6 +92,13 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
       { color: 'rgba(255, 80, 0, 0.6)', size: 1.0, speedX: 0.0003, speedY: 0.0004, phaseX: 1, phaseY: 4 },
       { color: 'rgba(255, 140, 0, 0.5)', size: 0.6, speedX: 0.0007, speedY: 0.0005, phaseX: 3, phaseY: 2 }
     ];
+
+    const activeOrbs = mobile 
+      ? [
+          { color: 'rgba(255, 107, 0, 0.8)', size: 0.8, speedX: 0.0006, speedY: 0.0005, phaseX: 0, phaseY: 1 },
+          { color: 'rgba(255, 167, 38, 0.6)', size: 0.9, speedX: 0.0004, speedY: 0.0003, phaseX: 2, phaseY: 3 }
+        ]
+      : orbs;
 
     // Definición de las curvas de las mechas (Alta velocidad: 3 segundos por pantalla)
     const comets = [
@@ -127,7 +136,7 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
       return Math.min(182, Math.max(127, h));
     };
 
-    const particles: Array<{x: number, y: number, vx: number, vy: number, life: number, size: number}> = [];
+    // const particles: Array<{x: number, y: number, vx: number, vy: number, life: number, size: number}> = [];
     
     // Variables para el control de "Bursts" (Ráfagas) y Pausas de 10s
     let globalTimer = 0;
@@ -193,9 +202,11 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
       if (orbAlpha > 0) {
         ctx.globalAlpha = orbAlpha;
         ctx.globalCompositeOperation = 'screen';
-        ctx.filter = 'blur(80px)'; 
+        if (!mobile) {
+          ctx.filter = 'blur(80px)'; 
+        }
 
-        orbs.forEach((orb) => {
+        activeOrbs.forEach((orb) => {
           const x = width / 2 + Math.sin(orbTime * orb.speedX + orb.phaseX) * (width * 0.4) + Math.cos(orbTime * orb.speedX * 0.5) * (width * 0.1);
           const y = height / 2 + Math.cos(orbTime * orb.speedY + orb.phaseY) * (height * 0.4) + Math.sin(orbTime * orb.speedY * 0.5) * (height * 0.1);
           
@@ -211,7 +222,9 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
           ctx.fill();
         });
 
-        ctx.filter = 'none';
+        if (!mobile) {
+          ctx.filter = 'none';
+        }
         ctx.globalAlpha = 1;
         ctx.globalCompositeOperation = 'source-over';
       }
@@ -237,7 +250,9 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
         }
         if (waveAlpha > 0) {
           ctx.globalAlpha = waveAlpha * (0.1 + scrollEnergy * 0.25);
-          ctx.filter = 'blur(50px)';
+          if (!mobile) {
+            ctx.filter = 'blur(50px)';
+          }
           ctx.beginPath();
           ctx.moveTo(0, height);
           for (let x = 0; x <= width; x += 10) {
@@ -252,7 +267,9 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
           lightGrad.addColorStop(1, 'rgba(140, 67, 29, 0)');
           ctx.fillStyle = lightGrad;
           ctx.fill();
-          ctx.filter = 'none';
+          if (!mobile) {
+            ctx.filter = 'none';
+          }
           ctx.globalAlpha = 1;
         }
       }
@@ -272,28 +289,6 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
           ctx.stroke();
         }
 
-        // if (comet.isParticles) {
-        //   if (!transitionStarted) return;
-        //   const p = ((time + 2000) % 22000) / comet.duration;
-        //   if (p >= 0 && p <= 1) {
-        //     let emissionRate = 3;
-        //     if (p < 0.1 || p > 0.9) emissionRate = 0.5;
-        //     if (Math.random() < emissionRate) {
-        //       const head = getBezierPoint(p, p0, p1, p2, p3);
-        //       const count = Math.floor(Math.random() * 3) + 1;
-        //       for(let i=0; i<count; i++) {
-        //         particles.push({
-        //           x: head.x + (Math.random() - 0.5) * 15,
-        //           y: head.y + (Math.random() - 0.5) * 15,
-        //           vx: (Math.random() - 0.5) * 0.8,
-        //           vy: (Math.random() * -1) - 0.2,
-        //           life: 1.0 + Math.random() * 0.5,
-        //           size: Math.random() * 2.5 + 0.5
-        //         });
-        //       }
-        //     }
-        //   }
-        // } else {
         if (!comet.isParticles) {
           if (currentBurstIndices.includes(index)) {
             const burstPos = currentBurstIndices.indexOf(index); 
@@ -302,7 +297,7 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
             if (currentCycleTime >= startOffset && currentCycleTime <= startOffset + comet.duration) {
               const p = (currentCycleTime - startOffset) / comet.duration;
               const lightLength = 0.1; 
-              const segments = 25; 
+              const segments = mobile ? 10 : 25; 
 
               ctx.globalCompositeOperation = isDarkTheme ? 'screen' : 'source-over';
 
@@ -322,10 +317,6 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
                 if (p < 0.1) edgeFade = p / 0.1;
                 if (p > 0.9) edgeFade = (1 - p) / 0.1;
 
-                ctx.beginPath();
-                ctx.moveTo(pt1.x, pt1.y);
-                ctx.lineTo(pt2.x, pt2.y);
-
                 const r = 255;
                 const g = 180;
                 const b = 80;
@@ -333,15 +324,37 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
                 const localFade = Math.sin(ratio * Math.PI); 
                 const alpha = localFade * edgeFade;
                 
-                ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
-                ctx.lineWidth = 2; 
-                ctx.lineCap = 'round';
-                
-                ctx.shadowColor = `rgba(255, 167, 38, ${alpha})`;
-                ctx.shadowBlur = 15;
+                if (mobile) {
+                  // Glow alternativo en móviles sin shadowBlur
+                  ctx.beginPath();
+                  ctx.moveTo(pt1.x, pt1.y);
+                  ctx.lineTo(pt2.x, pt2.y);
+                  ctx.strokeStyle = `rgba(255, 167, 38, ${alpha * 0.3})`;
+                  ctx.lineWidth = 6;
+                  ctx.lineCap = 'round';
+                  ctx.stroke();
 
-                ctx.stroke();
-                ctx.shadowBlur = 0; 
+                  ctx.beginPath();
+                  ctx.moveTo(pt1.x, pt1.y);
+                  ctx.lineTo(pt2.x, pt2.y);
+                  ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+                  ctx.lineWidth = 1.5;
+                  ctx.lineCap = 'round';
+                  ctx.stroke();
+                } else {
+                  ctx.beginPath();
+                  ctx.moveTo(pt1.x, pt1.y);
+                  ctx.lineTo(pt2.x, pt2.y);
+                  ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+                  ctx.lineWidth = 2; 
+                  ctx.lineCap = 'round';
+                  
+                  ctx.shadowColor = `rgba(255, 167, 38, ${alpha})`;
+                  ctx.shadowBlur = 15;
+
+                  ctx.stroke();
+                  ctx.shadowBlur = 0; 
+                }
               }
               ctx.globalCompositeOperation = 'source-over'; 
             }
@@ -349,41 +362,15 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
         }
       });
 
-      // --- 4. ACTUALIZAR Y DIBUJAR PARTÍCULAS (desactivado) ---
-      // ctx.globalCompositeOperation = isDarkTheme ? 'screen' : 'source-over';
-      // for (let i = particles.length - 1; i >= 0; i--) {
-      //   let p = particles[i];
-      //   p.x += p.vx;
-      //   p.y += p.vy;
-      //   p.life -= 0.008;
-      //   if (p.life <= 0) { particles.splice(i, 1); continue; }
-      //   const alpha = Math.min(1, p.life);
-      //   ctx.beginPath();
-      //   ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      //   if (p.size > 2) {
-      //     ctx.fillStyle = `rgba(255, 200, 100, ${alpha})`;
-      //   } else {
-      //     ctx.fillStyle = `rgba(255, 107, 0, ${alpha})`;
-      //   }
-      //   ctx.fill();
-      //   if (p.life > 0.5 && p.size > 1.5) {
-      //     ctx.shadowColor = `rgba(255, 167, 38, ${alpha})`;
-      //     ctx.shadowBlur = 6;
-      //     ctx.fill();
-      //     ctx.shadowBlur = 0;
-      //   }
-      // }
-      // ctx.globalCompositeOperation = 'source-over';
-
-
-
       // --- SCROLL ORBS (dark mode, re-aparecen durante el scroll) ---
       if (!isLight && transitionStarted && scrollEnergy > 0.01 && !isGallery) {
         ctx.globalAlpha = scrollEnergy * 0.6;
         ctx.globalCompositeOperation = 'screen';
-        ctx.filter = 'blur(80px)';
+        if (!mobile) {
+          ctx.filter = 'blur(80px)';
+        }
 
-        orbs.forEach((orb) => {
+        activeOrbs.forEach((orb) => {
           const x = width / 2 + Math.sin(scrollOrbTime * orb.speedX + orb.phaseX) * (width * 0.4) + Math.cos(scrollOrbTime * orb.speedX * 0.5) * (width * 0.1);
           const y = height / 2 + Math.cos(scrollOrbTime * orb.speedY + orb.phaseY) * (height * 0.4) + Math.sin(scrollOrbTime * orb.speedY * 0.5) * (height * 0.1);
           const radius = minDim * orb.size;
@@ -396,7 +383,9 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
           ctx.fill();
         });
 
-        ctx.filter = 'none';
+        if (!mobile) {
+          ctx.filter = 'none';
+        }
         ctx.globalAlpha = 1;
         ctx.globalCompositeOperation = 'source-over';
       }
@@ -416,7 +405,9 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
         ctx.globalCompositeOperation = 'screen';
 
         // Capa 1: glow exterior amplio (ilumina el centro superior e inferior)
-        ctx.filter = 'blur(90px)';
+        if (!mobile) {
+          ctx.filter = 'blur(90px)';
+        }
         const outerR = Math.max(width * 0.78, height * 1.05);
         const outerGrad = ctx.createRadialGradient(orbX, orbY, 0, orbX, orbY, outerR);
         outerGrad.addColorStop(0,    'rgba(200, 70, 0, 0.70)');
@@ -427,10 +418,14 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
         ctx.beginPath();
         ctx.arc(orbX, orbY, outerR, 0, Math.PI * 2);
         ctx.fill();
-        ctx.filter = 'none';
+        if (!mobile) {
+          ctx.filter = 'none';
+        }
 
         // Capa 2: núcleo brillante concentrado en el top-center
-        ctx.filter = 'blur(55px)';
+        if (!mobile) {
+          ctx.filter = 'blur(55px)';
+        }
         const innerR = Math.min(width, height) * 0.58;
         const innerGrad = ctx.createRadialGradient(orbX, orbY, 0, orbX, orbY, innerR);
         innerGrad.addColorStop(0,    'rgba(255, 130, 0, 0.95)');
@@ -441,7 +436,9 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
         ctx.beginPath();
         ctx.arc(orbX, orbY, innerR, 0, Math.PI * 2);
         ctx.fill();
-        ctx.filter = 'none';
+        if (!mobile) {
+          ctx.filter = 'none';
+        }
 
         ctx.globalAlpha = 1;
         ctx.globalCompositeOperation = 'source-over';

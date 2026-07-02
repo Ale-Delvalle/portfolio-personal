@@ -95,7 +95,7 @@ export function Hero() {
         const xPosR = sweepProxy.val * rCanvas.width;
         
         const emit = (particlesArr: any[], x: number, y: number) => {
-          const count = Math.floor(Math.random() * 3) + 1; 
+          const count = isMobile ? (Math.random() < 0.4 ? 1 : 0) : (Math.floor(Math.random() * 3) + 1); 
           for (let i = 0; i < count; i++) {
             particlesArr.push({
               x: x + (Math.random() - 0.5) * 15, 

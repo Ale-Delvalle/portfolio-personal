@@ -53,7 +53,6 @@ export function Stack() {
     } else {
       // Mobile: cada elemento se revela al entrar individualmente al viewport
       const elements = [titleRef.current, row1Ref.current, row2Ref.current].filter(Boolean) as HTMLElement[];
-      let revealed = 0;
 
       elements.forEach((el) => {
         ScrollTrigger.create({
@@ -61,16 +60,27 @@ export function Stack() {
           start: 'bottom bottom-=10',
           once: true,
           onEnter: () => {
-            gsap.to(el, {
-              autoAlpha: 1,
-              y: 0,
-              duration: 0.72,
-              ease: 'expo.out',
-              onComplete: () => {
-                revealed++;
-                if (revealed >= elements.length) startFloat();
-              },
-            });
+            if (el === titleRef.current) {
+              gsap.to(el, {
+                autoAlpha: 1,
+                y: 0,
+                duration: 0.72,
+                ease: 'expo.out',
+              });
+            } else {
+              // Fila de pills: animamos el contenedor y sus hijos de forma staggered
+              gsap.to(el, {
+                autoAlpha: 1,
+                y: 0,
+                duration: 0.4,
+                ease: 'power2.out',
+              });
+              const pills = el.children;
+              gsap.fromTo(pills,
+                { scale: 0.8, autoAlpha: 0 },
+                { scale: 1, autoAlpha: 1, duration: 0.6, stagger: 0.05, ease: 'back.out(1.5)' }
+              );
+            }
           },
         });
       });

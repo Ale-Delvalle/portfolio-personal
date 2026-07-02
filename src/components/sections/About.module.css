@@ -107,6 +107,12 @@
   }
 }
 
+@media (max-width: 767px) {
+  .section {
+    padding-top: 4rem !important;
+  }
+}
+
 /* ── Light mode ── */
 :global([data-theme="light"]) .heading {
   background: linear-gradient(135deg, #1A1410 0%, #5C3317 50%, #8C431D 100%);

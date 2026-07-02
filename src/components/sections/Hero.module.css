@@ -92,7 +92,7 @@
   position: absolute;
   top: 10%;
   left: 50%;
-  transform: translate3d(-50%, -20%, -20px);
+  transform: translate(-50%, -20%) translateZ(-20px);
   width: 125%;
   height: 125%;
   background: radial-gradient(circle at center, rgba(255, 107, 0, 0.45) 0%, rgba(255, 167, 38, 0.18) 45%, rgba(0, 0, 0, 0) 70%);
@@ -101,7 +101,6 @@
   pointer-events: none;
   z-index: 1;
   animation: backGlowPulse 4.5s infinite alternate ease-in-out;
-  will-change: transform, opacity;
 }
 
 @keyframes backGlowPulse {
@@ -554,7 +553,7 @@
   content: '';
   position: absolute;
   top: 0;
-  left: 0;
+  left: -150%;
   width: 50%;
   height: 100%;
   background: linear-gradient(
@@ -563,15 +562,14 @@
     rgba(255, 255, 255, 0.4) 50%,
     rgba(255, 255, 255, 0) 100%
   );
-  transform: translate3d(-150%, 0, 0) skewX(-25deg);
+  transform: skewX(-25deg);
   animation: shimmer 8s infinite;
-  will-change: transform;
 }
 
 @keyframes shimmer {
-  0% { transform: translate3d(-150%, 0, 0) skewX(-25deg); }
-  40% { transform: translate3d(250%, 0, 0) skewX(-25deg); }
-  100% { transform: translate3d(250%, 0, 0) skewX(-25deg); }
+  0% { left: -150%; }
+  40% { left: 200%; }
+  100% { left: 200%; }
 }
 
 .secondaryBtn:hover {
@@ -736,10 +734,6 @@
     width: 100% !important;
     flex-wrap: wrap !important;
   }
-  .backGlow {
-    animation: none !important;
-    transform: translate3d(-50%, -20%, -20px) scale(1) !important;
-  }
   .main {
     height: auto !important;
     /* sin min-height: la sección ocupa lo que su contenido necesita */
@@ -821,7 +815,7 @@
 
   /* Adaptar contenedor de imagen en mobile */
   .imageContainer {
-    width: 266px !important;
+    width: 285px !important;
     height: auto !important;
     aspect-ratio: 3 / 4 !important;
     max-height: unset !important;
@@ -858,16 +852,42 @@
     object-position: center center !important;
   }
 
+  /* ─── Botones en columna vertical ─── */
+  .buttonGroup {
+    gap: 0.75rem !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+
   .primaryBtn, .secondaryBtn {
     width: auto !important;
-    padding: 0.75rem 1.5rem !important;
-    font-size: 0.9rem !important;
+    padding: 0.7rem 1.1rem !important;
+    font-size: 0.85rem !important;
+  }
+
+  .buttonRow1, .buttonRow2 {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    width: 100% !important;
+    flex-wrap: nowrap !important;
   }
 
   .btn3dContainer {
     width: auto !important;
     display: flex !important;
     justify-content: center !important;
+  }
+
+  :global([data-theme="dark"]) .btn3dContainer {
+    order: 3;
+  }
+
+  :global([data-theme="dark"]) .socialGroup {
+    order: 4;
   }
 
   .btn3dContainer button {
@@ -881,12 +901,14 @@
 
   /* Social group: fila horizontal siempre */
   .socialGroup {
+    display: flex !important;
     flex-direction: row !important;
+    align-items: center !important;
     border-left: none !important;
     padding-left: 0 !important;
     margin-left: 0 !important;
     gap: 0.75rem !important;
-    padding-top: 0.25rem;
+    padding-top: 0 !important;
   }
 
   .textBlock {
@@ -1073,6 +1095,9 @@
   border-left-color: rgba(140, 67, 29, 0.2);
 }
 
+/* =========================================================
+   Landscape Mobile (Motorola g72 horizontal)
+   ========================================================= */
 @media (max-height: 600px) {
   .imageContainer {
     width: 190px !important;
@@ -1080,7 +1105,6 @@
     aspect-ratio: 3 / 4 !important;
     max-height: unset !important;
     max-width: unset !important;
-    position: relative !important;
     margin: 0 auto !important;
   }
 
@@ -1089,26 +1113,12 @@
     height: 100% !important;
     max-height: unset !important;
     max-width: unset !important;
-    position: relative !important;
-    margin: 0 !important;
-    border-top-left-radius: 50% !important;
-    border-top-right-radius: 50% !important;
-    border-bottom-left-radius: 18px !important;
-    border-bottom-right-radius: 18px !important;
-    overflow: hidden !important;
-    padding: 0 !important;
-    background: rgba(15, 12, 10, 0.45) !important;
-    border: 1px solid rgba(255, 167, 38, 0.28) !important;
-    box-shadow:
-      0 12px 40px rgba(0, 0, 0, 0.45),
-      0 4px 16px rgba(0, 0, 0, 0.3) !important;
+    border-radius: 50% 50% 18px 18px !important;
   }
 
   .profileImage {
     width: 100% !important;
     height: 100% !important;
-    max-height: unset !important;
     object-fit: contain !important;
-    object-position: center center !important;
   }
 }

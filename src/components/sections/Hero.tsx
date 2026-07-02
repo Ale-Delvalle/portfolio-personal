@@ -95,7 +95,7 @@ export function Hero() {
         const xPosR = sweepProxy.val * rCanvas.width;
         
         const emit = (particlesArr: any[], x: number, y: number) => {
-          const count = isMobile ? (Math.random() < 0.4 ? 1 : 0) : (Math.floor(Math.random() * 3) + 1); 
+          const count = Math.floor(Math.random() * 3) + 1; 
           for (let i = 0; i < count; i++) {
             particlesArr.push({
               x: x + (Math.random() - 0.5) * 15, 
@@ -147,7 +147,7 @@ export function Hero() {
       )
       // 5) Botones aparecen en cascada después de la foto
       .fromTo(
-        buttonsRef.current ? Array.from(buttonsRef.current.querySelectorAll(`button, .${styles.btn3dContainer}, .${styles.socialBtn}`)) : [],
+        buttonsRef.current ? Array.from(buttonsRef.current.children) : [],
         { opacity: 0, y: 18, scale: 0.95 },
         { opacity: 1, y: 0, scale: 1, duration: 0.45, stagger: 0.1, ease: "back.out(1.4)", clearProps: "all" },
         "moveUp+=1.6"
@@ -369,10 +369,11 @@ export function Hero() {
                 <a href={cvFile} download="Delvalle-Alexis-CV-full-stack-developer.docx" className={styles.primaryBtn}>
                   Descargar CV
                   <svg className={styles.btnIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
                   </svg>
                 </a>
               </div>
+
               <div className={styles.buttonRow2}>
                 <div ref={contactBtnRef} className={styles.btn3dContainer}>
                   {Array.from({ length: 6 }).map((_, i) => (

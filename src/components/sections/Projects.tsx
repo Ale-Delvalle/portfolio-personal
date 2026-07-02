@@ -18,6 +18,16 @@ import hnp1 from '../../assets/projects/screenshots/H-n-P/1.png';
 import hnp2 from '../../assets/projects/screenshots/H-n-P/2.png';
 import hnp3 from '../../assets/projects/screenshots/H-n-P/3.png';
 import hnp4 from '../../assets/projects/screenshots/H-n-P/4.png';
+import hnp5 from '../../assets/projects/screenshots/H-n-P/5.png';
+import hnp6 from '../../assets/projects/screenshots/H-n-P/6.png';
+import hnp7 from '../../assets/projects/screenshots/H-n-P/7.png';
+import hnp8 from '../../assets/projects/screenshots/H-n-P/8.png';
+import hnp9 from '../../assets/projects/screenshots/H-n-P/9.png';
+import hnp10 from '../../assets/projects/screenshots/H-n-P/10.png';
+import hnp11 from '../../assets/projects/screenshots/H-n-P/11.png';
+import hnp12 from '../../assets/projects/screenshots/H-n-P/12.png';
+import hnp13 from '../../assets/projects/screenshots/H-n-P/13.png';
+
 
 import pb1 from '../../assets/projects/screenshots/Portfolio-basico/1.jpg';
 import pb2 from '../../assets/projects/screenshots/Portfolio-basico/2.jpg';
@@ -91,7 +101,7 @@ const projects: Project[] = [
       'Tests unitarios y de integración con Jest y Supertest'
     ],
     image: hnp1,
-    screenshots: [hnp1, hnp2, hnp3, hnp4],
+    screenshots: [hnp1, hnp2, hnp3, hnp4, hnp5, hnp6, hnp7, hnp8, hnp9, hnp10, hnp11, hnp12, hnp13],
     repoUrl: 'https://github.com/Ale-Delvalle/backend-hearts-and-paws',
   },
   {

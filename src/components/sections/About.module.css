@@ -113,15 +113,3 @@
   }
 }
 
-/* ── Light mode ── */
-:global([data-theme="light"]) .heading {
-  background: linear-gradient(135deg, #1A1410 0%, #5C3317 50%, #8C431D 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: none;
-}
-
-:global([data-theme="light"]) .paragraph {
-  color: rgba(30, 20, 10, 0.78);
-}

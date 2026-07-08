@@ -540,57 +540,6 @@
   transform: translate(2px, -2px);
 }
 
-/* =========================================================
-   Desktop Light Mode Overrides
-   ========================================================= */
-:global([data-theme="light"]) .rowTitle {
-  color: rgba(26, 20, 16, 0.82);
-}
-
-:global([data-theme="light"]) .row:hover .rowTitle {
-  color: #1A1410;
-}
-
-:global([data-theme="light"]) .rowDesc {
-  color: rgba(42, 36, 32, 0.52);
-}
-
-:global([data-theme="light"]) .row {
-  border-bottom: 1px solid rgba(42, 36, 32, 0.1);
-}
-
-:global([data-theme="light"]) .previewFrame {
-  border: 1px solid rgba(140, 67, 29, 0.12);
-  box-shadow: 0 0 0 1px rgba(42, 36, 32, 0.04), 0 24px 60px rgba(42, 36, 32, 0.1);
-  background: #EDE9E2;
-}
-
-:global([data-theme="light"]) .browserBar {
-  background: rgba(42, 36, 32, 0.06);
-  border-bottom: 1px solid rgba(42, 36, 32, 0.08);
-}
-
-:global([data-theme="light"]) .browserUrl {
-  background: rgba(42, 36, 32, 0.04);
-  border: 1px solid rgba(42, 36, 32, 0.08);
-}
-
-:global([data-theme="light"]) .urlText {
-  color: rgba(42, 36, 32, 0.4);
-}
-
-:global([data-theme="light"]) .metaTitle {
-  color: rgba(42, 36, 32, 0.5);
-}
-
-:global([data-theme="light"]) .imgStack {
-  background: #E8E4DE;
-}
-
-:global([data-theme="light"]) .sectionLabel {
-  color: rgba(140, 67, 29, 0.55);
-}
-
 /* ── Scroll indicator ── */
 .scrollIndicator {
   position: absolute;
@@ -612,10 +561,6 @@
 .scrollChar {
   display: inline-block;
   opacity: 0.8;
-}
-
-:global([data-theme="light"]) .headerLine {
-  background: linear-gradient(to right, rgba(140, 67, 29, 0.3), rgba(140, 67, 29, 0.08) 60%, transparent);
 }
 
 /* =========================================================
@@ -714,44 +659,3 @@
   }
 }
 
-/* Modo claro en mobile y elementos expandidos */
-:global([data-theme="light"]) .mobileCard {
-  border: 1px solid rgba(140, 67, 29, 0.18);
-  box-shadow: 0 0 0 1px rgba(42, 36, 32, 0.04), 0 16px 40px rgba(42, 36, 32, 0.1);
-}
-
-:global([data-theme="light"]) .mobileCardOverlay {
-  background: linear-gradient(
-    to top,
-    rgba(248, 246, 242, 0.95) 0%,
-    rgba(248, 246, 242, 0.45) 55%,
-    transparent 100%
-  );
-}
-
-:global([data-theme="light"]) .mobileCardContent h4 {
-  color: #1A1410 !important;
-}
-
-:global([data-theme="light"]) .mobileCardContent p {
-  color: rgba(42, 36, 32, 0.72) !important;
-}
-
-:global([data-theme="light"]) .mobileHdrLine {
-  background: linear-gradient(to right, rgba(140, 67, 29, 0.3), rgba(140, 67, 29, 0.08) 60%, transparent);
-}
-
-:global([data-theme="light"]) .heroClone {
-  background: #F8F6F2;
-  border-color: rgba(140, 67, 29, 0.12);
-  box-shadow: 0 0 0 1px rgba(42, 36, 32, 0.04), 0 24px 60px rgba(42, 36, 32, 0.1);
-}
-
-:global([data-theme="light"]) .heroCloneBrowserBar {
-  background: rgba(42, 36, 32, 0.06);
-  border-bottom: 1px solid rgba(42, 36, 32, 0.08);
-}
-
-:global([data-theme="light"]) .heroImgWrapper {
-  background: #E8E4DE;
-}

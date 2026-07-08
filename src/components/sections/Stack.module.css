@@ -59,23 +59,6 @@
   box-shadow: 0 0 22px rgba(255, 107, 0, 0.38);
 }
 
-/* ── Light mode ── */
-:global([data-theme="light"]) .title {
-  color: #1A1410;
-  text-shadow: none;
-}
-
-:global([data-theme="light"]) .pill {
-  background: rgba(248, 246, 242, 0.88);
-  color: #2A2420;
-  border: 1px solid rgba(140, 67, 29, 0.18);
-  box-shadow: 0 0 12px rgba(140, 67, 29, 0.05);
-}
-
-:global([data-theme="light"]) .pill:hover {
-  box-shadow: 0 0 20px rgba(140, 67, 29, 0.12);
-}
-
 /* ── Mobile ── */
 @media (max-width: 1023px) {
   .stackSection {

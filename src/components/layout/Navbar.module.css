@@ -16,7 +16,6 @@
   animation: fadeInNavbar 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
 }
 
-/* Capa de fondo que difumina físicamente el borde recto (solo en desktop light mode) */
 .navbar::before {
   content: none;
 }
@@ -143,23 +142,6 @@
   text-decoration-color: currentColor;
   text-underline-offset: 3px;
   text-decoration-thickness: 1px;
-}
-
-/* ── Botón de tema ──────────────────────────────── */
-.themeBtn {
-  background: none;
-  border: none;
-  color: #E8A060;
-  cursor: pointer;
-  padding: 0.3rem;
-  padding-left: calc(var(--conn) + 0.625rem);
-  display: flex;
-  align-items: center;
-  transition: color 0.2s ease;
-}
-
-.themeBtn:hover {
-  color: #FFD080;
 }
 
 /* Hamburguesa y Overlay de Menú Móvil */
@@ -296,59 +278,6 @@
   .navList li::after {
     content: none !important;
   }
-
-  .themeBtn {
-    padding-left: 0;
-  }
-}
-
-/* --- DESKTOP LIGHT MODE --- */
-:global([data-theme="light"]) .navbar {
-  background: rgba(248, 246, 242, 0.88);
-  border: 1px solid rgba(255, 167, 38, 0.45);
-  box-shadow: 0 0 25px rgba(255, 107, 0, 0.4), inset 0 0 10px rgba(255, 107, 0, 0.2);
-  --lc: #2A2420;
-}
-
-:global([data-theme="light"]) .link {
-  color: #3D2B1F;
-}
-
-:global([data-theme="light"]) .link:hover {
-  color: #8C431D;
-}
-
-:global([data-theme="light"]) .activeLink {
-  color: #8C431D;
-}
-
-:global([data-theme="light"]) .themeBtn {
-  color: #3D2B1F;
-}
-
-:global([data-theme="light"]) .themeBtn:hover {
-  color: #8C431D;
-}
-
-:global([data-theme="light"]) .hamburgerBtn {
-  color: #3D2B1F;
-}
-
-:global([data-theme="light"]) .hamburgerBtn:hover {
-  color: #8C431D;
-}
-
-:global([data-theme="light"]) .menuOverlay {
-  background: rgba(248, 246, 242, 0.82);
-}
-
-:global([data-theme="light"]) .mobileLink {
-  color: #8C431D;
-  text-shadow: none;
-}
-
-:global([data-theme="light"]) .mobileLink:hover {
-  color: #FFA726;
 }
 
 /* --- TABLET (768px - 1023px) --- */
@@ -381,10 +310,6 @@
   .navList li::before,
   .navList li::after {
     content: none !important;
-  }
-
-  .themeBtn {
-    padding-left: 0;
   }
 
   .navbar {
@@ -427,10 +352,6 @@
 
   .navList {
     display: none !important;
-  }
-
-  .themeBtn {
-    padding: 0.75rem !important;
   }
 
   .navbar {

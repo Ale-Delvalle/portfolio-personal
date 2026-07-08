@@ -305,10 +305,6 @@
   }
 }
 
-:global([data-theme="light"]) .introOverlay {
-  display: none !important;
-}
-
 .roleContainer {
   position: relative;
   display: flex;
@@ -824,13 +820,10 @@
     width: auto !important;
     display: flex !important;
     justify-content: center !important;
-  }
-
-  :global([data-theme="dark"]) .btn3dContainer {
     order: 3;
   }
 
-  :global([data-theme="dark"]) .socialGroup {
+  .socialGroup {
     order: 4;
   }
 
@@ -890,94 +883,6 @@
   }
 }
 
-/* =========================================================
-   Desktop Light Mode Overrides
-   Solo se activan cuando la intro ya terminó (data-intro-done).
-   Durante la intro el fondo es negro = mismos colores que dark mode.
-   ========================================================= */
-/* Estilos de cristal claro y aura suave en modo claro */
-:global([data-theme="light"][data-intro-done]) .imageWrapper {
-  background: rgba(248, 246, 242, 0.45);
-  border-color: rgba(140, 67, 29, 0.25);
-  box-shadow:
-    0 15px 40px rgba(42, 36, 32, 0.12),
-    inset 0 0 20px rgba(140, 67, 29, 0.05);
-}
-
-:global([data-theme="light"][data-intro-done]) .backGlow {
-  background: radial-gradient(circle at center, rgba(140, 67, 29, 0.28) 0%, rgba(255, 167, 38, 0.1) 45%, rgba(0, 0, 0, 0) 70%);
-}
-
-:global([data-theme="light"][data-intro-done]) .profileImage {
-  filter: brightness(1.02) contrast(1.03) drop-shadow(0 5px 12px rgba(42, 36, 32, 0.2)) drop-shadow(0 0 8px rgba(140, 67, 29, 0.15));
-}
-
-/* TextBlock glass claro (sin transición de intro, aparece al hacer scroll) */
-:global([data-theme="light"][data-intro-done]) .textBlock {
-  background: rgba(248, 246, 242, 0.75);
-  border: 1px solid rgba(42, 36, 32, 0.1);
-  border-top: 1px solid rgba(42, 36, 32, 0.15);
-  border-left: 1px solid rgba(42, 36, 32, 0.08);
-  box-shadow: 0 10px 30px rgba(42, 36, 32, 0.08), inset 0 0 20px rgba(140, 67, 29, 0.02);
-}
-
-:global([data-theme="light"][data-intro-done]) .textBlock::before {
-  box-shadow: 0 0 8px rgba(140, 67, 29, 0.3);
-}
-
-:global([data-theme="light"][data-intro-done]) .textBlock:hover {
-  border-color: rgba(140, 67, 29, 0.18);
-  box-shadow: 0 0 28px rgba(140, 67, 29, 0.07), inset 0 0 16px rgba(140, 67, 29, 0.04);
-}
-
-/* Nombre: gradiente oscuro — solo post-intro */
-:global([data-theme="light"][data-intro-done]) .name {
-  background: linear-gradient(135deg, #1A1410 0%, #5C3317 50%, #8C431D 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: none;
-  transition: filter 0.4s ease;
-}
-
-:global([data-theme="light"][data-intro-done]) .role {
-  color: #2A2420;
-  transition: color 0.4s ease;
-}
-
-:global([data-theme="light"][data-intro-done]) .sideTitle {
-  color: #1A1410;
-  transition: color 0.4s ease;
-}
-
-:global([data-theme="light"][data-intro-done]) .sideDesc {
-  color: #4A3527;
-  transition: color 0.4s ease;
-}
-
-:global([data-theme="light"][data-intro-done]) .cardHeader {
-  border-bottom-color: rgba(140, 67, 29, 0.14);
-}
-
-:global([data-theme="light"][data-intro-done]) .cardIcon {
-  background: rgba(140, 67, 29, 0.08);
-  border-color: rgba(140, 67, 29, 0.25);
-  color: #8C431D;
-}
-
-:global([data-theme="light"][data-intro-done]) .tag {
-  color: #5C3317;
-  background: rgba(140, 67, 29, 0.07);
-  border-color: rgba(140, 67, 29, 0.25);
-}
-
-
-
-/* Scroll indicator */
-:global([data-theme="light"][data-intro-done]) .scrollIndicator {
-  color: #8C431D;
-}
-
 @media (max-width: 480px) {
   .name {
     font-size: clamp(1.9rem, 9vw, 2.8rem) !important;
@@ -996,41 +901,6 @@
     width: 38px !important;
     height: 38px !important;
   }
-}
-
-/* Ocultar capa blanca del nombre en modo claro (desktop y mobile) */
-:global([data-theme="light"]) .nameWhiteOverlay {
-  display: none !important;
-}
-
-/* Botón primario en modo claro (desktop y mobile) con glow permanente */
-:global([data-theme="light"][data-intro-done]) .primaryBtn {
-  color: #5C3317;
-  border: 1px solid rgba(255, 167, 38, 0.45);
-  box-shadow: 0 0 25px rgba(255, 107, 0, 0.4), inset 0 0 10px rgba(255, 107, 0, 0.2);
-}
-
-:global([data-theme="light"][data-intro-done]) .primaryBtn:hover {
-  background: rgba(140, 67, 29, 0.07);
-  box-shadow: 0 0 28px rgba(255, 107, 0, 0.5), inset 0 0 12px rgba(255, 107, 0, 0.25);
-  border-color: #FFA726;
-}
-
-/* Social buttons en modo claro */
-:global([data-theme="light"][data-intro-done]) .socialBtn {
-  color: #5C3317;
-  border: 1px solid rgba(255, 167, 38, 0.45);
-  box-shadow: 0 0 25px rgba(255, 107, 0, 0.4), inset 0 0 10px rgba(255, 107, 0, 0.2);
-}
-
-:global([data-theme="light"][data-intro-done]) .socialBtn:hover {
-  background: rgba(140, 67, 29, 0.07);
-  box-shadow: 0 0 28px rgba(255, 107, 0, 0.5), inset 0 0 12px rgba(255, 107, 0, 0.25);
-  border-color: #FFA726;
-}
-
-:global([data-theme="light"][data-intro-done]) .socialGroup {
-  border-left-color: rgba(140, 67, 29, 0.2);
 }
 
 /* =========================================================

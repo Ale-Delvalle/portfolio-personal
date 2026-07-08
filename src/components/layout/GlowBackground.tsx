@@ -28,25 +28,15 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
     let waveTime = 0;
     let rafId: number;
 
-    let waveAlpha = isGallery ? 1 : 0;
     let orbAlpha = isGallery ? 0 : 1;
     let heroOrbAlpha = isGallery ? 1 : 0;
     let transitionStarted = isGallery;
-    let introDoneSet = isGallery;
 
     let scrollEnergy = 0;
     let scrollOrbTime = 0;
     let mobileOrbRamp = 0;
     let scrollTimeoutId: any = null;
     let isScrolling = false;
-
-    const getIsDark = () => {
-      const attr = document.documentElement.getAttribute('data-theme');
-      if (attr) return attr === 'dark';
-      const saved = localStorage.getItem('theme');
-      if (saved) return saved === 'dark';
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
-    };
 
     const handleTransition = () => {
       transitionStarted = true;
@@ -71,10 +61,10 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
     window.addEventListener('hero-move-up', handleTransition);
     window.addEventListener('scroll', handleScroll, true);
 
-    // Mobile dark mode: disparar una vez por sección cuando el 40% es visible
+    // Mobile: disparar una vez por sección cuando el 40% es visible
     const titleObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting && isMobile() && getIsDark()) {
+        if (entry.isIntersecting && isMobile()) {
           mobileOrbRamp = 56; // ~56 frames ≈ 1s de fade-in
           titleObserver.unobserve(entry.target);
         }
@@ -128,14 +118,6 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
       return { x, y };
     };
 
-    const getGlowHeight = (x: number, t: number) => {
-      let h = 127;
-      h += Math.sin(x * 0.01 + t) * 28;
-      h += Math.cos(x * 0.02 - t * 0.7) * 18;
-      h += Math.sin(x * 0.005 + t * 0.5) * 36;
-      return Math.min(182, Math.max(127, h));
-    };
-
     // const particles: Array<{x: number, y: number, vx: number, vy: number, life: number, size: number}> = [];
     
     // Variables para el control de "Bursts" (Ráfagas) y Pausas de 10s
@@ -153,15 +135,6 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
     };
 
     const animate = () => {
-      const isDarkTheme = getIsDark();
-      const isLight = !isDarkTheme;
-
-      // Sincronizar data-intro-done con el estado real del tema
-      if (isDarkTheme && introDoneSet) {
-        document.documentElement.removeAttribute('data-intro-done');
-        introDoneSet = false;
-      }
-
       time += 16;
       globalTimer += 16;
       waveTime += 0.007;
@@ -179,21 +152,11 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
       if (!transitionStarted) orbTime = time;
 
       if (transitionStarted) {
-        waveAlpha = Math.min(1, waveAlpha + 0.015);
         orbAlpha = Math.max(0, orbAlpha - 0.02);
         heroOrbAlpha = Math.min(1, heroOrbAlpha + 0.012);
       }
 
-      // Light theme: fondo transiciona de negro a crema a medida que los orbes se desvanecen
-      if (isLight && transitionStarted) {
-        const t = 1 - orbAlpha;
-        const r = Math.round(248 * t);
-        const g = Math.round(246 * t);
-        const b = Math.round(242 * t);
-        ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-      } else {
-        ctx.fillStyle = '#000000';
-      }
+      ctx.fillStyle = '#000000';
       ctx.fillRect(0, 0, width, height);
 
       const minDim = Math.min(width, height);
@@ -242,38 +205,6 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
       }
 
       // --- 3. DIBUJAR COMETAS / MECHAS ---
-      // Desktop light post-intro: fondo crema con glow cálido sutil en la base
-      if (isLight && orbAlpha === 0) {
-        if (!introDoneSet) {
-          document.documentElement.setAttribute('data-intro-done', 'true');
-          introDoneSet = true;
-        }
-        if (waveAlpha > 0) {
-          ctx.globalAlpha = waveAlpha * (0.1 + scrollEnergy * 0.25);
-          if (!mobile) {
-            ctx.filter = 'blur(50px)';
-          }
-          ctx.beginPath();
-          ctx.moveTo(0, height);
-          for (let x = 0; x <= width; x += 10) {
-            const h = getGlowHeight(x, waveTime);
-            ctx.lineTo(x, height - h * 0.4);
-          }
-          ctx.lineTo(width, height);
-          ctx.closePath();
-          const lightGrad = ctx.createLinearGradient(0, height, 0, height - 80);
-          lightGrad.addColorStop(0, 'rgba(140, 67, 29, 0.7)');
-          lightGrad.addColorStop(0.6, 'rgba(140, 67, 29, 0.2)');
-          lightGrad.addColorStop(1, 'rgba(140, 67, 29, 0)');
-          ctx.fillStyle = lightGrad;
-          ctx.fill();
-          if (!mobile) {
-            ctx.filter = 'none';
-          }
-          ctx.globalAlpha = 1;
-        }
-      }
-
       comets.forEach((comet, index) => {
         const p0 = { x: comet.p0.x * width, y: comet.p0.y * height };
         const p1 = { x: comet.p1.x * width, y: comet.p1.y * height };
@@ -299,7 +230,7 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
               const lightLength = 0.1; 
               const segments = mobile ? 10 : 25; 
 
-              ctx.globalCompositeOperation = isDarkTheme ? 'screen' : 'source-over';
+              ctx.globalCompositeOperation = 'screen';
 
               for (let i = 0; i < segments; i++) {
                 const tCurrent = p - (i * lightLength / segments);
@@ -362,8 +293,8 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
         }
       });
 
-      // --- SCROLL ORBS (dark mode, re-aparecen durante el scroll) ---
-      if (!isLight && transitionStarted && scrollEnergy > 0.01 && !isGallery) {
+      // --- SCROLL ORBS (re-aparecen durante el scroll) ---
+      if (transitionStarted && scrollEnergy > 0.01 && !isGallery) {
         ctx.globalAlpha = scrollEnergy * 0.6;
         ctx.globalCompositeOperation = 'screen';
         if (!mobile) {
@@ -390,9 +321,9 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
         ctx.globalCompositeOperation = 'source-over';
       }
 
-      // --- ORBE HERO (POST-INTRO, solo dark mode) ---
+      // --- ORBE HERO (POST-INTRO) ---
       // Orbe única centrada en el top que ilumina el centro superior e inferior
-      if (!isLight && heroOrbAlpha > 0 && !isGallery) {
+      if (heroOrbAlpha > 0 && !isGallery) {
         const scrollMoveX = Math.sin(scrollOrbTime * 0.0007) * (width * 0.18) * scrollEnergy;
         const scrollMoveY = Math.cos(scrollOrbTime * 0.0005) * (height * 0.1) * scrollEnergy;
         const orbX = width / 2 + scrollMoveX;
@@ -456,9 +387,6 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
       if (scrollTimeoutId) window.clearTimeout(scrollTimeoutId);
       titleObserver.disconnect();
       cancelAnimationFrame(rafId);
-      if (!isGallery) {
-        document.documentElement.removeAttribute('data-intro-done');
-      }
     };
   }, [isGallery]);
 

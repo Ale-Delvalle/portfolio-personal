@@ -1,12 +1,6 @@
 import { useCallback, useState } from 'react';
-// import { Moon, Sun, Menu, X } from 'lucide-react';
 import { Menu, X } from 'lucide-react';
 import styles from './Navbar.module.css';
-
-interface NavbarProps {
-  theme?: 'light' | 'dark';
-  toggleTheme?: () => void;
-}
 
 const NAV_ITEMS = [
   { label: 'Home',          target: 'home'      },
@@ -15,7 +9,7 @@ const NAV_ITEMS = [
   { label: 'Stack',         target: 'stack'     },
 ] as const;
 
-export function Navbar({ /* theme, toggleTheme */ }: NavbarProps) {
+export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const scrollTo = useCallback((id: string) => {
@@ -38,13 +32,7 @@ export function Navbar({ /* theme, toggleTheme */ }: NavbarProps) {
           ))}
         </ul>
 
-        {/* Funcionalidad de cambio de tema comentada para futura re-implementación
-        <button className={styles.themeBtn} onClick={toggleTheme} aria-label="Toggle Theme">
-          {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
-        </button>
-        */}
-
-        <button 
+        <button
           className={styles.hamburgerBtn} 
           onClick={() => setIsOpen(!isOpen)} 
           aria-label="Toggle Menu"

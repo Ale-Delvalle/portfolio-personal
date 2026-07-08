@@ -1,5 +1,4 @@
 
-import { useTheme } from './hooks/useTheme';
 import { Navbar } from './components/layout/Navbar';
 import { GlowBackground } from './components/layout/GlowBackground';
 import { Hero } from './components/sections/Hero';
@@ -13,7 +12,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 function App() {
-  const { theme, toggleTheme } = useTheme();
   const isAnimating   = useRef(false);
   const activeIndexRef = useRef(0);
 
@@ -183,7 +181,7 @@ function App() {
   return (
     <>
       <GlowBackground />
-      <Navbar theme={theme} toggleTheme={toggleTheme} />
+      <Navbar />
       <Hero />
       <About />
       <Projects />

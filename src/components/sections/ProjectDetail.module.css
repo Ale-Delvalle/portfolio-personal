@@ -592,11 +592,3 @@
   .lightboxNav { width: 2.4rem; height: 2.4rem; font-size: 1rem; }
 }
 
-/* ── Light mode ── */
-:global([data-theme="light"]) .detailTitle {
-  background: linear-gradient(135deg, #1A1410 0%, #5C3317 50%, #8C431D 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: none;
-}

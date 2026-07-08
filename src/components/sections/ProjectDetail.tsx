@@ -33,8 +33,32 @@ type Props = {
 export function ProjectDetail({ detail, goBack, outerRef, scrollRef, firstScreenRef, detailHeaderRef }: Props) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  const openLightbox = useCallback((i: number) => setLightboxIndex(i), []);
-  const closeLightbox = useCallback(() => setLightboxIndex(null), []);
+  const openLightbox = useCallback((i: number) => {
+    setLightboxIndex(i);
+    // Push a synthetic history entry so the browser Back button closes the
+    // lightbox first, then the gallery (see popstate listener below).
+    if (!(window.history.state as { lightbox?: boolean } | null)?.lightbox) {
+      window.history.pushState({ projectGallery: true, lightbox: true }, '');
+    }
+  }, []);
+
+  // UI-triggered close (✕ button, backdrop, Escape): hand off to the
+  // browser Back button so it stays the single source of truth for closing.
+  const closeLightbox = useCallback(() => {
+    window.history.back();
+  }, []);
+
+  // Actually close the lightbox when the user presses the browser Back button
+  useEffect(() => {
+    const onPopState = (e: PopStateEvent) => {
+      const state = e.state as { lightbox?: boolean } | null;
+      if (!state?.lightbox && lightboxIndex !== null) {
+        setLightboxIndex(null);
+      }
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, [lightboxIndex]);
 
   const goNext = useCallback(() => {
     if (!detail || lightboxIndex === null) return;

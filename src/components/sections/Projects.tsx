@@ -216,6 +216,11 @@ export function Projects() {
           setSelected(null);
           document.body.style.overflow = '';
           document.documentElement.style.overflow = '';
+          // We're closing via in-app navigation, not the Back button: defuse
+          // the synthetic history entry instead of leaving it dangling.
+          if ((window.history.state as { projectGallery?: boolean } | null)?.projectGallery) {
+            window.history.replaceState(null, '');
+          }
           // Restore main view silently so Projects looks correct on return
           gsap.set(mainRef.current, { x: '0%', autoAlpha: 1 });
           setTimeout(() => {
@@ -518,6 +523,12 @@ export function Projects() {
     document.body.style.overflow = 'hidden';
     document.documentElement.style.overflow = 'hidden';
 
+    // Push a synthetic history entry so the browser Back button closes
+    // the gallery instead of leaving the app (see popstate listener below).
+    if (!(window.history.state as { projectGallery?: boolean } | null)?.projectGallery) {
+      window.history.pushState({ projectGallery: true }, '');
+    }
+
     gsap.killTweensOf([mainRef.current, detailRef.current]);
     if (scrollTlRef.current) { scrollTlRef.current.kill(); scrollTlRef.current = null; }
     gsap.to(scrollIndicatorRef.current, { autoAlpha: 0, duration: 0.25 });
@@ -572,8 +583,8 @@ export function Projects() {
     });
   }, []);
 
-  // ── Go back to projects list ────────────────────────────
-  const goBack = useCallback(() => {
+  // ── Go back to projects list (actual close animation + state reset) ──
+  const closeGallery = useCallback(() => {
     gsap.killTweensOf([mainRef.current, detailRef.current]);
 
     const tl = gsap.timeline();
@@ -592,7 +603,25 @@ export function Projects() {
         onComplete: startScrollBounce,
       });
     });
+  }, [startScrollBounce]);
+
+  // ── UI-triggered close (buttons inside ProjectDetail): hand off to the
+  // browser Back button so it stays the single source of truth for closing.
+  const goBack = useCallback(() => {
+    window.history.back();
   }, []);
+
+  // ── Close the gallery when the user presses the browser Back button ──
+  useEffect(() => {
+    const onPopState = (e: PopStateEvent) => {
+      const state = e.state as { projectGallery?: boolean } | null;
+      if (!state?.projectGallery && selected) {
+        closeGallery();
+      }
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, [selected, closeGallery]);
 
   const active   = projects.find(p => p.id === activeId)!;
   const detail   = selected ?? lastRef.current;

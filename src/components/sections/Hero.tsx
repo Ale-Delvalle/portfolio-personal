@@ -345,11 +345,6 @@ export function Hero() {
             <div ref={imageContainerRef} className={styles.imageContainer}>
               <div ref={glowRef} className={styles.backGlow} />
               <div ref={imageRef} className={styles.imageWrapper}>
-                <div className={styles.particlesContainer}>
-                  {Array.from({ length: 12 }).map((_, i) => (
-                    <span key={i} className={styles.cinematicParticle} />
-                  ))}
-                </div>
                 <img ref={profileImageRef} src={profileImg} alt="Alexis Delvalle" className={styles.profileImage} />
               </div>
             </div>

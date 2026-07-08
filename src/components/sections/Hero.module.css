@@ -141,61 +141,6 @@
   transition: border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
-/* Partículas flotantes cinematográficas */
-.particlesContainer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 3;
-  overflow: hidden;
-}
-
-.cinematicParticle {
-  position: absolute;
-  bottom: -10px;
-  width: 3px;
-  height: 3px;
-  background: #FFA726;
-  border-radius: 50%;
-  filter: drop-shadow(0 0 4px #FF6B00);
-  opacity: 0;
-  animation: floatUp 6s infinite linear;
-}
-
-/* Offsets y retardos para las 12 partículas */
-.cinematicParticle:nth-child(1) { left: 15%; width: 2px; height: 2px; animation-duration: 5s; animation-delay: 0s; }
-.cinematicParticle:nth-child(2) { left: 30%; width: 3px; height: 3px; animation-duration: 7s; animation-delay: 1.5s; }
-.cinematicParticle:nth-child(3) { left: 45%; width: 1.5px; height: 1.5px; animation-duration: 4.5s; animation-delay: 0.5s; }
-.cinematicParticle:nth-child(4) { left: 60%; width: 2.5px; height: 2.5px; animation-duration: 6.5s; animation-delay: 2s; }
-.cinematicParticle:nth-child(5) { left: 75%; width: 3.5px; height: 3.5px; animation-duration: 8s; animation-delay: 1s; }
-.cinematicParticle:nth-child(6) { left: 85%; width: 2px; height: 2px; animation-duration: 5.5s; animation-delay: 3s; }
-.cinematicParticle:nth-child(7) { left: 20%; width: 2.5px; height: 2.5px; animation-duration: 6s; animation-delay: 2.5s; }
-.cinematicParticle:nth-child(8) { left: 40%; width: 3px; height: 3px; animation-duration: 7.5s; animation-delay: 0.8s; }
-.cinematicParticle:nth-child(9) { left: 55%; width: 1.5px; height: 1.5px; animation-duration: 5s; animation-delay: 3.5s; }
-.cinematicParticle:nth-child(10) { left: 70%; width: 2px; height: 2px; animation-duration: 6.2s; animation-delay: 1.2s; }
-.cinematicParticle:nth-child(11) { left: 10%; width: 3px; height: 3px; animation-duration: 6.8s; animation-delay: 4s; }
-.cinematicParticle:nth-child(12) { left: 90%; width: 2px; height: 2px; animation-duration: 5.2s; animation-delay: 2.2s; }
-
-@keyframes floatUp {
-  0% {
-    transform: translateY(0) translateX(0) scale(1);
-    opacity: 0;
-  }
-  10% {
-    opacity: 0.7;
-  }
-  90% {
-    opacity: 0.7;
-  }
-  100% {
-    transform: translateY(-240px) translateX(15px) scale(0.4);
-    opacity: 0;
-  }
-}
-
 /* Imagen de perfil con filtro cinematográfico e iluminación */
 .profileImage {
   width: 100%;
@@ -967,11 +912,6 @@
 
 :global([data-theme="light"][data-intro-done]) .profileImage {
   filter: brightness(1.02) contrast(1.03) drop-shadow(0 5px 12px rgba(42, 36, 32, 0.2)) drop-shadow(0 0 8px rgba(140, 67, 29, 0.15));
-}
-
-:global([data-theme="light"][data-intro-done]) .cinematicParticle {
-  background: #8C431D;
-  filter: drop-shadow(0 0 3px rgba(140, 67, 29, 0.4));
 }
 
 /* TextBlock glass claro (sin transición de intro, aparece al hacer scroll) */

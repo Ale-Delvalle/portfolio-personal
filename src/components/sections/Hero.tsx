@@ -44,7 +44,7 @@ export function Hero() {
 
   useGSAP(() => {
     const isMobile = window.innerWidth < 768;
-    const startY = isMobile ? (window.innerHeight / 2 - 80) : "20vh";
+    const startY = isMobile ? (window.innerHeight / 2 - 80) : (window.innerHeight * 0.2 + 50);
     const startScale = isMobile ? 1.15 : 1.5;
     const endY = isMobile ? 10 : 30;
 

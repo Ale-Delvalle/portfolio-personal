@@ -1,13 +1,10 @@
 
-import { useTheme } from './hooks/useTheme';
 import { Navbar } from './components/layout/Navbar';
 import { GlowBackground } from './components/layout/GlowBackground';
 import { Hero } from './components/sections/Hero';
+import { About } from './components/sections/About';
 import { Stack } from './components/sections/Stack';
-// import { Projects } from './components/sections/Projects';
-// import { ProjectsV1 } from './components/sections/ProjectsV1';
-import { ProjectsV2 } from './components/sections/ProjectsV2';
-
+import { Projects } from './components/sections/Projects';
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -15,8 +12,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 function App() {
-  const { theme, toggleTheme } = useTheme();
-  const isAnimating = useRef(false);
+  const isAnimating   = useRef(false);
   const activeIndexRef = useRef(0);
 
   useEffect(() => {
@@ -34,7 +30,7 @@ function App() {
       history.scrollRestoration = 'manual';
     }
 
-    const sections = ['home', 'proyectos', 'stack'];
+    const sections = ['home', 'about', 'proyectos', 'stack'];
     
     // Maintain the active index across events
     const initialScroll = window.scrollY;
@@ -43,6 +39,21 @@ function App() {
     const handleWheel = (e: WheelEvent) => {
       if (window.innerWidth < 1024) return;
       if (isAnimating.current) return;
+      
+      // Si la galería está abierta, evitamos que cualquier scroll fuera del contenedor propague y mueva el fondo
+      if (document.body.style.overflow === 'hidden') {
+        const path = e.composedPath();
+        const isScrollArea = path.some(el => {
+          if (el instanceof HTMLElement) {
+            return el.className.includes('detailScrollArea');
+          }
+          return false;
+        });
+        if (!isScrollArea) {
+          e.preventDefault();
+        }
+        return;
+      }
       const direction = Math.sign(e.deltaY);
       if (direction === 0) return;
 
@@ -60,6 +71,8 @@ function App() {
     };
 
     const handleScroll = () => {
+      // Si la galería o algún overlay está abierto, ignoramos
+      if (document.body.style.overflow === 'hidden') return;
       // Si estamos en medio de una transición nuestra, ignoramos
       if (isAnimating.current) return;
 
@@ -90,12 +103,15 @@ function App() {
             setTimeout(() => {
               // 3) Justo por debajo del Navbar se renderiza la siguiente sección
               nextEl.scrollIntoView({ behavior: 'instant', block: 'start' });
-              
+
               // Refrescar ScrollTrigger para que las animaciones internas se disparen
               ScrollTrigger.refresh();
-              
+
               // Asegurarnos de que la nueva sección sea visible
               gsap.set(nextEl, { autoAlpha: 1 });
+
+              // Notificar a las secciones qué sección acaba de volverse activa
+              window.dispatchEvent(new CustomEvent('section-entered', { detail: { id: nextSectionId } }));
               
               // Liberar el bloqueo
               setTimeout(() => {
@@ -136,6 +152,7 @@ function App() {
     };
     const handleTouchMove = (e: TouchEvent) => {
       if (window.innerWidth < 1024) return;
+      if (document.body.style.overflow === 'hidden') return;
       if (isAnimating.current) {
         e.preventDefault();
         return;
@@ -164,11 +181,10 @@ function App() {
   return (
     <>
       <GlowBackground />
-      <Navbar theme={theme} toggleTheme={toggleTheme} />
+      <Navbar />
       <Hero />
-      {/* <Projects /> */}
-      {/* <ProjectsV1 /> */}
-      <ProjectsV2 />
+      <About />
+      <Projects />
       <Stack />
     </>
   );

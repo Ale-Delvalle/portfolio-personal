@@ -1,5 +1,5 @@
 .stackSection {
-  padding: 1.5rem 2rem;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -9,265 +9,74 @@
   min-height: 100vh;
 }
 
-.circleContainer {
-  position: relative;
-  width: 100%;
-  max-width: 1100px;
-  height: 480px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-}
-
-
-.titleContainer {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: max-content;
-  z-index: 10;
-}
-
-.titleLayer {
+.title {
   font-family: var(--font-headline);
-  font-size: 6.6rem;
+  font-size: clamp(5rem, 14vw, 9rem);
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  position: absolute;
-  white-space: nowrap;
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-  -webkit-font-smoothing: antialiased;
-}
-
-.titleCenter {
-  position: relative;
-  z-index: 2;
-  color: #ffffff;
-  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 107, 0, 0.4);
-}
-
-.titleTop {
-  color: var(--color-primary, #0066CC);
-  opacity: 0;
-  z-index: 1;
-}
-
-.titleBottom {
-  color: #ffffff;
-  opacity: 0;
-  z-index: 3;
-}
-
-.techPill {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  background: #141416;
-  padding: 0.65rem 1.45rem;
-  border-radius: 30px;
-  box-shadow: 0 0 12px rgba(255, 107, 0, 0.2);
-  font-family: var(--font-headline);
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: #ffffff;
-  z-index: 5;
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255, 167, 38, 0.4);
-  cursor: pointer;
-  will-change: transform, opacity, box-shadow;
-  backface-visibility: hidden;
-  -webkit-font-smoothing: antialiased;
-}
-
-.techPill:hover {
-  z-index: 20;
-}
-
-.secondaryTitle {
-  font-family: var(--font-body);
-  font-size: 1.2rem;
-  color: #ffffff;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-.secondaryStack {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  justify-content: center;
-  font-family: var(--font-body);
-  color: #ffffff;
-}
-
-.secondaryStack p {
-  background: rgba(255, 107, 0, 0.1);
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-weight: 600;
-  border: 1px solid rgba(255, 167, 38, 0.15);
-  transition: background 0.3s ease;
-}
-
-.secondaryStack p:hover {
-  background: rgba(255, 107, 0, 0.2);
-  border-color: rgba(255, 167, 38, 0.3);
-}
-
-/* =========================================================
-   Mobile grid layout (oculto en desktop)
-   ========================================================= */
-.mobilePillGrid {
-  display: none;
-}
-
-.mobilePillTitle {
-  font-family: var(--font-headline);
-  font-size: clamp(3.5rem, 18vw, 5.5rem);
-  font-weight: 800;
-  text-align: center;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  margin: 0 0 2rem;
+  letter-spacing: 0.08em;
   color: #ffffff;
   text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 24px rgba(255, 107, 0, 0.35);
+  margin: 0 0 3rem;
+  text-align: center;
+  will-change: transform, opacity;
 }
 
-.mobilePillsContainer {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
+.pillsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: center;
   width: 100%;
-  max-width: 340px;
-  margin: 0 auto;
+  max-width: 1000px;
 }
 
-.mobilePill {
+.pillRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  will-change: transform, opacity;
+}
+
+.pill {
   background: #141416;
   color: #ffffff;
-  border: 1px solid rgba(255, 167, 38, 0.35);
-  border-radius: 14px;
-  padding: 0.85rem 0.75rem;
+  border: 1px solid rgba(255, 167, 38, 0.4);
+  border-radius: 30px;
+  padding: 0.7rem 1.6rem;
   font-family: var(--font-headline);
-  font-size: 0.88rem;
+  font-size: clamp(0.85rem, 2vw, 1rem);
   font-weight: 700;
-  text-align: center;
-  box-shadow: 0 0 14px rgba(255, 107, 0, 0.12);
-  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+  white-space: nowrap;
+  box-shadow: 0 0 12px rgba(255, 107, 0, 0.2);
+  transition: box-shadow 0.25s ease, transform 0.2s ease;
   cursor: default;
 }
 
-.mobilePill:active {
-  transform: scale(0.96);
+.pill:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 22px rgba(255, 107, 0, 0.38);
 }
 
-/* =========================================================
-   Desktop Light Mode Overrides
-   ========================================================= */
-:global([data-theme="light"]) .titleCenter {
-  color: #1A1410;
-  text-shadow: none;
-}
-
-:global([data-theme="light"]) .techPill {
-  background: rgba(248, 246, 242, 0.88);
-  color: #2A2420;
-  border: 1px solid rgba(140, 67, 29, 0.18);
-  box-shadow: 0 0 12px rgba(140, 67, 29, 0.05);
-}
-
-:global([data-theme="light"]) .techPill:hover {
-  box-shadow: 0 0 18px rgba(140, 67, 29, 0.1);
-}
-
-:global([data-theme="light"]) .secondaryTitle {
-  color: #2A2420;
-}
-
-:global([data-theme="light"]) .secondaryStack {
-  color: #2A2420;
-}
-
-:global([data-theme="light"]) .secondaryStack p {
-  background: rgba(140, 67, 29, 0.06);
-  border: 1px solid rgba(140, 67, 29, 0.14);
-  color: #3D2B1F;
-}
-
-:global([data-theme="light"]) .secondaryStack p:hover {
-  background: rgba(140, 67, 29, 0.1);
-  border-color: rgba(140, 67, 29, 0.22);
-}
-
-/* =========================================================
-   Responsive Overrides for Stack Section
-   ========================================================= */
-
+/* ── Mobile ── */
 @media (max-width: 1023px) {
   .stackSection {
-    height: auto !important;
-    min-height: unset !important;
-    overflow: clip !important;
-    padding: 1rem 1.5rem 4rem 1.5rem !important;
-    justify-content: flex-start !important;
+    min-height: auto;
+    justify-content: flex-start;
+    padding: 5rem 1.25rem 7.5rem;
   }
 
-  /* Ocultar orbital en mobile/tablet */
-  .circleContainer {
-    display: none !important;
+  .pillsWrapper {
+    gap: 0.85rem;
   }
 
-  /* Mostrar grid de pills */
-  .mobilePillGrid {
-    display: flex !important;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    padding: 0 1.5rem;
-    box-sizing: border-box;
+  .pillRow {
+    gap: 0.6rem;
   }
 
-  /* Secundario */
-  .secondaryTitle {
-    font-size: 0.9rem !important;
-    padding: 0 0.75rem !important;
-    margin-top: 2rem !important;
-    text-align: center !important;
+  .pill {
+    padding: 0.6rem 1.1rem;
+    font-size: 0.82rem;
   }
-
-  .secondaryStack {
-    gap: 0.65rem !important;
-    padding: 0 0.75rem !important;
-    justify-content: center !important;
-  }
-
-  .secondaryStack p {
-    font-size: 0.78rem !important;
-    padding: 0.3rem 0.7rem !important;
-  }
-}
-
-/* Estilos de modo claro para mobile */
-:global([data-theme="light"]) .mobilePillTitle {
-  color: #1A1410;
-  text-shadow: none;
-}
-
-:global([data-theme="light"]) .mobilePill {
-  background: rgba(248, 246, 242, 0.88);
-  color: #2A2420;
-  border: 1px solid rgba(140, 67, 29, 0.18);
-  box-shadow: 0 0 12px rgba(140, 67, 29, 0.05);
-}
-
-:global([data-theme="light"]) .mobilePill:active {
-  box-shadow: 0 0 18px rgba(140, 67, 29, 0.1);
 }

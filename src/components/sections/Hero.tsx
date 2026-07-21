@@ -4,13 +4,13 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import pleaseImg from '../../assets/please.png';
-import profileImg from '../../assets/foto-transparente.png';
+import profileImg from '../../assets/foto.png';
+import cvFile from '../../assets/Delvalle-Alexis-CV-full-stack-developer.docx?url';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export function Hero() {
   const nameRef = useRef<HTMLDivElement>(null);
-  const nameWhiteRef = useRef<HTMLSpanElement>(null);
   const roleRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const rightTextRef = useRef<HTMLDivElement>(null);
@@ -20,7 +20,6 @@ export function Hero() {
   const buttonsRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
   const scrollTextRef = useRef<HTMLSpanElement>(null);
-  const welcomeContainerRef = useRef<HTMLDivElement>(null);
   const mobileAccentRef = useRef<HTMLDivElement>(null);
   const introOverlayRef = useRef<HTMLDivElement>(null);
 
@@ -36,16 +35,18 @@ export function Hero() {
   const rotXBtn = useRef<any>(null);
   const rotYBtn = useRef<any>(null);
 
+  // Cinematic profile image refs
+  const glowRef = useRef<HTMLDivElement>(null);
+  const profileImageRef = useRef<HTMLImageElement>(null);
+  const imageContainerRef = useRef<HTMLDivElement>(null);
+
   const [introDone, setIntroDone] = useState(false);
 
   useGSAP(() => {
     const isMobile = window.innerWidth < 768;
-    const startY = isMobile ? (window.innerHeight / 2 - 80) : "20vh";
+    const startY = isMobile ? (window.innerHeight / 2 - 80) : (window.innerHeight * 0.2 + 50);
     const startScale = isMobile ? 1.15 : 1.5;
     const endY = isMobile ? 10 : 30;
-
-    const wipeStart = isMobile ? "moveUp+=0.4" : "+=0.2";
-    const wipeDuration = isMobile ? 0.6 : 0.9;
 
     const tl = gsap.timeline({
       onComplete: () => {
@@ -62,10 +63,9 @@ export function Hero() {
     });
 
     gsap.set(nameContainerRef.current, { zIndex: 51, position: 'relative' });
-    gsap.set(welcomeContainerRef.current, { x: -50, autoAlpha: 0 });
 
     if (isMobile) {
-      gsap.set(imageRef.current, { opacity: 0, scale: 0.92, y: 20 });
+      gsap.set(imageRef.current, { opacity: 0, scale: 0.92, y: -80 });
       gsap.set(rightTextRef.current, { autoAlpha: 0 });
       gsap.set(mobileAccentRef.current, { scaleX: 0, opacity: 0 });
       if (buttonsRef.current) {
@@ -135,8 +135,8 @@ export function Hero() {
       }, "moveUp")
       // 3) Foto: aparece justo cuando el overlay termina de desvanecerse (moveUp+0.8)
       .fromTo(imageRef.current,
-        { opacity: 0, scale: 0.92, y: 20 },
-        { opacity: 1, scale: 1, y: 0, duration: 0.7, ease: "expo.out", clearProps: "opacity,transform" },
+        { opacity: 0, scale: 0.92, y: -80 },
+        { opacity: 1, scale: 1, y: 0, duration: 0.85, ease: "power3.out", clearProps: "opacity,transform" },
         "moveUp+=0.8"
       )
       // 4) Línea naranja: comienza cuando la foto ya está visible (moveUp+1.5)
@@ -157,26 +157,13 @@ export function Hero() {
         { autoAlpha: 0, y: 20 },
         { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out" },
         "moveUp+=1.7"
-      )
-      // 7) Role → Bienvenido
-      .to(roleRef.current, {
-        x: 50,
-        autoAlpha: 0,
-        duration: 0.45,
-        ease: "power2.in"
-      }, "moveUp+=2")
-      .to(welcomeContainerRef.current, {
-        x: 0,
-        autoAlpha: 1,
-        duration: 0.45,
-        ease: "power2.out"
-      }, "moveUp+=2.45");
+      );
     } else {
       // --- SECUENCIA ORIGINAL PARA PC Y TABLET ---
-      // 3) Imagen aparece con desplazamiento suave (Fade + Slide)
+      // 3) Imagen aparece con desplazamiento desde arriba hacia abajo (Fade + Slide)
       tl.fromTo(imageRef.current, 
-        { autoAlpha: 0, y: 50 },
-        { autoAlpha: 1, y: 0, duration: 1, ease: "power3.out" },
+        { autoAlpha: 0, y: -150 },
+        { autoAlpha: 1, y: 0, duration: 1.2, ease: "power3.out" },
         "-=0.5"
       )
       // 4) Textos y botones
@@ -187,19 +174,6 @@ export function Hero() {
         stagger: 0.15,
         ease: "power3.out"
       }, "-=1")
-      // 4.5) Bienvenido a mi portfolio reemplaza el role de izquierda a derecha
-      .to(roleRef.current, {
-        x: 50,
-        autoAlpha: 0,
-        duration: 0.5,
-        ease: "power2.in"
-      }, "moveUp+=2")
-      .to(welcomeContainerRef.current, {
-        x: 0,
-        autoAlpha: 1,
-        duration: 0.5,
-        ease: "power2.out"
-      }, ">")
       // 5) Indicador de Scroll
       .fromTo(scrollIndicatorRef.current,
         { autoAlpha: 0, y: -10 },
@@ -207,26 +181,7 @@ export function Hero() {
         "-=0.5"
       );
     }
-    const isLightTheme = document.documentElement.getAttribute('data-theme') === 'light';
 
-    // 6) Barrido del nombre: de degradado brillante a blanco, de derecha a izquierda
-    if (!isLightTheme) {
-      tl.addLabel("nameWipe", wipeStart)
-      .fromTo(nameWhiteRef.current,
-        { clipPath: 'inset(0 100% 0 0)' },
-        { clipPath: 'inset(0 0% 0 0)', textShadow: 'none', duration: wipeDuration, ease: 'power2.inOut' },
-        "nameWipe"
-      )
-      .call(() => {
-        if (document.documentElement.getAttribute('data-theme') === 'dark' && nameRef.current) {
-          gsap.to(nameRef.current, {
-            filter: 'drop-shadow(0 4px 20px rgba(255, 107, 0, 0))',
-            duration: 0.4,
-            ease: 'power2.inOut',
-          });
-        }
-      }, [], "nameWipe+=" + (wipeDuration * 0.6));
-    }
 
     // --- MOUSE PARALLAX (Botón Contactame) ---
     xToBtn.current = gsap.quickTo(contactBtnRef.current, "x", { duration: 0.8, ease: "power3" });
@@ -375,54 +330,110 @@ export function Hero() {
               <canvas ref={nameCanvasRef} className={styles.introSparksCanvas} />
             </div>
             Alexis Delvalle
-            <span ref={nameWhiteRef} className={styles.nameWhiteOverlay} aria-hidden="true">
-              Alexis Delvalle
-            </span>
           </div>
           <div className={styles.roleContainer}>
             <div className={styles.introSparksContainer}>
               <canvas ref={roleCanvasRef} className={styles.introSparksCanvas} />
             </div>
-            <div ref={roleRef} className={styles.role}>Fullstack developer and backend specialist</div>
-            <div ref={welcomeContainerRef} className={styles.welcomeText}>Bienvenido a mi portfolio</div>
+            <div ref={roleRef} className={styles.role}>Full Stack Developer · Backend con NestJS & TypeScript · Human first.</div>
           </div>
           <div ref={mobileAccentRef} className={styles.mobileAccentLine} />
         </div>
 
         <div className={styles.textsContainer}>
           <div className={styles.leftColumn}>
-            <div ref={imageRef} className={styles.imageWrapper}>
-              <img src={profileImg} alt="Alexis Delvalle" className={styles.profileImage} />
+            <div ref={imageContainerRef} className={styles.imageContainer}>
+              <div ref={glowRef} className={styles.backGlow} />
+              <div ref={imageRef} className={styles.imageWrapper}>
+                <img ref={profileImageRef} src={profileImg} alt="Alexis Delvalle" className={styles.profileImage} />
+              </div>
             </div>
             <div ref={buttonsRef} className={styles.buttonGroup}>
-              <button className={styles.primaryBtn}>Revisar proyectos</button>
-              <a href="/cv-alexis-delvalle.pdf" download className={styles.primaryBtn}>Descargar CV</a>
-              <div ref={contactBtnRef} className={styles.btn3dContainer}>
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className={styles.btnLayer} style={{ transform: `translateZ(${-i * 2}px)` }}></div>
-                ))}
-                <button className={styles.secondaryBtn}>
-                  Contáctame 
-                  <span className={styles.emojiWrapper}>
-                    <span className={styles.emojis}>👁️👁️</span>
-                    <img src={pleaseImg} alt="Please" className={styles.pleaseImg} />
-                  </span>
+              <div className={styles.buttonRow1}>
+                <button
+                  className={styles.primaryBtn}
+                  onClick={() => {
+                    window.dispatchEvent(new CustomEvent('navigate', { detail: { id: 'proyectos' } }));
+                  }}
+                >
+                  Revisar proyectos
+                  <svg className={styles.btnIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                  </svg>
                 </button>
+                <a href={cvFile} download="Delvalle-Alexis-CV-full-stack-developer.docx" className={styles.primaryBtn}>
+                  Descargar CV
+                  <svg className={styles.btnIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                  </svg>
+                </a>
+              </div>
+
+              <div className={styles.buttonRow2}>
+                <div ref={contactBtnRef} className={styles.btn3dContainer}>
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className={styles.btnLayer} style={{ transform: `translateZ(${-i * 2}px)` }}></div>
+                  ))}
+                  <a href="mailto:alexisdelvalle137@gmail.com" className={styles.secondaryBtn}>
+                    Contáctame
+                    <span className={styles.emojiWrapper}>
+                      <span className={styles.emojis}>👁️👁️</span>
+                      <img src={pleaseImg} alt="Please" className={styles.pleaseImg} />
+                    </span>
+                  </a>
+                </div>
+                <div className={styles.socialGroup}>
+                  <a href="https://www.linkedin.com/in/alexis-delvalle-283081370/" target="_blank" rel="noopener noreferrer" className={styles.socialBtn} aria-label="LinkedIn">
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                  </a>
+                  <a href="https://github.com/Ale-Delvalle" target="_blank" rel="noopener noreferrer" className={styles.socialBtn} aria-label="GitHub">
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                      <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+                    </svg>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
 
           <div ref={rightTextRef} className={styles.rightColumn}>
             <div className={styles.textBlock}>
-              <h2 className={styles.sideTitle}>Mi perfil profesional</h2>
+              <div className={styles.cardHeader}>
+                <span className={styles.cardIcon}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
+                    <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+                  </svg>
+                </span>
+                <h2 className={styles.sideTitle}>Mi perfil profesional</h2>
+              </div>
               <p className={styles.sideDesc}>
-                Soy un full stack developer impulsado por la curiosidad y al aprendizaje. Aunque tengo un gusto especial por el backend he trabajado en el front end, tanto en PC y mobile.
+                Estoy enfocado en el desarrollo backend, y desarrollo aplicaciones full stack de principio a fin: desde el diseño del modelo de datos y la API REST hasta la integración de servicios externos y el cliente web.
               </p>
+              <div className={styles.tagRow}>
+                <span className={styles.tag}>NodeJS</span>
+                <span className={styles.tag}>PostgreSQL</span>
+                <span className={styles.tag}>MongoDB</span>
+                <span className={styles.tag}>React</span>
+                <span className={styles.tag}>React Native</span>
+                <span className={styles.tag}>CSS</span>
+                <span className={styles.tag}>Docker</span>
+              </div>
             </div>
             <div className={styles.textBlock}>
-              <h2 className={styles.sideTitle}>Un poco de mi</h2>
+              <div className={styles.cardHeader}>
+                <span className={styles.cardIcon}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                  </svg>
+                </span>
+                <h2 className={styles.sideTitle}>¿Cómo trabajo?</h2>
+              </div>
               <p className={styles.sideDesc}>
-                Disfruto crear aplicaciones pero mucho más formar lazos humanos y profesionales, una buena comunicacion y un ambiente laboral ameno en pro de crecer y conseguir nuestros objetivos.
+                
+                Comunicación directa y constante, empatía, SCRUM, documentación y código limpio para entregar proyectos mantenibles y escalables.
               </p>
             </div>
           </div>

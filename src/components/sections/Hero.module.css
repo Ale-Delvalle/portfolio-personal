@@ -73,29 +73,85 @@
   }
 }
 
-.imageWrapper {
-  width: 100%;
-  max-height: 35vh;
+/* Contenedor principal de la imagen que permite efectos 3D de paralaje */
+.imageContainer {
+  position: relative;
   display: flex;
   justify-content: center;
-  align-items: center;
-  position: relative;
+  align-items: flex-end;
+  width: 100%;
+  max-width: 230px;
+  max-height: 38vh;
+  perspective: 1200px;
+  transform-style: preserve-3d;
+  z-index: 5;
 }
 
+/* Aura de luz trasera (Rim Light / Contraluz) que sobresale del arco */
+.backGlow {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -20%) translateZ(-20px);
+  width: 125%;
+  height: 125%;
+  background: radial-gradient(circle at center, rgba(255, 107, 0, 0.45) 0%, rgba(255, 167, 38, 0.18) 45%, rgba(0, 0, 0, 0) 70%);
+  border-radius: 50%;
+  filter: blur(35px);
+  pointer-events: none;
+  z-index: 1;
+  animation: backGlowPulse 4.5s infinite alternate ease-in-out;
+}
+
+@keyframes backGlowPulse {
+  0% {
+    opacity: 0.8;
+    transform: translate(-50%, -20%) translateZ(-20px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -20%) translateZ(-20px) scale(1.08);
+  }
+}
+
+/* Contenedor del arco con fondo de vidrio semi-transparente */
+.imageWrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  position: relative;
+  background: rgba(15, 12, 10, 0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top-left-radius: 50%;
+  border-top-right-radius: 50%;
+  border-bottom-left-radius: 18px;
+  border-bottom-right-radius: 18px;
+  overflow: hidden;
+  padding: 0;
+  border: 1.5px solid rgba(255, 167, 38, 0.28);
+  box-shadow:
+    0 15px 45px rgba(0, 0, 0, 0.5),
+    inset 0 0 25px rgba(255, 107, 0, 0.12);
+  z-index: 2;
+  transform-style: preserve-3d;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Imagen de perfil con filtro cinematográfico e iluminación */
 .profileImage {
   width: 100%;
   height: 100%;
-  max-height: 35vh;
+  max-height: 33vh;
   object-fit: contain;
   position: relative;
-  z-index: 2;
-  animation: floatProfile 6s ease-in-out infinite;
-}
-
-@keyframes floatProfile {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-12px); }
-  100% { transform: translateY(0px); }
+  z-index: 4;
+  transform: translateZ(20px) scale(1.03);
+  filter: brightness(1.05) contrast(1.06) drop-shadow(0 5px 15px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 12px rgba(255, 107, 0, 0.22));
+  pointer-events: none;
+  transition: filter 0.3s ease;
 }
 
 
@@ -144,33 +200,67 @@
   }
 }
 
+/* Card header: icon + title inline */
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.65rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid rgba(255, 167, 38, 0.12);
+}
+
+.cardIcon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: rgba(255, 107, 0, 0.12);
+  border: 1px solid rgba(255, 167, 38, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #FFA726;
+}
+
+/* Skill tags row */
+.tagRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.8rem;
+}
+
+.tag {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #FFA726;
+  background: rgba(255, 107, 0, 0.1);
+  border: 1px solid rgba(255, 167, 38, 0.3);
+  border-radius: 999px;
+  padding: 0.22rem 0.7rem;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
 /* Typography & Colors */
 .sideTitle {
   font-family: var(--font-headline);
-  font-size: 1.8rem;
-  font-weight: 800;
+  font-size: 1.15rem;
+  font-weight: 700;
   color: #ffffff;
-  margin-top: 0;
-  margin-bottom: 0.5rem;
-}
-
-.sideTitleLarge {
-  font-family: var(--font-headline);
-  font-size: 1.8rem;
-  font-weight: 800;
-  color: #ffffff;
-  margin-top: 0;
-  margin-bottom: 0.5rem;
+  margin: 0;
+  line-height: 1.2;
 }
 
 .sideDesc {
   font-family: var(--font-body);
-  font-size: 1.05rem;
-  color: #ffffff;
-  font-weight: 300;
-  line-height: 1.5;
-  margin-top: 0;
-  margin-bottom: 0;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.78);
+  font-weight: 400;
+  line-height: 1.6;
+  margin: 0;
 }
 
 .nameContainer {
@@ -215,10 +305,6 @@
   }
 }
 
-:global([data-theme="light"]) .introOverlay {
-  display: none !important;
-}
-
 .roleContainer {
   position: relative;
   display: flex;
@@ -228,23 +314,7 @@
   margin-top: 0.25rem;
 }
 
-.welcomeText {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: var(--font-headline);
-  font-size: clamp(1rem, 2.5vw, 1.8rem);
-  font-weight: 800;
-  color: #ffffff;
-  white-space: nowrap;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-}
+
 
 .name {
   position: relative;
@@ -308,10 +378,59 @@
 /* Buttons */
 .buttonGroup {
   display: flex;
-  gap: 2.5rem; /* 40px gap for parallax boundary limit */
+  gap: 1rem;
   margin-top: 0;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
+}
+
+.buttonRow1, .buttonRow2 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btnIcon {
+  width: 1em;
+  height: 1em;
+  margin-left: 0.45rem;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.socialGroup {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.6rem;
+  padding-left: 1.25rem;
+  border-left: 1px solid rgba(255, 167, 38, 0.2);
+  margin-left: 0.5rem;
+}
+
+.socialBtn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 167, 38, 0.45);
+  background: transparent;
+  color: #FFA726;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.socialBtn:hover {
+  background: rgba(255, 107, 0, 0.15);
+  box-shadow: 0 0 25px rgba(255, 107, 0, 0.4), inset 0 0 10px rgba(255, 107, 0, 0.2);
+  border-color: #FFA726;
+  transform: translateY(-2px);
 }
 
 .primaryBtn, .secondaryBtn {
@@ -536,6 +655,25 @@
    ========================================================= */
 
 @media (max-width: 1023px) {
+  .emojiWrapper {
+    display: none !important;
+  }
+  .buttonGroup {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
+  }
+  .buttonRow1, .buttonRow2 {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
+    flex-wrap: wrap !important;
+  }
   .main {
     height: auto !important;
     /* sin min-height: la sección ocupa lo que su contenido necesita */
@@ -602,9 +740,7 @@
     font-size: 1.05rem !important;
   }
 
-  .welcomeText {
-    font-size: 1.05rem !important;
-  }
+
 
   /* ─── Línea naranja visible en mobile ─── */
   .mobileAccentLine {
@@ -617,32 +753,35 @@
     align-items: center !important;
   }
 
-  .imageWrapper {
-    width: 170px !important;
-    height: 170px !important;
+  /* Adaptar contenedor de imagen en mobile */
+  .imageContainer {
+    width: 285px !important;
+    height: auto !important;
+    aspect-ratio: 3 / 4 !important;
     max-height: unset !important;
+    max-width: unset !important;
     position: relative !important;
     margin: 0 auto !important;
-    border-radius: 50% !important;
-    overflow: hidden !important;
   }
 
   .imageWrapper {
-    border: 2px solid rgba(255, 107, 0, 0.3);
-    box-shadow: 0 0 28px rgba(255, 107, 0, 0.18);
-  }
-
-  .imageWrapper::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 75%;
-    height: 22px;
-    background: radial-gradient(ellipse, rgba(255, 107, 0, 0.32) 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
+    width: 100% !important;
+    height: 100% !important;
+    max-height: unset !important;
+    max-width: unset !important;
+    position: relative !important;
+    margin: 0 !important;
+    border-top-left-radius: 50% !important;
+    border-top-right-radius: 50% !important;
+    border-bottom-left-radius: 18px !important;
+    border-bottom-right-radius: 18px !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    background: rgba(15, 12, 10, 0.45) !important;
+    border: 1px solid rgba(255, 167, 38, 0.28) !important;
+    box-shadow:
+      0 12px 40px rgba(0, 0, 0, 0.45),
+      0 4px 16px rgba(0, 0, 0, 0.3) !important;
   }
 
   .profileImage {
@@ -650,7 +789,7 @@
     height: 100% !important;
     max-height: unset !important;
     object-fit: contain !important;
-    object-position: center top !important;
+    object-position: center center !important;
   }
 
   /* ─── Botones en columna vertical ─── */
@@ -662,26 +801,51 @@
   }
 
   .primaryBtn, .secondaryBtn {
+    width: auto !important;
+    padding: 0.7rem 1.1rem !important;
+    font-size: 0.85rem !important;
+  }
+
+  .buttonRow1, .buttonRow2 {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
     width: 100% !important;
-    max-width: 280px !important;
-    padding: 0.75rem 1.5rem !important;
-    font-size: 0.9rem !important;
+    flex-wrap: nowrap !important;
   }
 
   .btn3dContainer {
-    width: 100% !important;
-    max-width: 280px !important;
+    width: auto !important;
     display: flex !important;
     justify-content: center !important;
+    order: 3;
+  }
+
+  .socialGroup {
+    order: 4;
   }
 
   .btn3dContainer button {
-    width: 100% !important;
+    width: auto !important;
   }
 
   /* Sin capas 3D en mobile (performance) */
   .btnLayer {
     display: none !important;
+  }
+
+  /* Social group: fila horizontal siempre */
+  .socialGroup {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    border-left: none !important;
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+    gap: 0.75rem !important;
+    padding-top: 0 !important;
   }
 
   .textBlock {
@@ -690,11 +854,21 @@
   }
 
   .sideTitle {
-    font-size: 1.35rem !important;
+    font-size: 1.05rem !important;
   }
 
   .sideDesc {
-    font-size: 0.9rem !important;
+    font-size: 0.88rem !important;
+  }
+
+  .cardIcon {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  .tag {
+    font-size: 0.68rem !important;
+    padding: 0.18rem 0.55rem !important;
   }
 
   /* ─── Scroll indicator en flujo normal ─── */
@@ -705,65 +879,8 @@
     transform: none !important;
     opacity: 1 !important;
     margin: 0.5rem auto 0 !important;
-    padding-bottom: 2rem !important;
+    padding-bottom: 1rem !important;
   }
-}
-
-/* =========================================================
-   Desktop Light Mode Overrides
-   Solo se activan cuando la intro ya terminó (data-intro-done).
-   Durante la intro el fondo es negro = mismos colores que dark mode.
-   ========================================================= */
-/* TextBlock glass claro (sin transición de intro, aparece al hacer scroll) */
-:global([data-theme="light"][data-intro-done]) .textBlock {
-  background: rgba(248, 246, 242, 0.75);
-  border: 1px solid rgba(42, 36, 32, 0.1);
-  border-top: 1px solid rgba(42, 36, 32, 0.15);
-  border-left: 1px solid rgba(42, 36, 32, 0.08);
-  box-shadow: 0 10px 30px rgba(42, 36, 32, 0.08), inset 0 0 20px rgba(140, 67, 29, 0.02);
-}
-
-:global([data-theme="light"][data-intro-done]) .textBlock::before {
-  box-shadow: 0 0 8px rgba(140, 67, 29, 0.3);
-}
-
-:global([data-theme="light"][data-intro-done]) .textBlock:hover {
-  border-color: rgba(140, 67, 29, 0.18);
-  box-shadow: 0 0 28px rgba(140, 67, 29, 0.07), inset 0 0 16px rgba(140, 67, 29, 0.04);
-}
-
-/* Nombre: gradiente oscuro — solo post-intro */
-:global([data-theme="light"][data-intro-done]) .name {
-  background: linear-gradient(135deg, #1A1410 0%, #5C3317 50%, #8C431D 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: none;
-  transition: filter 0.4s ease;
-}
-
-:global([data-theme="light"][data-intro-done]) .role,
-:global([data-theme="light"][data-intro-done]) .welcomeText {
-  color: #2A2420;
-  transition: color 0.4s ease;
-}
-
-:global([data-theme="light"][data-intro-done]) .sideTitle,
-:global([data-theme="light"][data-intro-done]) .sideTitleLarge {
-  color: #1A1410;
-  transition: color 0.4s ease;
-}
-
-:global([data-theme="light"][data-intro-done]) .sideDesc {
-  color: #3D2B1F;
-  transition: color 0.4s ease;
-}
-
-
-
-/* Scroll indicator */
-:global([data-theme="light"][data-intro-done]) .scrollIndicator {
-  color: #8C431D;
 }
 
 @media (max-width: 480px) {
@@ -780,22 +897,36 @@
     padding: 0.55rem 1rem !important;
     font-size: 0.82rem !important;
   }
+  .socialBtn {
+    width: 38px !important;
+    height: 38px !important;
+  }
 }
 
-/* Ocultar capa blanca del nombre en modo claro (desktop y mobile) */
-:global([data-theme="light"]) .nameWhiteOverlay {
-  display: none !important;
-}
+/* =========================================================
+   Landscape Mobile (Motorola g72 horizontal)
+   ========================================================= */
+@media (max-height: 600px) {
+  .imageContainer {
+    width: 190px !important;
+    height: auto !important;
+    aspect-ratio: 3 / 4 !important;
+    max-height: unset !important;
+    max-width: unset !important;
+    margin: 0 auto !important;
+  }
 
-/* Botón primario en modo claro (desktop y mobile) con glow permanente */
-:global([data-theme="light"][data-intro-done]) .primaryBtn {
-  color: #5C3317;
-  border: 1px solid rgba(255, 167, 38, 0.45);
-  box-shadow: 0 0 25px rgba(255, 107, 0, 0.4), inset 0 0 10px rgba(255, 107, 0, 0.2);
-}
+  .imageWrapper {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: unset !important;
+    max-width: unset !important;
+    border-radius: 50% 50% 18px 18px !important;
+  }
 
-:global([data-theme="light"][data-intro-done]) .primaryBtn:hover {
-  background: rgba(140, 67, 29, 0.07);
-  box-shadow: 0 0 28px rgba(255, 107, 0, 0.5), inset 0 0 12px rgba(255, 107, 0, 0.25);
-  border-color: #FFA726;
+  .profileImage {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+  }
 }

@@ -10,13 +10,12 @@
   --gap:  2.75rem;                     /* separación entre ítems         */
 
   position: fixed;
-  z-index: 100;
+  z-index: 1100;
   display: flex;
   transition: background 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   animation: fadeInNavbar 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
 }
 
-/* Capa de fondo que difumina físicamente el borde recto (solo en desktop light mode) */
 .navbar::before {
   content: none;
 }
@@ -122,7 +121,7 @@
   font-weight: 700;
   letter-spacing: 0.18em;
   text-decoration: none;
-  color: #8C431D;
+  color: #E8A060;
   white-space: nowrap;
   transition: opacity 0.2s ease, color 0.2s ease;
   background: none;
@@ -133,33 +132,16 @@
 
 .link:hover {
   opacity: 1;
-  color: #FFA726;
+  color: #FFD080;
 }
 
 .activeLink {
   opacity: 1;
-  color: #FFA726;
+  color: #FFD080;
   text-decoration: underline;
   text-decoration-color: currentColor;
   text-underline-offset: 3px;
   text-decoration-thickness: 1px;
-}
-
-/* ── Botón de tema ──────────────────────────────── */
-.themeBtn {
-  background: none;
-  border: none;
-  color: #8C431D;
-  cursor: pointer;
-  padding: 0.3rem;
-  padding-left: calc(var(--conn) + 0.625rem);
-  display: flex;
-  align-items: center;
-  transition: color 0.2s ease;
-}
-
-.themeBtn:hover {
-  color: #FFA726;
 }
 
 /* Hamburguesa y Overlay de Menú Móvil */
@@ -173,11 +155,11 @@
   padding: 0;
   transition: transform 0.2s ease, color 0.2s ease;
   z-index: 2001;
-  color: #8C431D;
+  color: #E8A060;
 }
 
 .hamburgerBtn:hover {
-  color: #FFA726;
+  color: #FFD080;
 }
 
 .menuOverlay {
@@ -275,11 +257,12 @@
     align-items: center;
     gap: 2rem;
     padding: 0.75rem 2rem;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(12px);
+    background: rgba(4, 2, 1, 0.72);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-radius: 9999px;
-    border: 1px solid #8C431D;
-    box-shadow: 0 0 15px rgba(140, 67, 29, 0.6);
+    border: 1px solid rgba(200, 100, 40, 0.7);
+    box-shadow: 0 0 20px rgba(140, 67, 29, 0.55), inset 0 0 12px rgba(0, 0, 0, 0.4);
   }
 
   .navList {
@@ -295,59 +278,6 @@
   .navList li::after {
     content: none !important;
   }
-
-  .themeBtn {
-    padding-left: 0;
-  }
-}
-
-/* --- DESKTOP LIGHT MODE --- */
-:global([data-theme="light"]) .navbar {
-  background: rgba(248, 246, 242, 0.88);
-  border: 1px solid rgba(255, 167, 38, 0.45);
-  box-shadow: 0 0 25px rgba(255, 107, 0, 0.4), inset 0 0 10px rgba(255, 107, 0, 0.2);
-  --lc: #2A2420;
-}
-
-:global([data-theme="light"]) .link {
-  color: #3D2B1F;
-}
-
-:global([data-theme="light"]) .link:hover {
-  color: #8C431D;
-}
-
-:global([data-theme="light"]) .activeLink {
-  color: #8C431D;
-}
-
-:global([data-theme="light"]) .themeBtn {
-  color: #3D2B1F;
-}
-
-:global([data-theme="light"]) .themeBtn:hover {
-  color: #8C431D;
-}
-
-:global([data-theme="light"]) .hamburgerBtn {
-  color: #3D2B1F;
-}
-
-:global([data-theme="light"]) .hamburgerBtn:hover {
-  color: #8C431D;
-}
-
-:global([data-theme="light"]) .menuOverlay {
-  background: rgba(248, 246, 242, 0.82);
-}
-
-:global([data-theme="light"]) .mobileLink {
-  color: #8C431D;
-  text-shadow: none;
-}
-
-:global([data-theme="light"]) .mobileLink:hover {
-  color: #FFA726;
 }
 
 /* --- TABLET (768px - 1023px) --- */
@@ -380,10 +310,6 @@
   .navList li::before,
   .navList li::after {
     content: none !important;
-  }
-
-  .themeBtn {
-    padding-left: 0;
   }
 
   .navbar {
@@ -426,10 +352,6 @@
 
   .navList {
     display: none !important;
-  }
-
-  .themeBtn {
-    padding: 0.75rem !important;
   }
 
   .navbar {

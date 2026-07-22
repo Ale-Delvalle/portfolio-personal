@@ -364,7 +364,7 @@
 
 .role {
   font-size: clamp(1rem, 2.5vw, 1.8rem);
-  font-weight: 800;
+  font-weight: 200;
   color: #ffffff;
   text-align: center;
   letter-spacing: normal;

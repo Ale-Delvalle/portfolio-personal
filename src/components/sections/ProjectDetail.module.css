@@ -105,14 +105,6 @@
   position: relative;
 }
 
-.titleAccent {
-  width: 3rem;
-  height: 3px;
-  background: linear-gradient(90deg, #FF6B00, #FFA726);
-  border-radius: 2px;
-  margin-bottom: 0.25rem;
-}
-
 .detailTitle {
   font-family: "Alex Brush", cursive;
   font-size: clamp(2.8rem, 6vw, 5.5rem);

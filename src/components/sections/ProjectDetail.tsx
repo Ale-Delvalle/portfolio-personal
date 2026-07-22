@@ -90,7 +90,6 @@ export function ProjectDetail({ detail, goBack, outerRef, scrollRef, firstScreen
 
             {/* ── Header ── */}
             <div className={styles.detailHeader} ref={detailHeaderRef}>
-              <div className={styles.titleAccent} />
               <h2 className={styles.detailTitle}>{detail.title}</h2>
               <p className={styles.detailDesc}>{detail.description}</p>
 

@@ -467,35 +467,36 @@ export function Projects() {
       if (!frame) return;
 
       // gamma: inclinación izquierda-derecha. beta: adelante-atrás (compensamos 45° de sostenimiento natural)
-      const gamma = Math.min(Math.max(e.gamma ?? 0, -25), 25);
-      const beta  = Math.min(Math.max((e.beta ?? 0) - 45, -25), 25);
+      // Rango de clamp chico (±14°) para que el efecto máximo se alcance con apenas mover el teléfono
+      const gamma = Math.min(Math.max(e.gamma ?? 0, -14), 14);
+      const beta  = Math.min(Math.max((e.beta ?? 0) - 45, -14), 14);
 
       (window as any).__gyroActive = true;
 
       gsap.to(frame, {
-        rotateX: beta  * 0.18,
-        rotateY: gamma * 0.22,
+        rotateX: beta  * 0.85,
+        rotateY: gamma * 1.1,
         transformPerspective: 1000,
-        duration: 0.7,
+        duration: 0.35,
         ease: 'power2.out',
         overwrite: 'auto',
       });
 
       const imgs = Array.from(frame.querySelectorAll<HTMLElement>(`.${styles.previewImg}`));
       if (imgs.length) gsap.to(imgs, {
-        x: gamma * 0.25,
-        y: beta  * 0.15,
-        duration: 0.8,
+        x: gamma * 1.3,
+        y: beta  * 0.9,
+        duration: 0.4,
         ease: 'power2.out',
         overwrite: 'auto',
       });
 
       const glare = frame.querySelector<HTMLElement>(`.${styles.previewGlare}`);
       if (glare) {
-        const gx = ((gamma + 25) / 50) * 100;
-        const gy = ((beta  + 25) / 50) * 100;
-        glare.style.background = `radial-gradient(circle at ${gx}% ${gy}%, rgba(255,255,255,0.10) 0%, transparent 55%)`;
-        gsap.to(glare, { opacity: 0.6, duration: 0.3, overwrite: 'auto' });
+        const gx = ((gamma + 14) / 28) * 100;
+        const gy = ((beta  + 14) / 28) * 100;
+        glare.style.background = `radial-gradient(circle at ${gx}% ${gy}%, rgba(255,255,255,0.14) 0%, transparent 55%)`;
+        gsap.to(glare, { opacity: 0.75, duration: 0.25, overwrite: 'auto' });
       }
     };
 

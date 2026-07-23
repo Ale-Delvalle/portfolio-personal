@@ -144,96 +144,89 @@
   text-decoration-thickness: 1px;
 }
 
-/* Hamburguesa y Overlay de Menú Móvil */
-.hamburgerBtn {
+/* ── FAB + menú vertical desplegable (mobile) ─────── */
+.fabRoot {
   display: none;
-  background: none;
-  border: none;
-  cursor: pointer;
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2000;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 0;
-  transition: transform 0.2s ease, color 0.2s ease;
-  z-index: 2001;
-  color: #E8A060;
+  gap: 0.85rem;
 }
 
-.hamburgerBtn:hover {
-  color: #FFD080;
-}
-
-.menuOverlay {
+.fabScrim {
   position: fixed;
   inset: 0;
-  z-index: 1999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: fadeInOverlay 0.3s ease both;
-  background: rgba(8, 9, 11, 0.6);
-  backdrop-filter: blur(25px);
+  z-index: -1;
+  background: transparent;
 }
 
-.menuContent {
-  width: 100%;
-  max-width: 320px;
+.fabItems {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  animation: slideUpMenu 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  gap: 0.75rem;
 }
 
-.mobileNavList {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.fabItem {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 2.5rem;
-}
-
-.mobileLink {
-  background: none;
-  border: none;
-  font-family: var(--font-headline);
-  font-size: 2.2rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  gap: 0.6rem;
+  min-width: 172px;
+  padding: 0.65rem 1.2rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 167, 38, 0.28);
+  background: rgba(12, 14, 17, 0.85);
+  backdrop-filter: blur(12px);
+  color: rgba(232, 160, 96, 0.85);
+  font-family: "Inter", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
   cursor: pointer;
-  transition: transform 0.2s ease, color 0.2s ease;
-  padding: 0.5rem 1rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.mobileLink:hover {
-  transform: scale(1.08);
+.fabItemActive {
+  background: linear-gradient(135deg, #FFD180 0%, #FFA726 50%, #FF6B00 100%);
+  border-color: transparent;
+  color: #1a1006;
+  box-shadow: 0 8px 24px rgba(255, 107, 0, 0.4), 0 0 18px rgba(255, 107, 0, 0.35);
 }
 
-.mobileLink {
-  color: #FFA726;
-  text-shadow: 0 0 15px rgba(255, 107, 0, 0.15);
+.fabLabel {
+  white-space: nowrap;
+}
+
+.fabToggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, #FFD180 0%, #FFA726 50%, #FF6B00 100%);
+  color: #1a1006;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45), 0 0 22px rgba(255, 107, 0, 0.45);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  animation: fadeInNavbar 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fabToggle:active {
+  transform: scale(0.92);
 }
 
 @keyframes fadeInNavbar {
   from { opacity: 0; }
   to { opacity: 1; }
-}
-
-@keyframes fadeInOverlay {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideUpMenu {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 /* ==========================================================================
@@ -322,40 +315,10 @@
 /* --- MOBILE (< 768px) --- */
 @media (max-width: 767px) {
   .navbar {
-    bottom: 1.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    top: auto;
-    width: max-content;
-    max-width: 90vw;
-    height: auto;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 1.5rem;
-    padding: 0.65rem 1.5rem;
-    border-radius: 9999px;
-    z-index: 2000;
-  }
-
-  .navItemDesktopOnly {
     display: none !important;
   }
 
-  .hamburgerBtn {
+  .fabRoot {
     display: flex;
-    padding: 0.75rem !important;
-  }
-
-  .navList {
-    display: none !important;
-  }
-
-  .navbar {
-    background: rgba(12, 14, 17, 0.75);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 167, 38, 0.3);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 15px rgba(140, 67, 29, 0.2);
-    --lc: var(--color-on-background);
   }
 }

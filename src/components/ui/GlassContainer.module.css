@@ -2,7 +2,6 @@
 .glass {
   background-color: var(--glass-bg);         /* semitransparente claro/oscuro según tema */
   backdrop-filter: blur(16px);               /* desenfoca lo que hay detrás */
-  -webkit-backdrop-filter: blur(16px);       /* compatibilidad Safari */
   border-top: 1px solid var(--glass-border); /* borde superior sutil para efecto de vidrio */
   border-radius: 9999px;                     /* completamente redondeado (pill shape) */
   box-shadow: 0 40px 60px rgba(0, 0, 0, 0.05); /* sombra ambiente muy suave */

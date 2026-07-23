@@ -172,7 +172,6 @@
   animation: fadeInOverlay 0.3s ease both;
   background: rgba(8, 9, 11, 0.6);
   backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
 }
 
 .menuContent {
@@ -259,7 +258,6 @@
     padding: 0.75rem 2rem;
     background: rgba(4, 2, 1, 0.72);
     backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
     border-radius: 9999px;
     border: 1px solid rgba(200, 100, 40, 0.7);
     box-shadow: 0 0 20px rgba(140, 67, 29, 0.55), inset 0 0 12px rgba(0, 0, 0, 0.4);
@@ -315,7 +313,6 @@
   .navbar {
     background: rgba(12, 14, 17, 0.75);
     backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 167, 38, 0.3);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 15px rgba(140, 67, 29, 0.2);
     --lc: var(--color-on-background);
@@ -357,7 +354,6 @@
   .navbar {
     background: rgba(12, 14, 17, 0.75);
     backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 167, 38, 0.3);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 15px rgba(140, 67, 29, 0.2);
     --lc: var(--color-on-background);

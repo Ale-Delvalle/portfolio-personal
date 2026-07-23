@@ -124,7 +124,6 @@
   position: relative;
   background: rgba(15, 12, 10, 0.45);
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   border-top-left-radius: 50%;
   border-top-right-radius: 50%;
   border-bottom-left-radius: 18px;
@@ -170,7 +169,6 @@
   border-left: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 167, 38, 0.05);
   backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   overflow: hidden;
   transition: all 0.3s ease;
 }

@@ -463,8 +463,6 @@ export function Projects() {
     if (window.innerWidth >= 1024) return;
 
     const applyOrientation = (e: DeviceOrientationEvent) => {
-      // En mobile (<768px) el previewFrame está oculto — no animar
-      if (window.innerWidth < 768) return;
       const frame = previewFrameRef.current;
       if (!frame) return;
 

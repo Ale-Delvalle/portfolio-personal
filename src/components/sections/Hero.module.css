@@ -164,30 +164,15 @@
   border-radius: 16px;
   position: relative;
   background: rgba(10, 10, 12, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 167, 38, 0.05);
+  border: 1.5px solid rgba(255, 167, 38, 0.28);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(16px);
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-
-.textBlock::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 3px;
-  height: 100%;
-  background: linear-gradient(to bottom, #FF6B00, #FFD180);
-  box-shadow: 0 0 15px rgba(255, 107, 0, 0.8);
-  border-radius: 16px 0 0 16px;
+  transition: box-shadow 0.4s ease, border-color 0.4s ease;
 }
 
 .textBlock:hover {
-  border-color: rgba(255, 167, 38, 0.32);
-  box-shadow: 0 0 32px rgba(255, 107, 0, 0.15), inset 0 0 20px rgba(255, 167, 38, 0.1);
+  border-color: rgba(255, 167, 38, 0.45);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 @media (min-width: 768px) {

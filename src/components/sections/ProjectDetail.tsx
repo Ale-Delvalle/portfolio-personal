@@ -90,7 +90,11 @@ export function ProjectDetail({ detail, goBack, outerRef, scrollRef, firstScreen
 
             {/* ── Header ── */}
             <div className={styles.detailHeader} ref={detailHeaderRef}>
-              <h2 className={styles.detailTitle}>{detail.title}</h2>
+              <h2 className={`${styles.detailTitle} ${detail.id === 4 ? styles.detailTitleClinica : ''}`}>
+                {detail.id === 4
+                  ? <>Clínica<br className={styles.titleBreakMobile} /> San Sebastián</>
+                  : detail.title}
+              </h2>
               <p className={styles.detailDesc}>{detail.description}</p>
 
               {(detail.repoUrl || detail.repoFrontUrl || detail.repoBackUrl) && (
@@ -183,11 +187,11 @@ export function ProjectDetail({ detail, goBack, outerRef, scrollRef, firstScreen
             <ArrowLeftIcon />
           </button>
 
-          {/* ── Desktop back button (bottom-right) ── */}
+          {/* ── Desktop back button (top-left, above the title) ── */}
           <div className={styles.backBtnWrapper}>
             <button className={styles.backBtn} onClick={goBack}>
               <ArrowLeftIcon />
-              Volver a la sección de proyectos
+              Atrás
             </button>
           </div>
 

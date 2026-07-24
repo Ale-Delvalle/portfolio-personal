@@ -63,8 +63,7 @@ export type Project = {
 const projects: Project[] = [
   {
     id: 1,
-    title: 'Astro Tech — E-Commerce',
-    listTitle: 'Astro Tech',
+    title: 'Astro Tech',
     description: 'Plataforma de e-commerce full stack con carrito de compras, panel de administración y autenticación JWT.',
     tags: ['NestJS', 'TypeScript', 'PostgreSQL', 'TypeORM', 'JWT', 'Next.js', 'Zustand', 'React Query', 'Zod', 'Docker', 'Swagger'],
     features: [

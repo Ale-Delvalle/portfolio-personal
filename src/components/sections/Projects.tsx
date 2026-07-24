@@ -177,6 +177,12 @@ export function Projects() {
   const intervalRef      = useRef<ReturnType<typeof setInterval> | null>(null);
   const isNavigatingRef  = useRef(false);
 
+  // ── Swipe táctil para cambiar de imagen en el carrusel (solo mobile) ──
+  const touchStartXRef = useRef(0);
+  const touchStartYRef = useRef(0);
+  const didSwipeRef     = useRef(false);
+  const SWIPE_THRESHOLD = 45;
+
   // ── Auto-advance carousel every 10s ────────────────────
   const startCarousel = useCallback(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
@@ -515,6 +521,38 @@ export function Projects() {
     return () => { delete (window as any).__gyroActive; };
   }, []);
 
+  // ── Swipe handlers: cambian de imagen deslizando el dedo (solo mobile) ──
+  const handlePreviewTouchStart = useCallback((e: React.TouchEvent) => {
+    if (window.innerWidth >= 768) return;
+    const t = e.touches[0];
+    touchStartXRef.current = t.clientX;
+    touchStartYRef.current = t.clientY;
+    didSwipeRef.current = false;
+  }, []);
+
+  const handlePreviewTouchMove = useCallback((e: React.TouchEvent) => {
+    if (window.innerWidth >= 768) return;
+    const t = e.touches[0];
+    const dx = t.clientX - touchStartXRef.current;
+    const dy = t.clientY - touchStartYRef.current;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > SWIPE_THRESHOLD) {
+      didSwipeRef.current = true;
+    }
+  }, []);
+
+  const handlePreviewTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (window.innerWidth >= 768 || !didSwipeRef.current) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchStartXRef.current;
+    const dir = dx < 0 ? 1 : -1; // izquierda → siguiente, derecha → anterior
+    setActiveId(prev => {
+      const idx = projects.findIndex(p => p.id === prev);
+      const nextIdx = (idx + dir + projects.length) % projects.length;
+      return projects[nextIdx].id;
+    });
+    startCarousel();
+  }, [startCarousel]);
+
   // ── Open project detail page ────────────────────────────
   const openProject = useCallback((project: Project) => {
     lastRef.current = project;
@@ -704,7 +742,15 @@ export function Projects() {
             <div
               ref={previewFrameRef}
               className={styles.previewFrame}
+              onTouchStart={handlePreviewTouchStart}
+              onTouchMove={handlePreviewTouchMove}
+              onTouchEnd={handlePreviewTouchEnd}
               onClick={() => {
+                // Un swipe no debe disparar la apertura del proyecto
+                if (didSwipeRef.current) {
+                  didSwipeRef.current = false;
+                  return;
+                }
                 // En iOS solicita permiso de gyroscopio; en mobile abre el proyecto activo
                 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
                 if (isIOS && typeof (DeviceOrientationEvent as any).requestPermission === 'function') {

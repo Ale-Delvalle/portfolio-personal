@@ -631,6 +631,11 @@
     max-width: 100% !important;
   }
 
+  /* Permite swipe horizontal para cambiar de imagen sin bloquear el scroll vertical de la página */
+  .previewFrame {
+    touch-action: pan-y;
+  }
+
   .sectionLabel {
     padding-left: 10px;
     padding-right: 10px;

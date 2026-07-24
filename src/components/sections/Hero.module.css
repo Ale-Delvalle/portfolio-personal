@@ -835,6 +835,7 @@
   .textBlock {
     padding: 0.9rem 1.1rem !important;
     border-radius: 12px !important;
+    border-width: 1px !important; /* mismo ancho que el marco de la foto en mobile */
   }
 
   .sideTitle {

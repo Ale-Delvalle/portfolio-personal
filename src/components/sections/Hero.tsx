@@ -207,7 +207,7 @@ export function Hero() {
     rotYBtn.current = gsap.quickTo(contactBtnRef.current, "rotationY", { duration: 0.8, ease: "power3" });
 
     // --- ANIMACION INFINITA SCROLL TEXT ---
-    const scrollTl = gsap.timeline({ repeat: -1, repeatDelay: 2, delay: 1, repeatRefresh: true });
+    const scrollTl = gsap.timeline({ repeat: -1, repeatDelay: 8, delay: 1, repeatRefresh: true });
     
     // 1) Primero: 5 saltos principales
     scrollTl.to(scrollTextRef.current, {

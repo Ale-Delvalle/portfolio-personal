@@ -58,7 +58,7 @@
   position: absolute;
   top: 8vh;
   left: 32.5%;
-  transform: translateX(-50%);
+  transform: translateX(calc(-50% - 80px));
   z-index: 10;
 }
 
@@ -105,7 +105,7 @@
 
 .detailTitle {
   font-family: "Alex Brush", cursive;
-  font-size: clamp(5.6rem, 12vw, 11rem);
+  font-size: clamp(2.8rem, 6vw, 5.5rem);
   font-weight: 400;
   line-height: 1.3;
   letter-spacing: 0.02em;
@@ -559,7 +559,7 @@
   .detailHeader  { width: 88%; padding-top: calc(5rem + 60px); }
   .galleryLabel  { width: 88%; }
   .collage       { width: 88%; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 170px; }
-  .backBtnWrapper { top: 1.5rem; left: 28%; }
+  .backBtnWrapper { top: 1.5rem; left: 28%; transform: translateX(-50%); }
 }
 
 @media (max-width: 767px) {

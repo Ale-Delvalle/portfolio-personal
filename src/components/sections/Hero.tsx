@@ -22,6 +22,7 @@ export function Hero() {
   const scrollTextRef = useRef<HTMLSpanElement>(null);
   const mobileAccentRef = useRef<HTMLDivElement>(null);
   const introOverlayRef = useRef<HTMLDivElement>(null);
+  const howIWorkRef = useRef<HTMLDivElement>(null);
 
   // Canvas Sparks Refs
   const nameCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -68,6 +69,8 @@ export function Hero() {
       gsap.set(imageRef.current, { opacity: 0, scale: 0.92, y: -80 });
       gsap.set(rightTextRef.current, { autoAlpha: 0 });
       gsap.set(mobileAccentRef.current, { scaleX: 0, opacity: 0 });
+      // "¿Cómo trabajo?" no está visible sin scroll en mobile: se revela por ScrollTrigger, no en la intro
+      gsap.set(howIWorkRef.current, { autoAlpha: 0, y: 30 });
       if (buttonsRef.current) {
         gsap.set(Array.from(buttonsRef.current.children), { opacity: 0, y: 18, scale: 0.95 });
       }
@@ -158,6 +161,20 @@ export function Hero() {
         { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out" },
         "moveUp+=1.7"
       );
+
+      // "¿Cómo trabajo?" se revela recién cuando el usuario hace scroll hasta esa sección
+      gsap.to(howIWorkRef.current, {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.7,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: howIWorkRef.current,
+          start: "top 88%",
+          toggleActions: "play none none none",
+          once: true
+        }
+      });
     } else {
       // --- SECUENCIA ORIGINAL PARA PC Y TABLET ---
       // 3) Imagen aparece con desplazamiento desde arriba hacia abajo (Fade + Slide)
@@ -421,7 +438,7 @@ export function Hero() {
                 <span className={styles.tag}>Docker</span>
               </div>
             </div>
-            <div className={styles.textBlock}>
+            <div ref={howIWorkRef} className={styles.textBlock}>
               <div className={styles.cardHeader}>
                 <span className={styles.cardIcon}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">

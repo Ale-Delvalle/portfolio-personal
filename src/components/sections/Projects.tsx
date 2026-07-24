@@ -468,14 +468,25 @@ export function Projects() {
   useEffect(() => {
     if (window.innerWidth >= 1024) return;
 
+    // Suaviza el ruido del sensor: cerca de beta≈90° (teléfono casi vertical)
+    // el gamma sufre gimbal lock y puede saltar entre extremos de un evento a
+    // otro. Un low-pass filter evita que ese salto crudo llegue al gsap.to.
+    const smoothed = { gamma: 0, beta: 0 };
+    const SMOOTHING = 0.12;
+
     const applyOrientation = (e: DeviceOrientationEvent) => {
       const frame = previewFrameRef.current;
       if (!frame) return;
 
       // gamma: inclinación izquierda-derecha. beta: adelante-atrás (compensamos 45° de sostenimiento natural)
       // Rango de clamp chico (±14°) para que el efecto máximo se alcance con apenas mover el teléfono
-      const gamma = Math.min(Math.max(e.gamma ?? 0, -14), 14);
-      const beta  = Math.min(Math.max((e.beta ?? 0) - 45, -14), 14);
+      const rawGamma = Math.min(Math.max(e.gamma ?? 0, -14), 14);
+      const rawBeta  = Math.min(Math.max((e.beta ?? 0) - 45, -14), 14);
+
+      smoothed.gamma += (rawGamma - smoothed.gamma) * SMOOTHING;
+      smoothed.beta  += (rawBeta  - smoothed.beta)  * SMOOTHING;
+      const gamma = smoothed.gamma;
+      const beta  = smoothed.beta;
 
       (window as any).__gyroActive = true;
 

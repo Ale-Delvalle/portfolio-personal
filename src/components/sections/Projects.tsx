@@ -67,14 +67,12 @@ const projects: Project[] = [
     description: 'Plataforma de e-commerce full stack con carrito de compras, panel de administración y autenticación JWT.',
     tags: ['NestJS', 'TypeScript', 'PostgreSQL', 'TypeORM', 'JWT', 'Next.js', 'Zustand', 'React Query', 'Zod', 'Docker', 'Swagger'],
     features: [
-      'API REST con NestJS y TypeScript, arquitectura modular por dominio',
-      'Autenticación JWT con control de acceso basado en roles (RBAC)',
-      'Base de datos relacional con PostgreSQL y TypeORM',
-      'Integración con Cloudinary para almacenamiento de imágenes en la nube',
-      'Documentación de API con Swagger/OpenAPI',
-      'Frontend en Next.js con App Router, estado global con Zustand y data fetching con React Query',
-      'Validación de schemas con Zod integrado con react-hook-form',
-      'Containerización con Docker Compose'
+      'Backend con NestJS y TypeScript, organizado por módulos de negocio',
+      'Autenticación segura con JWT y permisos por rol de usuario',
+      'Base de datos relacional con PostgreSQL',
+      'Frontend en Next.js con manejo de estado (Zustand) y consumo de datos con React Query',
+      'Documentación de API con Swagger',
+      'Proyecto containerizado con Docker'
     ],
     image: ec1,
     screenshots: [ec1, ec2, ec3, ec4, ec5, ec6, ec7, ec8],
@@ -88,16 +86,12 @@ const projects: Project[] = [
     description: 'Proyecto grupal · Educativo \nPlataforma para ONGs de rescate animal que conecta organizaciones protectoras con adoptantes. Gestiona adopciones, donaciones con pasarela de pago y mensajería en tiempo real. Trabajé en un grupo conformado por 6 personas, en donde participé del equipo de backend.',
     tags: ['NestJS', 'TypeScript', 'PostgreSQL', 'Prisma', 'JWT', 'Stripe', 'Socket.io', 'Cloudinary', 'Google Cloud Vision', 'Nodemailer', 'Jest'],
     features: [
-      'API REST modular con NestJS y TypeScript, arquitectura por dominio de negocio',
-      'Base de datos relacional con PostgreSQL y Prisma ORM, incluyendo migraciones y esquema tipado',
-      'Autenticación híbrida: JWT local con cookies HttpOnly y soporte para tokens de Supabase Auth',
-      'Control de acceso por roles (RBAC) con guards y decoradores personalizados',
-      'Integración con Stripe para procesamiento de donaciones, con webhook seguro y control de duplicidad',
-      'Moderación automática de imágenes con Sightengine y Google Cloud Vision — imágenes sensibles se almacenan pixeladas en Cloudinary',
-      'Mensajería en tiempo real con WebSockets (Socket.io) con salas por conversación y persistencia en base de datos',
-      'Notificaciones por email concurrentes con Nodemailer y Resend usando Promise.all',
-      'Sanitización XSS y validación global de DTOs con whitelist estricta',
-      'Tests unitarios y de integración con Jest y Supertest'
+      'Backend con NestJS y TypeScript, organizado por dominio de negocio',
+      'Base de datos relacional con PostgreSQL y Prisma',
+      'Autenticación segura con JWT y permisos por rol de usuario',
+      'Donaciones integradas con pasarela de pago Stripe',
+      'Moderación automática de imágenes sensibles con IA (Google Cloud Vision)',
+      'Chat en tiempo real entre organizaciones y adoptantes'
     ],
     image: hnp1,
     screenshots: [hnp1, hnp2, hnp3, hnp4, hnp5, hnp6, hnp7, hnp8, hnp9, hnp10, hnp11, hnp12, hnp13],
@@ -109,10 +103,9 @@ const projects: Project[] = [
     description: 'Primer proyecto personal desarrollado con tecnologías web fundamentales, sin frameworks ni librerías externas.',
     tags: ['HTML5', 'CSS3', 'JavaScript ES6+', 'Jasmine'],
     features: [
-      'Página web estática con perfil personal y gestor de actividades favoritas',
-      'Frontend puro con HTML5, CSS3 y JavaScript ES6+ vanilla — sin bundler ni framework',
-      'Patrón Repository para gestión de datos en memoria',
-      'Grid responsivo con CSS Grid sin media queries',
+      'Página de perfil personal con gestor de actividades favoritas',
+      'Desarrollado con HTML5, CSS3 y JavaScript puro, sin frameworks',
+      'Diseño responsivo con CSS Grid',
       'Tests unitarios con Jasmine'
     ],
     image: pb1,
@@ -124,12 +117,12 @@ const projects: Project[] = [
     description: 'Sistema de gestión de turnos médicos con autenticación, validaciones de negocio y panel de usuario.',
     tags: ['TypeScript', 'Node.js', 'Express', 'PostgreSQL', 'TypeORM', 'React', 'Vite', 'Formik'],
     features: [
-      'API REST con Express y TypeScript, arquitectura de 4 capas: router → controller → service → repository',
-      'Base de datos relacional con PostgreSQL y TypeORM',
-      'Autenticación con usuario y contraseña, sesión persistida con React Context API',
-      'Validaciones de negocio: turnos con mínimo 48h de anticipación, solo días hábiles y horario laboral',
-      'Frontend en React con Vite, React Router y Formik para gestión de formularios',
-      'Rutas protegidas con redirección automática si no hay sesión activa'
+      'Backend con Express y TypeScript, organizado en capas',
+      'Base de datos relacional con PostgreSQL',
+      'Sistema de turnos con reglas de negocio: anticipación mínima, días y horarios hábiles',
+      'Autenticación de usuarios con sesión persistida',
+      'Frontend en React con Vite y formularios gestionados con Formik',
+      'Rutas protegidas según sesión activa'
     ],
     image: st1,
     screenshots: [st1, st2, st3, st4],
@@ -141,11 +134,11 @@ const projects: Project[] = [
     description: 'Aplicación full stack de gestión de películas con carrusel 3D inmersivo, construida con Node.js y MongoDB.',
     tags: ['Node.js', 'Express', 'MongoDB', 'Mongoose', 'JavaScript', 'GSAP', 'Webpack', 'Jest'],
     features: [
-      'API REST con Node.js y Express, arquitectura de 3 capas: controller → service → model',
-      'Base de datos NoSQL con MongoDB y Mongoose',
-      'Catálogo con vista en carrusel 3D animado con GSAP y vista en grilla',
-      'CRUD completo: agregar y eliminar películas con confirmación modal',
-      'Frontend empaquetado con Webpack, peticiones HTTP con Axios',
+      'Backend con Node.js y Express',
+      'Base de datos NoSQL con MongoDB',
+      'Catálogo de películas con carrusel 3D animado (GSAP) y vista en grilla',
+      'Gestión completa de películas: alta y baja con confirmación',
+      'Frontend empaquetado con Webpack',
       'Tests unitarios con Jest'
     ],
     image: wp1,

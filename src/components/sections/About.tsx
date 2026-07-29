@@ -11,6 +11,7 @@ export function About() {
   const p3Ref              = useRef<HTMLParagraphElement>(null);
   const p4Ref              = useRef<HTMLParagraphElement>(null);
   const p5Ref              = useRef<HTMLParagraphElement>(null);
+  const p6Ref              = useRef<HTMLParagraphElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
   const scrollTextRef      = useRef<HTMLSpanElement>(null);
   const scrollTlRef        = useRef<gsap.core.Timeline | null>(null);
@@ -18,7 +19,7 @@ export function About() {
 
   // Initial hidden state
   useGSAP(() => {
-    gsap.set([headingRef.current, p1Ref.current, p2Ref.current, p3Ref.current, p4Ref.current, p5Ref.current], { autoAlpha: 0, y: 30 });
+    gsap.set([headingRef.current, p1Ref.current, p2Ref.current, p3Ref.current, p4Ref.current, p5Ref.current, p6Ref.current], { autoAlpha: 0, y: 30 });
   }, { scope: sectionRef });
 
   // Bounce animation — identical to Hero
@@ -35,9 +36,9 @@ export function About() {
   const playAll = useCallback(() => {
     if (seqTlRef.current) seqTlRef.current.kill();
     if (scrollTlRef.current) scrollTlRef.current.kill();
-    gsap.killTweensOf([headingRef.current, p1Ref.current, p2Ref.current, p3Ref.current, p4Ref.current, p5Ref.current, scrollTextRef.current]);
+    gsap.killTweensOf([headingRef.current, p1Ref.current, p2Ref.current, p3Ref.current, p4Ref.current, p5Ref.current, p6Ref.current, scrollTextRef.current]);
 
-    gsap.set([headingRef.current, p1Ref.current, p2Ref.current, p3Ref.current, p4Ref.current, p5Ref.current], { autoAlpha: 0, y: 30 });
+    gsap.set([headingRef.current, p1Ref.current, p2Ref.current, p3Ref.current, p4Ref.current, p5Ref.current, p6Ref.current], { autoAlpha: 0, y: 30 });
     gsap.set(scrollTextRef.current, { y: 0 });
 
     seqTlRef.current = gsap.timeline({
@@ -53,14 +54,15 @@ export function About() {
       .to(p2Ref.current,      { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 0.2)
       .to(p3Ref.current,      { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 0.3)
       .to(p4Ref.current,      { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 0.4)
-      .to(p5Ref.current,      { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 0.5);
+      .to(p5Ref.current,      { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 0.5)
+      .to(p6Ref.current,      { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 0.6);
   }, [startScrollBounce]);
 
   const resetAll = useCallback(() => {
     if (seqTlRef.current) { seqTlRef.current.kill(); seqTlRef.current = null; }
     if (scrollTlRef.current) { scrollTlRef.current.kill(); scrollTlRef.current = null; }
-    gsap.killTweensOf([headingRef.current, p1Ref.current, p2Ref.current, p3Ref.current, p4Ref.current, p5Ref.current, scrollTextRef.current, scrollIndicatorRef.current]);
-    gsap.set([headingRef.current, p1Ref.current, p2Ref.current, p3Ref.current, p4Ref.current, p5Ref.current], { autoAlpha: 0, y: 30 });
+    gsap.killTweensOf([headingRef.current, p1Ref.current, p2Ref.current, p3Ref.current, p4Ref.current, p5Ref.current, p6Ref.current, scrollTextRef.current, scrollIndicatorRef.current]);
+    gsap.set([headingRef.current, p1Ref.current, p2Ref.current, p3Ref.current, p4Ref.current, p5Ref.current, p6Ref.current], { autoAlpha: 0, y: 30 });
     gsap.set(scrollTextRef.current, { y: 0 });
     gsap.set(scrollIndicatorRef.current, { opacity: 0 });
   }, []);
@@ -104,6 +106,7 @@ export function About() {
       p3Ref.current,
       p4Ref.current,
       p5Ref.current,
+      p6Ref.current,
     ].filter(Boolean) as HTMLElement[];
 
     const observers = elements.map((el) => {
@@ -143,7 +146,10 @@ export function About() {
           Creo que el buen software se construye con criterio técnico y buenas prácticas — no como un fin en sí mismo, sino porque un código mantenible y escalable es lo que le da valor real al producto. Es el estándar con el que trabajo y el que busco en el equipo donde me desempeñe.
         </p>
         <p ref={p5Ref} className={styles.paragraph}>
-          Vivimos una transición tecnológica real. Hay quienes creen que la IA reemplazará a los trabajadores — yo creo lo contrario: nos hace más productivos y libera tiempo para lo que realmente importa. El criterio para analizar, la capacidad de tomar decisiones y la calidez humana que potencia a los equipos de trabajo no se automatizan. Éste es mi concepto de Human First: el factor humano y sus habilidades son lo que realmente aportan valor.
+          Vivimos una transición tecnológica acelerada. Hay quienes creen que la IA reemplazará a los trabajadores — yo creo que nos potencia: nos hace más productivos y libera tiempo para lo que realmente importa.
+        </p>
+        <p ref={p6Ref} className={styles.paragraph}>
+          El criterio para analizar, la capacidad de tomar decisiones y la calidez humana que potencia a los equipos de trabajo no se automatizan. Esto es lo que creo: lo humano vale y es determinante para el logro de los objetivos y la calidad del software.
         </p>
       </div>
 

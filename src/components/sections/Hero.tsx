@@ -429,13 +429,16 @@ export function Hero() {
                 Estoy enfocado en el desarrollo backend, y desarrollo aplicaciones full stack de principio a fin: desde el diseño del modelo de datos y la API REST hasta la integración de servicios externos y el cliente web.
               </p>
               <div className={styles.tagRow}>
+                <span className={styles.tag}>TypeScript</span>
                 <span className={styles.tag}>NodeJS</span>
+                <span className={styles.tag}>NestJS</span>
+                <span className={styles.tag}>Express</span>
                 <span className={styles.tag}>PostgreSQL</span>
                 <span className={styles.tag}>MongoDB</span>
+                <span className={styles.tag}>HTML 5</span>
+                <span className={styles.tag}>CSS</span>
                 <span className={styles.tag}>React</span>
                 <span className={styles.tag}>React Native</span>
-                <span className={styles.tag}>CSS</span>
-                <span className={styles.tag}>Docker</span>
               </div>
             </div>
             <div ref={howIWorkRef} className={styles.textBlock}>

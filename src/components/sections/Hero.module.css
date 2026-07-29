@@ -345,6 +345,10 @@
 
 
 
+.roleHighlight {
+  font-family: inherit;
+}
+
 .role {
   font-family: "New Amsterdam", sans-serif;
   font-size: clamp(1rem, 2.5vw, 1.8rem);

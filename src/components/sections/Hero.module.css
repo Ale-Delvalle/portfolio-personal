@@ -724,6 +724,10 @@
     font-size: 1.05rem !important;
   }
 
+  .roleHighlight {
+    white-space: nowrap !important;
+  }
+
 
 
   /* ─── Línea naranja visible en mobile ─── */

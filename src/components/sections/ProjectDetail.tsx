@@ -103,21 +103,21 @@ export function ProjectDetail({ detail, goBack, outerRef, scrollRef, firstScreen
                     <a href={detail.repoUrl} target="_blank" rel="noopener noreferrer" className={styles.repoBtn}>
                       <GithubIcon />
                       Ver repositorio
-                      <span className={styles.repoBtnArrow}>↗</span>
+                      <span className={styles.repoBtnArrow}>↗︎</span>
                     </a>
                   )}
                   {detail.repoFrontUrl && (
                     <a href={detail.repoFrontUrl} target="_blank" rel="noopener noreferrer" className={styles.repoBtn}>
                       <GithubIcon />
                       Ver repositorio (Front)
-                      <span className={styles.repoBtnArrow}>↗</span>
+                      <span className={styles.repoBtnArrow}>↗︎</span>
                     </a>
                   )}
                   {detail.repoBackUrl && (
                     <a href={detail.repoBackUrl} target="_blank" rel="noopener noreferrer" className={styles.repoBtn}>
                       <GithubIcon />
                       Ver repositorio (Back)
-                      <span className={styles.repoBtnArrow}>↗</span>
+                      <span className={styles.repoBtnArrow}>↗︎</span>
                     </a>
                   )}
                 </div>

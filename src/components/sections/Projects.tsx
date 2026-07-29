@@ -701,7 +701,7 @@ export function Projects() {
                     {project.tags.map(tag => <span key={tag}>{tag}</span>)}
                   </div>
                 </div>
-                <span className={styles.mobileCardArrow}>↗</span>
+                <span className={styles.mobileCardArrow}>↗︎</span>
               </div>
             ))}
           </div>
@@ -734,7 +734,7 @@ export function Projects() {
                     <h3 className={styles.rowTitle}>{project.listTitle || project.title}</h3>
                     <p className={styles.rowDesc}>{project.description}</p>
                   </div>
-                  <span className={styles.rowArrow}>↗</span>
+                  <span className={styles.rowArrow}>↗︎</span>
                 </div>
               ))}
             </div>

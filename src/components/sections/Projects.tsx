@@ -90,7 +90,7 @@ const projects: Project[] = [
       'Base de datos relacional con PostgreSQL y Prisma',
       'Autenticación segura con JWT y permisos por rol de usuario',
       'Donaciones integradas con pasarela de pago Stripe',
-      'Moderación automática de imágenes sensibles con IA (Google Cloud Vision)',
+      'Moderación automática de imágenes sensibles con Sightengine, con Google Cloud Vision integrado en el backend',
       'Chat en tiempo real entre organizaciones y adoptantes'
     ],
     image: hnp1,

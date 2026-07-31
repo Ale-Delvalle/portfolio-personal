@@ -67,6 +67,13 @@ export function Hero() {
 
     gsap.set(nameContainerRef.current, { zIndex: 51, position: 'relative' });
 
+    const lowTier = tier === 'low';
+    if (lowTier) {
+      // El glow detrás de la foto de perfil no tiene animación propia: sin esto
+      // queda visible desde el montaje, antes incluso de que la foto aparezca.
+      gsap.set(glowRef.current, { autoAlpha: 0 });
+    }
+
     if (isMobile) {
       gsap.set(imageRef.current, { opacity: 0, scale: 0.92, y: -80 });
       gsap.set(rightTextRef.current, { autoAlpha: 0 });
@@ -166,6 +173,15 @@ export function Hero() {
         "moveUp+=1.7"
       );
 
+      if (lowTier) {
+        // El glow aparece junto con la foto, nunca antes
+        tl.fromTo(glowRef.current,
+          { autoAlpha: 0 },
+          { autoAlpha: 1, duration: 0.7, ease: "power2.out" },
+          "moveUp+=0.8"
+        );
+      }
+
       // "¿Cómo trabajo?" se revela recién cuando el usuario hace scroll hasta esa sección
       gsap.to(howIWorkRef.current, {
         autoAlpha: 1,
@@ -182,10 +198,11 @@ export function Hero() {
     } else {
       // --- SECUENCIA ORIGINAL PARA PC Y TABLET ---
       // 3) Imagen aparece con desplazamiento desde arriba hacia abajo (Fade + Slide)
-      tl.fromTo(imageRef.current, 
+      tl.addLabel("photoIn", "-=0.5")
+      .fromTo(imageRef.current,
         { autoAlpha: 0, y: -150 },
         { autoAlpha: 1, y: 0, duration: 1.2, ease: "power3.out" },
-        "-=0.5"
+        "photoIn"
       )
       // 4) Textos y botones
       .from([rightTextRef.current, buttonsRef.current], {
@@ -201,6 +218,15 @@ export function Hero() {
         { autoAlpha: 1, y: 0, duration: 1, ease: "power2.out" },
         "-=0.5"
       );
+
+      if (lowTier) {
+        // El glow aparece junto con la foto, nunca antes
+        tl.fromTo(glowRef.current,
+          { autoAlpha: 0 },
+          { autoAlpha: 1, duration: 1, ease: "power2.out" },
+          "photoIn"
+        );
+      }
     }
 
 

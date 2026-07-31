@@ -43,14 +43,27 @@ export function estimateInitialTier(hints: DeviceHints): PerformanceTier {
     return hints.isMobile ? 'medium' : 'high';
   }
 
-  let score = 0;
-  if (hints.cores !== null) score += hints.cores >= 8 ? 2 : hints.cores >= 4 ? 1 : 0;
-  if (hints.memoryGB !== null) score += hints.memoryGB >= 8 ? 2 : hints.memoryGB >= 4 ? 1 : 0;
-  if (hints.isMobile) score -= 1;
+  const coreScore = hints.cores === null ? null : hints.cores >= 8 ? 2 : hints.cores >= 4 ? 1 : 0;
+  const memScore = hints.memoryGB === null ? null : hints.memoryGB >= 8 ? 2 : hints.memoryGB >= 4 ? 1 : 0;
 
-  if (score >= 3) return 'high';
-  if (score >= 1) return 'medium';
-  return 'low';
+  // Si falta una de las dos señales, se usa solo la disponible a doble peso
+  // en vez de dejar el puntaje combinado bajo por un dato que el navegador
+  // directamente no expone (ese hueco hacía que un desktop rápido sin
+  // deviceMemory nunca llegara al umbral de 'high').
+  const score = coreScore !== null && memScore !== null
+    ? coreScore + memScore
+    : (coreScore ?? memScore ?? 0) * 2;
+
+  let tier: PerformanceTier;
+  if (score >= 3) tier = 'high';
+  else if (score >= 1) tier = 'medium';
+  else tier = 'low';
+
+  // Igual que en la medición real: un mobile nunca arranca en 'high', aunque
+  // sus cores/memoria puntúen alto.
+  if (hints.isMobile && tier === 'high') tier = 'medium';
+
+  return tier;
 }
 
 const SAMPLE_WINDOW_MS = 1200;

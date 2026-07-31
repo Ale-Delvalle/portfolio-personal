@@ -149,7 +149,15 @@ export function GlowBackground({ isGallery = false, active = true }: { isGallery
       { color: 'rgba(255, 140, 0, 0.5)', size: 0.6, speedX: 0.0007, speedY: 0.0005, phaseX: 3, phaseY: 2 }
     ];
     const orbsReduced = [orbsFull[0], orbsFull[1]];
-    const orbsMinimal = [orbsFull[0]];
+    // Tier bajo: 2 orbes que arrancan en puntos bien distintos (uno a la derecha,
+    // otro a la izquierda, no el mismo punto divergiendo con el tiempo) y con
+    // radio más grande que cualquiera de los 5 originales, para compensar tener
+    // solo 2 fuentes de luz y seguir iluminando gran parte de la pantalla, tal
+    // como en tier alto.
+    const orbsMinimal = [
+      { color: 'rgba(255, 107, 0, 0.85)', size: 1.15, speedX: 0.0006, speedY: 0.0005, phaseX: 0.4, phaseY: 1 },
+      { color: 'rgba(255, 167, 38, 0.75)', size: 1.15, speedX: 0.0005, speedY: 0.0004, phaseX: 3.9, phaseY: 3 }
+    ];
 
     // Definición de las curvas de las mechas (Alta velocidad: 3 segundos por pantalla)
     const comets = [
@@ -218,7 +226,12 @@ export function GlowBackground({ isGallery = false, active = true }: { isGallery
 
       if (transitionStarted) {
         orbAlpha = Math.max(0, orbAlpha - 0.02);
-        heroOrbAlpha = Math.min(1, heroOrbAlpha + 0.012);
+        // Tier bajo: el orbe post-intro espera a que los orbes del intro terminen
+        // de desvanecerse por completo antes de empezar a aparecer (secuencial,
+        // no cruzado), para que no se vea un tercer orbe superpuesto de golpe.
+        if (!lowTier || orbAlpha <= 0) {
+          heroOrbAlpha = Math.min(1, heroOrbAlpha + 0.012);
+        }
       }
 
       frameCount++;

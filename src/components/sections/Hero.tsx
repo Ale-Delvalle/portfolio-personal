@@ -6,6 +6,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import pleaseImg from '../../assets/please.png';
 import profileImg from '../../assets/foto.png';
 import cvFile from '../../assets/Delvalle-Alexis-CV-full-stack-developer.docx?url';
+import { usePerformanceTier } from '../../context/PerformanceContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -42,6 +43,7 @@ export function Hero() {
   const imageContainerRef = useRef<HTMLDivElement>(null);
 
   const [introDone, setIntroDone] = useState(false);
+  const { tier } = usePerformanceTier();
 
   useGSAP(() => {
     const isMobile = window.innerWidth < 768;
@@ -98,7 +100,9 @@ export function Hero() {
         const xPosR = sweepProxy.val * rCanvas.width;
         
         const emit = (particlesArr: any[], x: number, y: number) => {
-          const count = Math.floor(Math.random() * 3) + 1; 
+          // Tier bajo: sin chispas decorativas. Tier medio: una por tick en vez de 1-3.
+          if (tier === 'low') return;
+          const count = tier === 'medium' ? 1 : Math.floor(Math.random() * 3) + 1;
           for (let i = 0; i < count; i++) {
             particlesArr.push({
               x: x + (Math.random() - 0.5) * 15, 
@@ -307,7 +311,7 @@ export function Hero() {
         }
         ctx.fill();
         
-        if (!isMobile && p.life > 0.5 && p.size > 1.5) {
+        if (tier === 'high' && !isMobile && p.life > 0.5 && p.size > 1.5) {
           ctx.shadowColor = `rgba(255, 167, 38, ${alpha})`;
           ctx.shadowBlur = 6;
           ctx.fill();

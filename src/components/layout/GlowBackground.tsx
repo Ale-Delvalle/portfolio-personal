@@ -1,8 +1,20 @@
 import { useRef, useEffect } from 'react';
 import styles from './GlowBackground.module.css';
+import { usePerformanceTier } from '../../context/PerformanceContext';
+import type { PerformanceTier } from '../../lib/performanceTier';
 
 export function GlowBackground({ isGallery = false, active = true }: { isGallery?: boolean; active?: boolean } = {}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { tier, measured } = usePerformanceTier();
+  // Arranca en 'high' (comportamiento original intacto) y solo se corrige una vez
+  // que hay una medición real confirmada. Se lee por-frame vía ref para nunca
+  // tener que reiniciar el efecto/canvas (eso reseteaba la transición del intro
+  // a mitad de camino cuando el tier cambiaba de fase 1 a fase 2).
+  const tierRef = useRef<PerformanceTier>('high');
+
+  useEffect(() => {
+    if (measured) tierRef.current = tier;
+  }, [tier, measured]);
 
   useEffect(() => {
     if (!active) return;
@@ -86,7 +98,12 @@ export function GlowBackground({ isGallery = false, active = true }: { isGallery
 
     document.querySelectorAll('[data-section-trigger]').forEach(el => titleObserver.observe(el));
 
-    const mobile = isMobile();
+    const mobileWidth = isMobile();
+    // "lightweight" = renderizado liviano: pantalla chica O tier confirmado no-alto.
+    // Se reevalúa en cada frame (ver animate) leyendo tierRef, así que un cambio de
+    // tier ajusta la calidad sin reiniciar el canvas ni el estado de la animación.
+    let lightweight = mobileWidth || tierRef.current !== 'high';
+    let lowTier = tierRef.current === 'low';
 
     // Dibuja una capa de "glow" desenfocada. En desktop, dibuja a baja
     // resolución en el canvas auxiliar (con el blur ya aplicado ahí, donde
@@ -100,7 +117,7 @@ export function GlowBackground({ isGallery = false, active = true }: { isGallery
     ) => {
       if (alpha <= 0) return;
 
-      if (mobile) {
+      if (lightweight) {
         ctx.globalAlpha = alpha;
         ctx.globalCompositeOperation = compositeOp;
         draw(ctx, 1);
@@ -122,20 +139,15 @@ export function GlowBackground({ isGallery = false, active = true }: { isGallery
       ctx.globalCompositeOperation = 'source-over';
     };
 
-    const orbs = [
+    const orbsFull = [
       { color: 'rgba(255, 107, 0, 0.8)', size: 0.8, speedX: 0.0006, speedY: 0.0005, phaseX: 0, phaseY: 1 },
       { color: 'rgba(255, 167, 38, 0.6)', size: 0.9, speedX: 0.0004, speedY: 0.0003, phaseX: 2, phaseY: 3 },
       { color: 'rgba(204, 68, 0, 0.9)', size: 0.7, speedX: 0.0005, speedY: 0.0006, phaseX: 4, phaseY: 5 },
       { color: 'rgba(255, 80, 0, 0.6)', size: 1.0, speedX: 0.0003, speedY: 0.0004, phaseX: 1, phaseY: 4 },
       { color: 'rgba(255, 140, 0, 0.5)', size: 0.6, speedX: 0.0007, speedY: 0.0005, phaseX: 3, phaseY: 2 }
     ];
-
-    const activeOrbs = mobile 
-      ? [
-          { color: 'rgba(255, 107, 0, 0.8)', size: 0.8, speedX: 0.0006, speedY: 0.0005, phaseX: 0, phaseY: 1 },
-          { color: 'rgba(255, 167, 38, 0.6)', size: 0.9, speedX: 0.0004, speedY: 0.0003, phaseX: 2, phaseY: 3 }
-        ]
-      : orbs;
+    const orbsReduced = [orbsFull[0], orbsFull[1]];
+    const orbsMinimal = [orbsFull[0]];
 
     // Definición de las curvas de las mechas (Alta velocidad: 3 segundos por pantalla)
     const comets = [
@@ -170,6 +182,7 @@ export function GlowBackground({ isGallery = false, active = true }: { isGallery
     // Variables para el control de "Bursts" (Ráfagas) y Pausas de 10s
     let globalTimer = 0;
     let currentBurstIndices = [0, 1, 2];
+    let frameCount = 0;
 
     const shuffle = (array: number[]) => {
       let currentIndex = array.length, randomIndex;
@@ -182,6 +195,9 @@ export function GlowBackground({ isGallery = false, active = true }: { isGallery
     };
 
     const animate = () => {
+      lightweight = mobileWidth || tierRef.current !== 'high';
+      lowTier = tierRef.current === 'low';
+
       time += 16;
       globalTimer += 16;
       waveTime += 0.007;
@@ -203,10 +219,19 @@ export function GlowBackground({ isGallery = false, active = true }: { isGallery
         heroOrbAlpha = Math.min(1, heroOrbAlpha + 0.012);
       }
 
+      frameCount++;
+      // Tier bajo: dibujamos a ~30fps en vez de 60fps. El estado (tiempos, alphas)
+      // sigue avanzando cada frame para no perder velocidad de la animación.
+      if (lowTier && frameCount % 2 === 0) {
+        rafId = requestAnimationFrame(animate);
+        return;
+      }
+
       ctx.fillStyle = '#000000';
       ctx.fillRect(0, 0, width, height);
 
       const minDim = Math.min(width, height);
+      const activeOrbs = lowTier ? orbsMinimal : lightweight ? orbsReduced : orbsFull;
 
       // --- 1. DIBUJAR ORBES (INTRO) ---
       drawGlowLayer((octx, scale) => {
@@ -239,8 +264,9 @@ export function GlowBackground({ isGallery = false, active = true }: { isGallery
         currentBurstIndices = shuffle(allLightIndices).slice(0, 3);
       }
 
-      // --- 3. DIBUJAR COMETAS / MECHAS ---
-      comets.forEach((comet, index) => {
+      // --- 3. DIBUJAR COMETAS / MECHAS (omitido en tier bajo: es el bloque más caro,
+      // por el shadowBlur y los ~25 segmentos con curvas de Bézier por frame) ---
+      if (!lowTier) comets.forEach((comet, index) => {
         const p0 = { x: comet.p0.x * width, y: comet.p0.y * height };
         const p1 = { x: comet.p1.x * width, y: comet.p1.y * height };
         const p2 = { x: comet.p2.x * width, y: comet.p2.y * height };
@@ -262,8 +288,8 @@ export function GlowBackground({ isGallery = false, active = true }: { isGallery
 
             if (currentCycleTime >= startOffset && currentCycleTime <= startOffset + comet.duration) {
               const p = (currentCycleTime - startOffset) / comet.duration;
-              const lightLength = 0.1; 
-              const segments = mobile ? 10 : 25; 
+              const lightLength = 0.1;
+              const segments = lightweight ? 10 : 25;
 
               ctx.globalCompositeOperation = 'screen';
 
@@ -290,8 +316,8 @@ export function GlowBackground({ isGallery = false, active = true }: { isGallery
                 const localFade = Math.sin(ratio * Math.PI); 
                 const alpha = localFade * edgeFade;
                 
-                if (mobile) {
-                  // Glow alternativo en móviles sin shadowBlur
+                if (lightweight) {
+                  // Glow alternativo en móviles / tiers no-altos, sin shadowBlur
                   ctx.beginPath();
                   ctx.moveTo(pt1.x, pt1.y);
                   ctx.lineTo(pt2.x, pt2.y);
@@ -328,8 +354,8 @@ export function GlowBackground({ isGallery = false, active = true }: { isGallery
         }
       });
 
-      // --- SCROLL ORBS (re-aparecen durante el scroll) ---
-      if (transitionStarted && scrollEnergy > 0.01 && !isGallery) {
+      // --- SCROLL ORBS (re-aparecen durante el scroll, omitido en tier bajo) ---
+      if (transitionStarted && scrollEnergy > 0.01 && !isGallery && !lowTier) {
         drawGlowLayer((octx, scale) => {
           activeOrbs.forEach((orb) => {
             const x = width / 2 + Math.sin(scrollOrbTime * orb.speedX + orb.phaseX) * (width * 0.4) + Math.cos(scrollOrbTime * orb.speedX * 0.5) * (width * 0.1);

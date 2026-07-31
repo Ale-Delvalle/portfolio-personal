@@ -1,15 +1,26 @@
 import { useRef, useEffect } from 'react';
 import styles from './GlowBackground.module.css';
 
-export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = {}) {
+export function GlowBackground({ isGallery = false, active = true }: { isGallery?: boolean; active?: boolean } = {}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    if (!active) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+
+    // Los orbes/glows se dibujan a baja resolución en este canvas auxiliar y
+    // se desenfocan ahí (ctx.filter blur es caro en proporción a la cantidad
+    // de píxeles procesados). Luego se escalan al canvas principal con un
+    // drawImage simple, que es barato. Misma apariencia, muchísimo menos costo.
+    const BLUR_DOWNSCALE = 4;
+    const offCanvas = document.createElement('canvas');
+    const offCtx = offCanvas.getContext('2d');
+    if (!offCtx) return;
 
     let width = 0;
     let height = 0;
@@ -19,6 +30,8 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
       height = window.innerHeight;
       canvas.width = width;
       canvas.height = height;
+      offCanvas.width = Math.max(1, Math.round(width / BLUR_DOWNSCALE));
+      offCanvas.height = Math.max(1, Math.round(height / BLUR_DOWNSCALE));
     };
     setCanvasSize();
     window.addEventListener('resize', setCanvasSize);
@@ -74,6 +87,40 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
     document.querySelectorAll('[data-section-trigger]').forEach(el => titleObserver.observe(el));
 
     const mobile = isMobile();
+
+    // Dibuja una capa de "glow" desenfocada. En desktop, dibuja a baja
+    // resolución en el canvas auxiliar (con el blur ya aplicado ahí, donde
+    // es barato) y luego la escala al canvas principal. En mobile no había
+    // blur antes tampoco, así que se dibuja directo sin cambios de comportamiento.
+    const drawGlowLayer = (
+      draw: (octx: CanvasRenderingContext2D, scale: number) => void,
+      blurPx: number,
+      alpha: number,
+      compositeOp: GlobalCompositeOperation = 'screen'
+    ) => {
+      if (alpha <= 0) return;
+
+      if (mobile) {
+        ctx.globalAlpha = alpha;
+        ctx.globalCompositeOperation = compositeOp;
+        draw(ctx, 1);
+        ctx.globalAlpha = 1;
+        ctx.globalCompositeOperation = 'source-over';
+        return;
+      }
+
+      const scale = 1 / BLUR_DOWNSCALE;
+      offCtx.clearRect(0, 0, offCanvas.width, offCanvas.height);
+      offCtx.filter = `blur(${Math.max(1, blurPx * scale)}px)`;
+      draw(offCtx, scale);
+      offCtx.filter = 'none';
+
+      ctx.globalAlpha = alpha;
+      ctx.globalCompositeOperation = compositeOp;
+      ctx.drawImage(offCanvas, 0, 0, width, height);
+      ctx.globalAlpha = 1;
+      ctx.globalCompositeOperation = 'source-over';
+    };
 
     const orbs = [
       { color: 'rgba(255, 107, 0, 0.8)', size: 0.8, speedX: 0.0006, speedY: 0.0005, phaseX: 0, phaseY: 1 },
@@ -162,35 +209,23 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
       const minDim = Math.min(width, height);
 
       // --- 1. DIBUJAR ORBES (INTRO) ---
-      if (orbAlpha > 0) {
-        ctx.globalAlpha = orbAlpha;
-        ctx.globalCompositeOperation = 'screen';
-        if (!mobile) {
-          ctx.filter = 'blur(80px)'; 
-        }
-
+      drawGlowLayer((octx, scale) => {
         activeOrbs.forEach((orb) => {
           const x = width / 2 + Math.sin(orbTime * orb.speedX + orb.phaseX) * (width * 0.4) + Math.cos(orbTime * orb.speedX * 0.5) * (width * 0.1);
           const y = height / 2 + Math.cos(orbTime * orb.speedY + orb.phaseY) * (height * 0.4) + Math.sin(orbTime * orb.speedY * 0.5) * (height * 0.1);
-          
+
           const radius = minDim * orb.size;
 
-          const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+          const gradient = octx.createRadialGradient(x * scale, y * scale, 0, x * scale, y * scale, radius * scale);
           gradient.addColorStop(0, orb.color);
           gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
-          ctx.fillStyle = gradient;
-          ctx.beginPath();
-          ctx.arc(x, y, radius, 0, Math.PI * 2);
-          ctx.fill();
+          octx.fillStyle = gradient;
+          octx.beginPath();
+          octx.arc(x * scale, y * scale, radius * scale, 0, Math.PI * 2);
+          octx.fill();
         });
-
-        if (!mobile) {
-          ctx.filter = 'none';
-        }
-        ctx.globalAlpha = 1;
-        ctx.globalCompositeOperation = 'source-over';
-      }
+      }, 80, orbAlpha, 'screen');
 
       // --- 2. LÓGICA DE TIEMPOS (BURST + PAUSA) PARA LUCES ---
       const BURST_DURATION = 5000; 
@@ -295,30 +330,20 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
 
       // --- SCROLL ORBS (re-aparecen durante el scroll) ---
       if (transitionStarted && scrollEnergy > 0.01 && !isGallery) {
-        ctx.globalAlpha = scrollEnergy * 0.6;
-        ctx.globalCompositeOperation = 'screen';
-        if (!mobile) {
-          ctx.filter = 'blur(80px)';
-        }
-
-        activeOrbs.forEach((orb) => {
-          const x = width / 2 + Math.sin(scrollOrbTime * orb.speedX + orb.phaseX) * (width * 0.4) + Math.cos(scrollOrbTime * orb.speedX * 0.5) * (width * 0.1);
-          const y = height / 2 + Math.cos(scrollOrbTime * orb.speedY + orb.phaseY) * (height * 0.4) + Math.sin(scrollOrbTime * orb.speedY * 0.5) * (height * 0.1);
-          const radius = minDim * orb.size;
-          const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
-          gradient.addColorStop(0, orb.color);
-          gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-          ctx.fillStyle = gradient;
-          ctx.beginPath();
-          ctx.arc(x, y, radius, 0, Math.PI * 2);
-          ctx.fill();
-        });
-
-        if (!mobile) {
-          ctx.filter = 'none';
-        }
-        ctx.globalAlpha = 1;
-        ctx.globalCompositeOperation = 'source-over';
+        drawGlowLayer((octx, scale) => {
+          activeOrbs.forEach((orb) => {
+            const x = width / 2 + Math.sin(scrollOrbTime * orb.speedX + orb.phaseX) * (width * 0.4) + Math.cos(scrollOrbTime * orb.speedX * 0.5) * (width * 0.1);
+            const y = height / 2 + Math.cos(scrollOrbTime * orb.speedY + orb.phaseY) * (height * 0.4) + Math.sin(scrollOrbTime * orb.speedY * 0.5) * (height * 0.1);
+            const radius = minDim * orb.size;
+            const gradient = octx.createRadialGradient(x * scale, y * scale, 0, x * scale, y * scale, radius * scale);
+            gradient.addColorStop(0, orb.color);
+            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            octx.fillStyle = gradient;
+            octx.beginPath();
+            octx.arc(x * scale, y * scale, radius * scale, 0, Math.PI * 2);
+            octx.fill();
+          });
+        }, 80, scrollEnergy * 0.6, 'screen');
       }
 
       // --- ORBE HERO (POST-INTRO) ---
@@ -331,48 +356,35 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
 
         // Respiración sutil para que no sea completamente estática
         const breathe = 1 + Math.sin(waveTime * 0.5) * 0.05;
-
-        ctx.globalAlpha = heroOrbAlpha * breathe;
-        ctx.globalCompositeOperation = 'screen';
+        const heroAlpha = heroOrbAlpha * breathe;
 
         // Capa 1: glow exterior amplio (ilumina el centro superior e inferior)
-        if (!mobile) {
-          ctx.filter = 'blur(90px)';
-        }
-        const outerR = Math.max(width * 0.78, height * 1.05);
-        const outerGrad = ctx.createRadialGradient(orbX, orbY, 0, orbX, orbY, outerR);
-        outerGrad.addColorStop(0,    'rgba(200, 70, 0, 0.70)');
-        outerGrad.addColorStop(0.30, 'rgba(130, 42, 0, 0.38)');
-        outerGrad.addColorStop(0.60, 'rgba(60, 15, 0, 0.14)');
-        outerGrad.addColorStop(1,    'rgba(0, 0, 0, 0)');
-        ctx.fillStyle = outerGrad;
-        ctx.beginPath();
-        ctx.arc(orbX, orbY, outerR, 0, Math.PI * 2);
-        ctx.fill();
-        if (!mobile) {
-          ctx.filter = 'none';
-        }
+        drawGlowLayer((octx, scale) => {
+          const outerR = Math.max(width * 0.78, height * 1.05);
+          const outerGrad = octx.createRadialGradient(orbX * scale, orbY * scale, 0, orbX * scale, orbY * scale, outerR * scale);
+          outerGrad.addColorStop(0,    'rgba(200, 70, 0, 0.70)');
+          outerGrad.addColorStop(0.30, 'rgba(130, 42, 0, 0.38)');
+          outerGrad.addColorStop(0.60, 'rgba(60, 15, 0, 0.14)');
+          outerGrad.addColorStop(1,    'rgba(0, 0, 0, 0)');
+          octx.fillStyle = outerGrad;
+          octx.beginPath();
+          octx.arc(orbX * scale, orbY * scale, outerR * scale, 0, Math.PI * 2);
+          octx.fill();
+        }, 90, heroAlpha, 'screen');
 
         // Capa 2: núcleo brillante concentrado en el top-center
-        if (!mobile) {
-          ctx.filter = 'blur(55px)';
-        }
-        const innerR = Math.min(width, height) * 0.58;
-        const innerGrad = ctx.createRadialGradient(orbX, orbY, 0, orbX, orbY, innerR);
-        innerGrad.addColorStop(0,    'rgba(255, 130, 0, 0.95)');
-        innerGrad.addColorStop(0.20, 'rgba(230, 88, 0, 0.58)');
-        innerGrad.addColorStop(0.50, 'rgba(150, 48, 0, 0.24)');
-        innerGrad.addColorStop(1,    'rgba(0, 0, 0, 0)');
-        ctx.fillStyle = innerGrad;
-        ctx.beginPath();
-        ctx.arc(orbX, orbY, innerR, 0, Math.PI * 2);
-        ctx.fill();
-        if (!mobile) {
-          ctx.filter = 'none';
-        }
-
-        ctx.globalAlpha = 1;
-        ctx.globalCompositeOperation = 'source-over';
+        drawGlowLayer((octx, scale) => {
+          const innerR = Math.min(width, height) * 0.58;
+          const innerGrad = octx.createRadialGradient(orbX * scale, orbY * scale, 0, orbX * scale, orbY * scale, innerR * scale);
+          innerGrad.addColorStop(0,    'rgba(255, 130, 0, 0.95)');
+          innerGrad.addColorStop(0.20, 'rgba(230, 88, 0, 0.58)');
+          innerGrad.addColorStop(0.50, 'rgba(150, 48, 0, 0.24)');
+          innerGrad.addColorStop(1,    'rgba(0, 0, 0, 0)');
+          octx.fillStyle = innerGrad;
+          octx.beginPath();
+          octx.arc(orbX * scale, orbY * scale, innerR * scale, 0, Math.PI * 2);
+          octx.fill();
+        }, 55, heroAlpha, 'screen');
       }
 
       ctx.globalAlpha = 1; // Restaurar alpha
@@ -388,7 +400,7 @@ export function GlowBackground({ isGallery = false }: { isGallery?: boolean } = 
       titleObserver.disconnect();
       cancelAnimationFrame(rafId);
     };
-  }, [isGallery]);
+  }, [isGallery, active]);
 
   return (
     <div className={styles.container}>

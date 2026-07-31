@@ -23,6 +23,7 @@ function GithubIcon() {
 
 type Props = {
   detail: Project | null;
+  active: boolean;
   goBack: () => void;
   outerRef: RefObject<HTMLDivElement | null>;
   scrollRef: RefObject<HTMLDivElement | null>;
@@ -30,7 +31,7 @@ type Props = {
   detailHeaderRef: RefObject<HTMLDivElement | null>;
 };
 
-export function ProjectDetail({ detail, goBack, outerRef, scrollRef, firstScreenRef, detailHeaderRef }: Props) {
+export function ProjectDetail({ detail, active, goBack, outerRef, scrollRef, firstScreenRef, detailHeaderRef }: Props) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const openLightbox = useCallback((i: number) => {
@@ -83,7 +84,7 @@ export function ProjectDetail({ detail, goBack, outerRef, scrollRef, firstScreen
 
   return (
     <div ref={outerRef} className={styles.detailView}>
-      <GlowBackground isGallery={true} />
+      <GlowBackground isGallery={true} active={active} />
       {detail && (
         <>
           <div ref={scrollRef} className={styles.detailScrollArea}>

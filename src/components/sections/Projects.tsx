@@ -830,6 +830,7 @@ export function Projects() {
         outerRef={detailRef}
         scrollRef={scrollAreaRef}
         detail={detail}
+        active={selected !== null}
         goBack={goBack}
         firstScreenRef={firstScreenRef}
         detailHeaderRef={detailHeaderRef}

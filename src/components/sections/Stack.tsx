@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import styles from './Stack.module.css';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
@@ -15,15 +15,18 @@ export function Stack() {
   const row1Ref    = useRef<HTMLDivElement>(null);
   const row2Ref    = useRef<HTMLDivElement>(null);
   const pillsRef   = useRef<(HTMLSpanElement | null)[]>([]);
+  // Tween "en curso" de cada pill, para poder pausarlo/reanudarlo sin perder
+  // la posición cuando la sección entra/sale del viewport.
+  const pillTweensRef = useRef<(gsap.core.Tween | null)[]>([]);
 
   useGSAP(() => {
     gsap.set([titleRef.current, row1Ref.current, row2Ref.current], { autoAlpha: 0, y: 32 });
 
     const startFloat = () => {
-      pillsRef.current.forEach((pill) => {
+      pillsRef.current.forEach((pill, i) => {
         if (!pill) return;
         const animateFloat = () => {
-          gsap.to(pill, {
+          pillTweensRef.current[i] = gsap.to(pill, {
             y: gsap.utils.random(-9, 9),
             duration: gsap.utils.random(2.6, 5.2),
             ease: 'sine.inOut',
@@ -86,6 +89,27 @@ export function Stack() {
       });
     }
   }, { scope: sectionRef });
+
+  // Pausa el flotado de los pills cuando la sección sale del viewport (y lo
+  // reanuda al volver a entrar) para no seguir animando 11 tweens infinitos
+  // en segundo plano el resto de la sesión.
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        pillTweensRef.current.forEach((tween) => {
+          if (!tween) return;
+          if (entry.isIntersecting) tween.resume();
+          else tween.pause();
+        });
+      },
+      { threshold: 0 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <section id="stack" ref={sectionRef} className={`${styles.stackSection} hero-mesh-gradient`} data-section-trigger>

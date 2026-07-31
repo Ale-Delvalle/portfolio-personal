@@ -374,9 +374,19 @@ export function Projects() {
   }, { scope: sectionRef });
 
   // ── 3D tilt + mouse-parallax + glare on the preview frame ──
-  // Global listener: strong effect when over frame, subtle when anywhere else
+  // Global listener: strong effect when over frame, subtle when anywhere else.
+  // Throttled to once per animation frame (mousemove can fire far more often
+  // than the screen refreshes) and skipped entirely while the section isn't
+  // in the viewport, so it doesn't keep animating off-screen elements.
   useEffect(() => {
-    const handleGlobalMove = (e: MouseEvent) => {
+    const isSectionVisibleRef = { current: false };
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => { isSectionVisibleRef.current = entry.isIntersecting; },
+      { threshold: 0 }
+    );
+    if (sectionRef.current) visibilityObserver.observe(sectionRef.current);
+
+    const processMove = (e: MouseEvent) => {
       const frame = previewFrameRef.current;
       if (!frame) return;
 
@@ -452,13 +462,36 @@ export function Projects() {
       }
     };
 
+    let ticking = false;
+    let lastEvent: MouseEvent | null = null;
+    const handleGlobalMove = (e: MouseEvent) => {
+      if (!isSectionVisibleRef.current) return;
+      lastEvent = e;
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        if (lastEvent) processMove(lastEvent);
+        ticking = false;
+      });
+    };
+
     window.addEventListener('mousemove', handleGlobalMove);
-    return () => window.removeEventListener('mousemove', handleGlobalMove);
+    return () => {
+      window.removeEventListener('mousemove', handleGlobalMove);
+      visibilityObserver.disconnect();
+    };
   }, []);
 
   // ── DeviceOrientation tilt para mobile (reemplaza el tilt de mouse) ─────
   useEffect(() => {
     if (window.innerWidth >= 1024) return;
+
+    const isSectionVisibleRef = { current: false };
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => { isSectionVisibleRef.current = entry.isIntersecting; },
+      { threshold: 0 }
+    );
+    if (sectionRef.current) visibilityObserver.observe(sectionRef.current);
 
     // Suaviza el ruido del sensor: cerca de beta≈90° (teléfono casi vertical)
     // el gamma sufre gimbal lock y puede saltar entre extremos de un evento a
@@ -466,7 +499,7 @@ export function Projects() {
     const smoothed = { gamma: 0, beta: 0 };
     const SMOOTHING = 0.12;
 
-    const applyOrientation = (e: DeviceOrientationEvent) => {
+    const processOrientation = (e: DeviceOrientationEvent) => {
       const frame = previewFrameRef.current;
       if (!frame) return;
 
@@ -509,6 +542,22 @@ export function Projects() {
       }
     };
 
+    // El sensor puede disparar más seguido que el refresco de pantalla; nos
+    // quedamos con el último evento y procesamos como máximo una vez por frame,
+    // y solo si la sección está realmente visible.
+    let ticking = false;
+    let lastEvent: DeviceOrientationEvent | null = null;
+    const applyOrientation = (e: DeviceOrientationEvent) => {
+      if (!isSectionVisibleRef.current) return;
+      lastEvent = e;
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        if (lastEvent) processOrientation(lastEvent);
+        ticking = false;
+      });
+    };
+
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     if (isIOS && typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
       // El permiso se solicita desde el primer tap al frame (ver onClick del previewFrame)
@@ -517,11 +566,15 @@ export function Projects() {
       window.addEventListener('deviceorientation', applyOrientation, true);
       return () => {
         window.removeEventListener('deviceorientation', applyOrientation, true);
+        visibilityObserver.disconnect();
         delete (window as any).__gyroActive;
       };
     }
 
-    return () => { delete (window as any).__gyroActive; };
+    return () => {
+      visibilityObserver.disconnect();
+      delete (window as any).__gyroActive;
+    };
   }, []);
 
   // ── Swipe handlers: cambian de imagen deslizando el dedo (solo mobile) ──

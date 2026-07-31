@@ -5,16 +5,18 @@ import type { PerformanceTier } from '../../lib/performanceTier';
 
 export function GlowBackground({ isGallery = false, active = true }: { isGallery?: boolean; active?: boolean } = {}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { tier, measured } = usePerformanceTier();
-  // Arranca en 'high' (comportamiento original intacto) y solo se corrige una vez
-  // que hay una medición real confirmada. Se lee por-frame vía ref para nunca
-  // tener que reiniciar el efecto/canvas (eso reseteaba la transición del intro
-  // a mitad de camino cuando el tier cambiaba de fase 1 a fase 2).
-  const tierRef = useRef<PerformanceTier>('high');
+  const { tier } = usePerformanceTier();
+  // Refleja el tier (estimación inmediata de fase 1, corregida por la medición
+  // real de fase 2) desde el frame 1 — el intro es lo primero que se dibuja y
+  // en una PC lenta no puede esperar 1.2s a la medición para aliviar el costo.
+  // Se lee por-frame vía ref, nunca como dependencia del efecto de abajo, así
+  // que la corrección de fase 2 es suave y no reinicia la animación del canvas
+  // (eso es lo que reseteaba la transición del intro a mitad de camino).
+  const tierRef = useRef<PerformanceTier>(tier);
 
   useEffect(() => {
-    if (measured) tierRef.current = tier;
-  }, [tier, measured]);
+    tierRef.current = tier;
+  }, [tier]);
 
   useEffect(() => {
     if (!active) return;

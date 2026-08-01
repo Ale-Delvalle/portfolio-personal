@@ -68,163 +68,225 @@ export function Hero() {
     gsap.set(nameContainerRef.current, { zIndex: 51, position: 'relative' });
 
     const lowTier = tier === 'low';
+
     if (lowTier) {
-      // El glow detrás de la foto de perfil no tiene animación propia: sin esto
-      // queda visible desde el montaje, antes incluso de que la foto aparezca.
+      // === SIN INTRO "CINEMATOGRÁFICA" (CPUs de menos de 5 cores) ===
+      // Se remueve el movimiento complejo de escala + reposicionamiento del
+      // nombre y las chispas de canvas. Se mantiene la animación de entrada
+      // del resto de los elementos, y nombre/subtítulo usan un fade + slide
+      // simple de arriba hacia abajo en vez del movimiento complejo.
+      gsap.set([nameCanvasRef.current, roleCanvasRef.current], { display: 'none' });
       gsap.set(glowRef.current, { autoAlpha: 0 });
-    }
+      if (introOverlayRef.current) gsap.set(introOverlayRef.current, { autoAlpha: 0 });
 
-    if (isMobile) {
-      gsap.set(imageRef.current, { opacity: 0, scale: 0.92, y: -80 });
-      gsap.set(rightTextRef.current, { autoAlpha: 0 });
-      gsap.set(mobileAccentRef.current, { scaleX: 0, opacity: 0 });
-      // "¿Cómo trabajo?" no está visible sin scroll en mobile: se revela por ScrollTrigger, no en la intro
-      gsap.set(howIWorkRef.current, { autoAlpha: 0, y: 30 });
-      if (buttonsRef.current) {
-        gsap.set(Array.from(buttonsRef.current.children), { opacity: 0, y: 18, scale: 0.95 });
-      }
-    }
-    // 1) Nombre y Rol aparecen en el centro de la pantalla
-    tl.fromTo(nameContainerRef.current, 
-      { autoAlpha: 0, y: startY, scale: startScale },
-      { autoAlpha: 1, y: startY, duration: 0.3, ease: "power3.out" }
-    )
-    // 1.5) Bolitas brillantes detrás del nombre de izquierda a derecha (Línea invisible, Renderizado en Canvas)
-    const sweepProxy = { val: 0 };
-    tl.addLabel("introSparks", "+=0.05")
-    .to(sweepProxy, {
-      val: 1,
-      duration: 0.3,
-      ease: "power2.inOut",
-      onUpdate: () => {
-        const nCanvas = nameCanvasRef.current;
-        const rCanvas = roleCanvasRef.current;
-        if (!nCanvas || !rCanvas) return;
-        
-        const yBaseN = nCanvas.height * 0.8;
-        const yBaseR = rCanvas.height * 0.8;
-        const xPosN = sweepProxy.val * nCanvas.width;
-        const xPosR = sweepProxy.val * rCanvas.width;
-        
-        const emit = (particlesArr: any[], x: number, y: number) => {
-          // Tier bajo: sin chispas decorativas. Tier medio: una por tick en vez de 1-3.
-          if (tier === 'low') return;
-          const count = tier === 'medium' ? 1 : Math.floor(Math.random() * 3) + 1;
-          for (let i = 0; i < count; i++) {
-            particlesArr.push({
-              x: x + (Math.random() - 0.5) * 15, 
-              y: y + (Math.random() - 0.5) * 15,
-              vx: (Math.random() - 0.5) * 0.8,
-              vy: (Math.random() * -1) - 0.2, 
-              life: 1.0 + Math.random() * 0.5,
-              size: Math.random() * 2.5 + 0.5 
-            });
-          }
-        };
-
-        emit(nameParticlesRef.current, xPosN, yBaseN);
-        emit(roleParticlesRef.current, xPosR, yBaseR);
-      }
-    }, "introSparks")
-    .set([nameCanvasRef.current, roleCanvasRef.current], { display: "none" }, "introSparks+=1")
-    // 2) Se desplazan hacia su posición final (arriba)
-    .addLabel("moveUp", "+=0.1")
-    .to(nameContainerRef.current, {
-      y: endY,
-      scale: 1,
-      duration: 1.2,
-      ease: "power3.inOut",
-      onStart: () => {
-        window.dispatchEvent(new CustomEvent('hero-move-up'));
-      }
-    }, "moveUp");
-
-    if (isMobile) {
-      // --- SECUENCIA MOBILE ---
-      // Overlay naranja-marrón se desvanece cuando el nombre sube
-      tl.to(introOverlayRef.current, {
-        autoAlpha: 0,
-        duration: 0.8,
-        ease: "power2.out"
-      }, "moveUp")
-      // 3) Foto: aparece justo cuando el overlay termina de desvanecerse (moveUp+0.8)
-      .fromTo(imageRef.current,
-        { opacity: 0, scale: 0.92, y: -80 },
-        { opacity: 1, scale: 1, y: 0, duration: 0.85, ease: "power3.out", clearProps: "opacity,transform" },
-        "moveUp+=0.8"
-      )
-      // 4) Línea naranja: comienza cuando la foto ya está visible (moveUp+1.5)
-      .fromTo(mobileAccentRef.current,
-        { scaleX: 0, opacity: 0 },
-        { scaleX: 1, opacity: 1, duration: 0.5, ease: "power2.out", transformOrigin: "left center" },
-        "moveUp+=1.5"
-      )
-      // 5) Botones aparecen en cascada después de la foto
-      .fromTo(
-        buttonsRef.current ? Array.from(buttonsRef.current.children) : [],
-        { opacity: 0, y: 18, scale: 0.95 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.45, stagger: 0.1, ease: "back.out(1.4)", clearProps: "all" },
-        "moveUp+=1.6"
-      )
-      // 6) Textos laterales aparecen después de los botones
-      .fromTo(rightTextRef.current,
-        { autoAlpha: 0, y: 20 },
-        { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out" },
-        "moveUp+=1.7"
-      );
-
-      if (lowTier) {
-        // El glow aparece junto con la foto, nunca antes
-        tl.fromTo(glowRef.current,
-          { autoAlpha: 0 },
-          { autoAlpha: 1, duration: 0.7, ease: "power2.out" },
-          "moveUp+=0.8"
-        );
-      }
-
-      // "¿Cómo trabajo?" se revela recién cuando el usuario hace scroll hasta esa sección
-      gsap.to(howIWorkRef.current, {
-        autoAlpha: 1,
-        y: 0,
-        duration: 0.7,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: howIWorkRef.current,
-          start: "top 88%",
-          toggleActions: "play none none none",
-          once: true
+      if (isMobile) {
+        gsap.set(imageRef.current, { opacity: 0, y: -20 });
+        gsap.set(rightTextRef.current, { autoAlpha: 0 });
+        gsap.set(mobileAccentRef.current, { scaleX: 0, opacity: 0 });
+        // "¿Cómo trabajo?" no está visible sin scroll en mobile: se revela por ScrollTrigger, no en la intro
+        gsap.set(howIWorkRef.current, { autoAlpha: 0, y: 30 });
+        if (buttonsRef.current) {
+          gsap.set(Array.from(buttonsRef.current.children), { opacity: 0, y: 14 });
         }
-      });
-    } else {
-      // --- SECUENCIA ORIGINAL PARA PC Y TABLET ---
-      // 3) Imagen aparece con desplazamiento desde arriba hacia abajo (Fade + Slide)
-      tl.addLabel("photoIn", "-=0.5")
-      .fromTo(imageRef.current,
-        { autoAlpha: 0, y: -150 },
-        { autoAlpha: 1, y: 0, duration: 1.2, ease: "power3.out" },
-        "photoIn"
+      } else {
+        gsap.set(imageRef.current, { autoAlpha: 0, y: -40 });
+      }
+
+      // 1) Nombre y subtítulo: fade + slide simple, directo a su posición final
+      tl.fromTo(nameContainerRef.current,
+        { autoAlpha: 0, y: endY - 24 },
+        {
+          autoAlpha: 1,
+          y: endY,
+          duration: 0.5,
+          ease: "power2.out",
+          onStart: () => {
+            window.dispatchEvent(new CustomEvent('hero-move-up'));
+          }
+        }
       )
-      // 4) Textos y botones
+      // 2) Foto de perfil
+      .to(imageRef.current, isMobile
+        ? { opacity: 1, y: 0, duration: 0.5, ease: "power2.out", clearProps: "opacity,transform" }
+        : { autoAlpha: 1, y: 0, duration: 0.5, ease: "power2.out" },
+        "-=0.25"
+      )
+      // El glow aparece junto con la foto, nunca antes
+      .to(glowRef.current, { autoAlpha: 1, duration: 0.5, ease: "power2.out" }, "<")
+      // 3) Textos y botones
       .from([rightTextRef.current, buttonsRef.current], {
         autoAlpha: 0,
-        y: 20,
-        duration: 0.8,
-        stagger: 0.15,
-        ease: "power3.out"
-      }, "-=1")
-      // 5) Indicador de Scroll
-      .fromTo(scrollIndicatorRef.current,
-        { autoAlpha: 0, y: -10 },
-        { autoAlpha: 1, y: 0, duration: 1, ease: "power2.out" },
-        "-=0.5"
-      );
+        y: 16,
+        duration: 0.45,
+        stagger: 0.1,
+        ease: "power2.out"
+      }, "-=0.2");
 
-      if (lowTier) {
-        // El glow aparece junto con la foto, nunca antes
-        tl.fromTo(glowRef.current,
-          { autoAlpha: 0 },
-          { autoAlpha: 1, duration: 1, ease: "power2.out" },
-          "photoIn"
+      if (isMobile) {
+        // 4) Línea naranja
+        tl.to(mobileAccentRef.current, {
+          scaleX: 1,
+          opacity: 1,
+          duration: 0.4,
+          ease: "power2.out",
+          transformOrigin: "left center"
+        }, "-=0.15");
+
+        // "¿Cómo trabajo?" se revela recién cuando el usuario hace scroll hasta esa sección
+        gsap.to(howIWorkRef.current, {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.6,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: howIWorkRef.current,
+            start: "top 88%",
+            toggleActions: "play none none none",
+            once: true
+          }
+        });
+      } else {
+        // 4) Indicador de Scroll
+        tl.fromTo(scrollIndicatorRef.current,
+          { autoAlpha: 0, y: -10 },
+          { autoAlpha: 1, y: 0, duration: 0.6, ease: "power2.out" },
+          "-=0.2"
+        );
+      }
+    } else {
+      // === SECUENCIA COMPLETA (tier medio/alto) ===
+      if (isMobile) {
+        gsap.set(imageRef.current, { opacity: 0, scale: 0.92, y: -80 });
+        gsap.set(rightTextRef.current, { autoAlpha: 0 });
+        gsap.set(mobileAccentRef.current, { scaleX: 0, opacity: 0 });
+        // "¿Cómo trabajo?" no está visible sin scroll en mobile: se revela por ScrollTrigger, no en la intro
+        gsap.set(howIWorkRef.current, { autoAlpha: 0, y: 30 });
+        if (buttonsRef.current) {
+          gsap.set(Array.from(buttonsRef.current.children), { opacity: 0, y: 18, scale: 0.95 });
+        }
+      }
+      // 1) Nombre y Rol aparecen en el centro de la pantalla
+      tl.fromTo(nameContainerRef.current,
+        { autoAlpha: 0, y: startY, scale: startScale },
+        { autoAlpha: 1, y: startY, duration: 0.3, ease: "power3.out" }
+      )
+      // 1.5) Bolitas brillantes detrás del nombre de izquierda a derecha (Línea invisible, Renderizado en Canvas)
+      const sweepProxy = { val: 0 };
+      tl.addLabel("introSparks", "+=0.05")
+      .to(sweepProxy, {
+        val: 1,
+        duration: 0.3,
+        ease: "power2.inOut",
+        onUpdate: () => {
+          const nCanvas = nameCanvasRef.current;
+          const rCanvas = roleCanvasRef.current;
+          if (!nCanvas || !rCanvas) return;
+
+          const yBaseN = nCanvas.height * 0.8;
+          const yBaseR = rCanvas.height * 0.8;
+          const xPosN = sweepProxy.val * nCanvas.width;
+          const xPosR = sweepProxy.val * rCanvas.width;
+
+          const emit = (particlesArr: any[], x: number, y: number) => {
+            // Tier medio: una por tick en vez de 1-3 (tier bajo no llega a este bloque).
+            const count = tier === 'medium' ? 1 : Math.floor(Math.random() * 3) + 1;
+            for (let i = 0; i < count; i++) {
+              particlesArr.push({
+                x: x + (Math.random() - 0.5) * 15,
+                y: y + (Math.random() - 0.5) * 15,
+                vx: (Math.random() - 0.5) * 0.8,
+                vy: (Math.random() * -1) - 0.2,
+                life: 1.0 + Math.random() * 0.5,
+                size: Math.random() * 2.5 + 0.5
+              });
+            }
+          };
+
+          emit(nameParticlesRef.current, xPosN, yBaseN);
+          emit(roleParticlesRef.current, xPosR, yBaseR);
+        }
+      }, "introSparks")
+      .set([nameCanvasRef.current, roleCanvasRef.current], { display: "none" }, "introSparks+=1")
+      // 2) Se desplazan hacia su posición final (arriba)
+      .addLabel("moveUp", "+=0.1")
+      .to(nameContainerRef.current, {
+        y: endY,
+        scale: 1,
+        duration: 1.2,
+        ease: "power3.inOut",
+        onStart: () => {
+          window.dispatchEvent(new CustomEvent('hero-move-up'));
+        }
+      }, "moveUp");
+
+      if (isMobile) {
+        // --- SECUENCIA MOBILE ---
+        // Overlay naranja-marrón se desvanece cuando el nombre sube
+        tl.to(introOverlayRef.current, {
+          autoAlpha: 0,
+          duration: 0.8,
+          ease: "power2.out"
+        }, "moveUp")
+        // 3) Foto: aparece justo cuando el overlay termina de desvanecerse (moveUp+0.8)
+        .fromTo(imageRef.current,
+          { opacity: 0, scale: 0.92, y: -80 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.85, ease: "power3.out", clearProps: "opacity,transform" },
+          "moveUp+=0.8"
+        )
+        // 4) Línea naranja: comienza cuando la foto ya está visible (moveUp+1.5)
+        .fromTo(mobileAccentRef.current,
+          { scaleX: 0, opacity: 0 },
+          { scaleX: 1, opacity: 1, duration: 0.5, ease: "power2.out", transformOrigin: "left center" },
+          "moveUp+=1.5"
+        )
+        // 5) Botones aparecen en cascada después de la foto
+        .fromTo(
+          buttonsRef.current ? Array.from(buttonsRef.current.children) : [],
+          { opacity: 0, y: 18, scale: 0.95 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.45, stagger: 0.1, ease: "back.out(1.4)", clearProps: "all" },
+          "moveUp+=1.6"
+        )
+        // 6) Textos laterales aparecen después de los botones
+        .fromTo(rightTextRef.current,
+          { autoAlpha: 0, y: 20 },
+          { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out" },
+          "moveUp+=1.7"
+        );
+
+        // "¿Cómo trabajo?" se revela recién cuando el usuario hace scroll hasta esa sección
+        gsap.to(howIWorkRef.current, {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.7,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: howIWorkRef.current,
+            start: "top 88%",
+            toggleActions: "play none none none",
+            once: true
+          }
+        });
+      } else {
+        // --- SECUENCIA ORIGINAL PARA PC Y TABLET ---
+        // 3) Imagen aparece con desplazamiento desde arriba hacia abajo (Fade + Slide)
+        tl.fromTo(imageRef.current,
+          { autoAlpha: 0, y: -150 },
+          { autoAlpha: 1, y: 0, duration: 1.2, ease: "power3.out" },
+          "-=0.5"
+        )
+        // 4) Textos y botones
+        .from([rightTextRef.current, buttonsRef.current], {
+          autoAlpha: 0,
+          y: 20,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: "power3.out"
+        }, "-=1")
+        // 5) Indicador de Scroll
+        .fromTo(scrollIndicatorRef.current,
+          { autoAlpha: 0, y: -10 },
+          { autoAlpha: 1, y: 0, duration: 1, ease: "power2.out" },
+          "-=0.5"
         );
       }
     }

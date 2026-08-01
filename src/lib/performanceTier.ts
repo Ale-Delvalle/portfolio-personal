@@ -43,7 +43,8 @@ export function estimateInitialTier(hints: DeviceHints): PerformanceTier {
     return hints.isMobile ? 'medium' : 'high';
   }
 
-  const coreScore = hints.cores === null ? null : hints.cores >= 8 ? 2 : hints.cores >= 4 ? 1 : 0;
+  // Corte explícito en 5 cores: menos de 5 se trata como gama baja.
+  const coreScore = hints.cores === null ? null : hints.cores >= 8 ? 2 : hints.cores >= 5 ? 1 : 0;
   const memScore = hints.memoryGB === null ? null : hints.memoryGB >= 8 ? 2 : hints.memoryGB >= 4 ? 1 : 0;
 
   // Si falta una de las dos señales, se usa solo la disponible a doble peso

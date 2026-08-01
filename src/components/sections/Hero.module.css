@@ -507,7 +507,7 @@
   content: '';
   position: absolute;
   top: 0;
-  left: -150%;
+  left: 0;
   width: 50%;
   height: 100%;
   background: linear-gradient(
@@ -516,14 +516,16 @@
     rgba(255, 255, 255, 0.4) 50%,
     rgba(255, 255, 255, 0) 100%
   );
-  transform: skewX(-25deg);
   animation: shimmer 8s infinite;
 }
 
+/* Mismo recorrido que antes (left: -150% -> 200% de un elemento con width: 50%),
+   expresado en transform para que el navegador lo anime en el compositor
+   en vez de disparar layout en cada frame. */
 @keyframes shimmer {
-  0% { left: -150%; }
-  40% { left: 200%; }
-  100% { left: 200%; }
+  0% { transform: translateX(-300%) skewX(-25deg); }
+  40% { transform: translateX(400%) skewX(-25deg); }
+  100% { transform: translateX(400%) skewX(-25deg); }
 }
 
 .secondaryBtn:hover {

@@ -680,8 +680,12 @@
     min-height: 100svh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding: 7rem 0 2rem;
+    /* Antes centraba verticalmente (con el padding-top como piso), lo que
+       sumaba espacio extra impredecible entre el navbar y la lista. Ahora
+       queda arriba, con la mitad del padding-top que tenía antes, así la
+       distancia al navbar es fija y la mitad de la anterior. */
+    justify-content: flex-start;
+    padding: calc(8rem) 0 2rem;
     overflow: visible;
   }
 

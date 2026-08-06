@@ -925,6 +925,172 @@
 }
 
 /* =========================================================
+   Short-height desktop/laptop screens (e.g. 1366x768, 1536x864,
+   1024x768 iPad landscape). A ancho amplio pero con poca altura,
+   el layout apilado (nombre -> foto -> fila de tarjetas) no entra
+   sin quedar detrás del navbar o recortado abajo. Se reestructura
+   a un grid de 2 columnas: nombre+foto+botones compactos a la
+   izquierda, tarjetas de info a la derecha, aprovechando el ancho
+   sobrante en vez de apilar todo verticalmente.
+   ========================================================= */
+@media (min-width: 1024px) and (max-height: 880px) {
+  /* .main pasa a centrar su contenido con flex en vez de un 100vh fijo:
+     si el contenido (con clearance de navbar incluido) no entra en la
+     altura del viewport, .main crece (height:auto) en vez de recortarlo
+     con el overflow:hidden heredado. */
+  .main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: auto !important;
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+
+  .content {
+    display: grid !important;
+    /* Columnas de ancho explícito (no 1fr) para que el bloque de 2
+       columnas quede centrado como una unidad en vez de pegado a la
+       izquierda con espacio muerto a la derecha. */
+    grid-template-columns: minmax(260px, 320px) minmax(360px, 640px);
+    grid-template-areas:
+      "name  cards"
+      "image cards";
+    align-items: start;
+    justify-content: center;
+    column-gap: 3rem;
+    row-gap: 0.85rem;
+    padding: 7rem 3rem 2rem !important;
+    height: auto !important;
+  }
+
+  /* Deshace el wrapper de textsContainer: sus hijos (leftColumn, rightColumn)
+     pasan a ser items directos del grid de .content sin tocar el DOM/JSX. */
+  .textsContainer {
+    display: contents !important;
+  }
+
+  .nameContainer {
+    grid-area: name;
+    width: 100% !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: auto;
+  }
+
+  .name, .nameWhiteOverlay {
+    white-space: normal !important;
+    font-size: clamp(1.9rem, 3.4vw, 2.6rem) !important;
+    letter-spacing: -0.02em !important;
+    text-align: center;
+  }
+
+  .role {
+    white-space: normal !important;
+    font-size: clamp(0.85rem, 1.3vw, 1rem) !important;
+    text-align: center;
+    padding: 0 0.5rem;
+  }
+
+  .leftColumn {
+    grid-area: image;
+    gap: 1rem !important;
+  }
+
+  .imageContainer {
+    width: 100% !important;
+    max-width: 170px !important;
+    height: auto !important;
+    aspect-ratio: 3 / 4 !important;
+    max-height: unset !important;
+    margin: 0 auto !important;
+  }
+
+  .imageWrapper {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: unset !important;
+    max-width: unset !important;
+  }
+
+  .profileImage {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: unset !important;
+    object-fit: contain !important;
+  }
+
+  .buttonGroup {
+    gap: 0.6rem;
+  }
+
+  .buttonRow1, .buttonRow2 {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+  }
+
+  .primaryBtn, .secondaryBtn {
+    padding: 0.6rem 1rem;
+    font-size: 0.82rem;
+  }
+
+  .socialGroup {
+    padding-left: 1rem;
+    margin-left: 0.35rem;
+  }
+
+  .socialBtn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .rightColumn {
+    grid-area: cards;
+    gap: 1.1rem !important;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .textBlock {
+    padding: 0.85rem 1.1rem;
+  }
+
+  .cardHeader {
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .cardIcon {
+    width: 26px;
+    height: 26px;
+  }
+
+  .sideTitle {
+    font-size: 1rem;
+  }
+
+  .sideDesc {
+    font-size: 0.83rem;
+    line-height: 1.5;
+  }
+
+  .tagRow {
+    gap: 0.32rem;
+    margin-top: 0.6rem;
+  }
+
+  .tag {
+    font-size: 0.66rem;
+    padding: 0.16rem 0.55rem;
+  }
+
+  .scrollIndicator {
+    bottom: 1rem;
+  }
+}
+
+/* =========================================================
    Landscape Mobile (Motorola g72 horizontal)
    ========================================================= */
 @media (max-height: 600px) {

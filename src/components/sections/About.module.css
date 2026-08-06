@@ -117,3 +117,46 @@
   }
 }
 
+/* =========================================================
+   Pantallas de escritorio con poca altura (p.ej. 1024x880).
+   El heading gigante (hasta 9.375rem) y los 6 párrafos apilados
+   no entran en el viewport. Se reduce el heading, se ajustan los
+   márgenes para el navbar (fixed) y los párrafos pasan a 2
+   columnas para aprovechar el ancho en vez de apilarse todos.
+   ========================================================= */
+@media (min-width: 1024px) and (max-height: 880px) {
+  .section {
+    height: auto !important;
+    min-height: 100vh;
+    min-height: 100svh;
+    justify-content: flex-start;
+    /* Pegado al navbar (fixed, top:8vh + ~40px de alto), con un margen
+       chico en vez del centrado vertical de antes. */
+    padding: calc(8vh + 60px) 2rem 2rem;
+    overflow: visible;
+  }
+
+  .heading {
+    /* El doble del tamaño que tenía este breakpoint antes. */
+    font-size: clamp(3.6rem, 6vw, 5.6rem);
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .paragraphsWrapper {
+    margin-top: 1rem;
+    /* 90% del ancho disponible dentro de .section (contenedor con padding
+       lateral de 2rem). */
+    width: 90%;
+    max-width: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .paragraph {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+}
+

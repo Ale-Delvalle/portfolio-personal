@@ -664,3 +664,54 @@
   }
 }
 
+/* =========================================================
+   Pantallas de escritorio con poca altura (p.ej. 1024x880).
+   .mainView estaba absolutamente posicionado y centrado dentro de
+   .section (100vh fijo), lo que recortaba el contenido con
+   overflow:hidden cuando no entraba. Se pasa a flujo normal
+   (.section crece si hace falta, sin recortar) y se reducen los
+   tamaños (el "Mis proyectos" cursivo estaba fijo en 5rem, sin
+   clamp) para que entre cómodo en el viewport.
+   ========================================================= */
+@media (min-width: 1024px) and (max-height: 880px) {
+  .section {
+    height: auto !important;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 7rem 0 2rem;
+    overflow: visible;
+  }
+
+  .mainView {
+    position: relative !important;
+    inset: auto !important;
+  }
+
+  .inner {
+    width: 80%;
+  }
+
+  .sectionLabel {
+    font-size: clamp(2rem, 4vw, 2.6rem);
+  }
+
+  .header {
+    margin-bottom: 0.6rem;
+  }
+
+  .row {
+    padding: 0.9rem 0.5rem 0.9rem 0;
+  }
+
+  .rowTitle {
+    font-size: clamp(1.05rem, 1.8vw, 1.5rem);
+  }
+
+  .row:hover .rowDesc {
+    max-height: 2.4rem;
+  }
+}
+

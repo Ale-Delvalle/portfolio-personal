@@ -956,10 +956,17 @@
 
   .content {
     display: grid !important;
-    /* Columnas de ancho explícito (no 1fr) para que el bloque de 2
-       columnas quede centrado como una unidad en vez de pegado a la
-       izquierda con espacio muerto a la derecha. */
-    grid-template-columns: minmax(260px, 320px) minmax(288px, 512px);
+    /* Columnas de ancho fijo (no minmax/1fr): con las cadenas de
+       "display: contents" (textsContainer, leftColumn) el navegador no
+       siempre calcula bien el max-content de las columnas, y eso rompía
+       el centrado (justify-content:center centraba un bloque cuyo ancho
+       real no coincidía con lo esperado). Con anchos fijos el bloque de
+       2 columnas mide siempre 320+48+560=928px y queda perfectamente
+       centrado, con el mismo espacio libre a los dos lados. La columna
+       de tarjetas es de 560px (con margen extra) para que la fila de
+       botones (nowrap) nunca se desborde hacia la derecha -eso era lo
+       que rompía la simetría: el desborde "comía" el margen derecho. */
+    grid-template-columns: 320px 560px;
     grid-template-areas:
       "name  cards"
       "image cards";
@@ -967,6 +974,10 @@
     justify-content: center;
     column-gap: 3rem;
     row-gap: 0.4rem;
+    /* Corrección manual: pese al centrado matemático, queda espacio de
+       más a la izquierda. Se desplaza el bloque 50px a la izquierda
+       (el Navbar no se toca, está fuera de .content). */
+    transform: translateX(-60px);
     padding: 7rem 3rem 2rem !important;
     height: auto !important;
   }
@@ -1049,19 +1060,19 @@
     flex-wrap: nowrap;
     justify-content: flex-start;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.4rem;
     width: 100%;
   }
 
   .buttonRow1, .buttonRow2 {
     flex-wrap: nowrap;
     justify-content: flex-start;
-    gap: 0.5rem;
+    gap: 0.4rem;
   }
 
   .primaryBtn, .secondaryBtn {
-    padding: 0.5rem 0.8rem;
-    font-size: 0.76rem;
+    padding: 0.45rem 0.7rem;
+    font-size: 0.72rem;
   }
 
   .emojiWrapper {
@@ -1069,9 +1080,9 @@
   }
 
   .socialGroup {
-    padding-left: 0.75rem;
-    margin-left: 0.3rem;
-    gap: 0.5rem;
+    padding-left: 0.6rem;
+    margin-left: 0.25rem;
+    gap: 0.4rem;
   }
 
   .socialBtn {

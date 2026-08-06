@@ -996,7 +996,7 @@
     z-index: auto;
     /* Separación mínima garantizada respecto a la foto, independiente
        del row-gap del grid (que además suma a este margen). */
-    margin-bottom: 1.25rem;
+    margin-bottom: 2.5rem;
   }
 
   .name, .nameWhiteOverlay {

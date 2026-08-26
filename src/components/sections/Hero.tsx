@@ -6,7 +6,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import pleaseImg from '../../assets/please.png';
 import profileImg from '../../assets/foto.png';
 import cvFile from '../../assets/Delvalle-Alexis-CV-full-stack-developer.docx?url';
+import cvPdfFile from '../../assets/Delvalle-Alexis-CV-full-stack-developer.pdf?url';
 import { usePerformanceTier } from '../../context/PerformanceContext';
+import { CvDownloadModal } from '../ui/CvDownloadModal';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -43,6 +45,7 @@ export function Hero() {
   const imageContainerRef = useRef<HTMLDivElement>(null);
 
   const [introDone, setIntroDone] = useState(false);
+  const [cvModalOpen, setCvModalOpen] = useState(false);
   const { tier } = usePerformanceTier();
 
   useGSAP(() => {
@@ -476,12 +479,16 @@ export function Hero() {
                     <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
                   </svg>
                 </button>
-                <a href={cvFile} download="Delvalle-Alexis-CV-full-stack-developer.docx" className={styles.primaryBtn}>
+                <button
+                  type="button"
+                  onClick={() => setCvModalOpen(true)}
+                  className={styles.primaryBtn}
+                >
                   Descargar CV
                   <svg className={styles.btnIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
                   </svg>
-                </a>
+                </button>
               </div>
 
               <div className={styles.buttonRow2}>
@@ -574,12 +581,16 @@ export function Hero() {
                     <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
                   </svg>
                 </button>
-                <a href={cvFile} download="Delvalle-Alexis-CV-full-stack-developer.docx" className={styles.primaryBtn}>
+                <button
+                  type="button"
+                  onClick={() => setCvModalOpen(true)}
+                  className={styles.primaryBtn}
+                >
                   Descargar CV
                   <svg className={styles.btnIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
                   </svg>
-                </a>
+                </button>
               </div>
 
               <div className={styles.buttonRow2}>
@@ -617,6 +628,12 @@ export function Hero() {
           ))}
         </span>
       </div>
+      <CvDownloadModal
+        isOpen={cvModalOpen}
+        onClose={() => setCvModalOpen(false)}
+        docxUrl={cvFile}
+        pdfUrl={cvPdfFile}
+      />
     </main>
   );
 }

@@ -12,7 +12,14 @@ import { CvDownloadModal } from '../ui/CvDownloadModal';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export function Hero() {
+interface HeroProps {
+  // Controla cuándo arranca la intro (gestionado por App para esperar a la
+  // pantalla de carga en equipos de alta gama). Por defecto true: el resto
+  // de dispositivos conserva el comportamiento de siempre, sin gate.
+  introReady?: boolean;
+}
+
+export function Hero({ introReady = true }: HeroProps) {
   const nameRef = useRef<HTMLDivElement>(null);
   const roleRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
@@ -49,6 +56,10 @@ export function Hero() {
   const { tier } = usePerformanceTier();
 
   useGSAP(() => {
+    // Mientras se espera la pantalla de carga (solo equipos de alta gama),
+    // la intro no debe arrancar: se difiere hasta que introReady sea true.
+    if (!introReady) return;
+
     const isMobile = window.innerWidth < 768;
     const startY = isMobile ? (window.innerHeight / 2 - 80) : (window.innerHeight * 0.2 + 50);
     const startScale = isMobile ? 1.15 : 1.5;
@@ -331,7 +342,7 @@ export function Hero() {
 
 
 
-  }, { scope: mainRef });
+  }, { scope: mainRef, dependencies: [introReady] });
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!introDone || window.innerWidth < 1024) return;

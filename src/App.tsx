@@ -5,15 +5,50 @@ import { Hero } from './components/sections/Hero';
 import { About } from './components/sections/About';
 import { Stack } from './components/sections/Stack';
 import { Projects } from './components/sections/Projects';
-import { useEffect, useRef } from 'react';
+import { LoadingScreen } from './components/ui/LoadingScreen';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { usePerformanceTier } from './context/PerformanceContext';
 
 gsap.registerPlugin(ScrollTrigger);
+
+// Tiempo mínimo que se muestra la pantalla de carga para evitar un parpadeo
+// cuando los recursos ya están en caché y cargan casi instantáneamente.
+const MIN_LOADING_SCREEN_MS = 500;
+const LOADING_SCREEN_FADE_MS = 500;
 
 function App() {
   const isAnimating   = useRef(false);
   const activeIndexRef = useRef(0);
+
+  const { tier } = usePerformanceTier();
+  // Se congela en el primer render: la pantalla de carga solo aplica a la
+  // estimación inmediata (heurística de cores/memoria), no a la medición de
+  // FPS que llega ~1.2s después y que no debe alterar esta decisión inicial.
+  const [showLoadingGate] = useState(() => tier === 'high');
+  const [introReady, setIntroReady] = useState(!showLoadingGate);
+  const [loaderExiting, setLoaderExiting] = useState(false);
+  const [loaderMounted, setLoaderMounted] = useState(showLoadingGate);
+
+  useEffect(() => {
+    if (!showLoadingGate) return;
+
+    const start = performance.now();
+    const fontsReady = document.fonts?.ready ?? Promise.resolve();
+    const windowLoaded = document.readyState === 'complete'
+      ? Promise.resolve()
+      : new Promise<void>((resolve) => window.addEventListener('load', () => resolve(), { once: true }));
+
+    Promise.all([fontsReady, windowLoaded]).then(() => {
+      const remaining = Math.max(0, MIN_LOADING_SCREEN_MS - (performance.now() - start));
+      setTimeout(() => {
+        setIntroReady(true);
+        setLoaderExiting(true);
+        setTimeout(() => setLoaderMounted(false), LOADING_SCREEN_FADE_MS);
+      }, remaining);
+    });
+  }, [showLoadingGate]);
 
   useEffect(() => {
     const onLoad = () => ScrollTrigger.refresh();
@@ -180,9 +215,10 @@ function App() {
 
   return (
     <>
+      {loaderMounted && <LoadingScreen exiting={loaderExiting} />}
       <GlowBackground />
       <Navbar />
-      <Hero />
+      <Hero introReady={introReady} />
       <About />
       <Projects />
       <Stack />

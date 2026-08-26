@@ -104,6 +104,14 @@
   line-height: 1.4;
 }
 
+.deviceWordDesktop {
+  display: none;
+}
+
+.deviceWordMobile {
+  display: inline;
+}
+
 .checkCircle {
   display: inline-flex;
   align-items: center;
@@ -135,5 +143,25 @@
 @media (max-width: 480px) {
   .formatRow {
     flex-direction: column;
+  }
+}
+
+/* Desktop: mensaje de éxito en una sola línea y "PC" en vez de "dispositivo" */
+@media (min-width: 1024px) {
+  .modalDone {
+    width: max-content;
+    max-width: min(90vw, 34rem);
+  }
+
+  .modalDone .statusText {
+    white-space: nowrap;
+  }
+
+  .deviceWordDesktop {
+    display: inline;
+  }
+
+  .deviceWordMobile {
+    display: none;
   }
 }

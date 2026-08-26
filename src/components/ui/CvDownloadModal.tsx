@@ -83,7 +83,7 @@ export function CvDownloadModal({ isOpen, onClose, docxUrl, pdfUrl }: CvDownload
 
   return createPortal(
     <div className={styles.overlay} onClick={onClose}>
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+      <div className={`${styles.modal} ${status === 'done' ? styles.modalDone : ''}`} onClick={(e) => e.stopPropagation()}>
         <button className={styles.closeBtn} onClick={onClose} aria-label="Cerrar">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
             <line x1="18" y1="6" x2="6" y2="18" />
@@ -108,7 +108,11 @@ export function CvDownloadModal({ isOpen, onClose, docxUrl, pdfUrl }: CvDownload
 
         {status === 'done' && (
           <div className={styles.statusBlock}>
-            <p className={styles.statusText}>CV descargado, ya puedes revisar el archivo en tu PC</p>
+            <p className={styles.statusText}>
+              CV descargado, ya puedes revisar el archivo en tu{' '}
+              <span className={styles.deviceWordDesktop}>PC</span>
+              <span className={styles.deviceWordMobile}>dispositivo</span>
+            </p>
             <div className={styles.checkCircle}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" width="24" height="24">
                 <polyline points="20 6 9 17 4 12" />

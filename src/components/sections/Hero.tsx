@@ -17,9 +17,13 @@ interface HeroProps {
   // pantalla de carga en equipos de alta gama). Por defecto true: el resto
   // de dispositivos conserva el comportamiento de siempre, sin gate.
   introReady?: boolean;
+  // Solo para celulares de gama baja (ver lib/mobileIntroSkip.ts): omite la
+  // intro animada y deja todo en su estado final de una vez. El resto de
+  // animaciones (scroll-reveals, parallax, etc.) sigue funcionando igual.
+  skipIntroAnimation?: boolean;
 }
 
-export function Hero({ introReady = true }: HeroProps) {
+export function Hero({ introReady = true, skipIntroAnimation = false }: HeroProps) {
   const nameRef = useRef<HTMLDivElement>(null);
   const roleRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
@@ -83,7 +87,40 @@ export function Hero({ introReady = true }: HeroProps) {
 
     const lowTier = tier === 'low';
 
-    if (lowTier) {
+    if (skipIntroAnimation && isMobile) {
+      // === CELULAR DE GAMA BAJA: SIN INTRO ANIMADA ===
+      // Detectado por lib/mobileIntroSkip.ts (benchmark real de dibujo, no
+      // relacionado con el sistema de tiers de arriba). Todo se deja de una
+      // vez en su estado final; "tl" queda vacío y su onComplete (más abajo)
+      // se dispara igual en el siguiente tick, reutilizando esa limpieza.
+      gsap.set([nameCanvasRef.current, roleCanvasRef.current], { display: 'none' });
+      gsap.set(nameContainerRef.current, { autoAlpha: 1, y: endY, scale: 1 });
+      gsap.set(glowRef.current, { autoAlpha: 1 });
+      gsap.set(imageRef.current, { opacity: 1, autoAlpha: 1, scale: 1, y: 0, clearProps: 'all' });
+      gsap.set(rightTextRef.current, { autoAlpha: 1, y: 0, clearProps: 'all' });
+      gsap.set(mobileAccentRef.current, { scaleX: 1, opacity: 1 });
+      if (buttonsRef.current) {
+        gsap.set(Array.from(buttonsRef.current.children), { opacity: 1, y: 0, scale: 1, clearProps: 'all' });
+      }
+      gsap.set(howIWorkRef.current, { autoAlpha: 0, y: 30 });
+      if (introOverlayRef.current) gsap.set(introOverlayRef.current, { autoAlpha: 0 });
+
+      window.dispatchEvent(new CustomEvent('hero-move-up'));
+
+      // "¿Cómo trabajo?" se sigue revelando al hacer scroll, igual que en los demás tiers
+      gsap.to(howIWorkRef.current, {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.6,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: howIWorkRef.current,
+          start: "top 88%",
+          toggleActions: "play none none none",
+          once: true
+        }
+      });
+    } else if (lowTier) {
       // === SIN INTRO "CINEMATOGRÁFICA" (CPUs de menos de 5 cores) ===
       // Se remueve el movimiento complejo de escala + reposicionamiento del
       // nombre y las chispas de canvas. Se mantiene la animación de entrada
@@ -342,7 +379,7 @@ export function Hero({ introReady = true }: HeroProps) {
 
 
 
-  }, { scope: mainRef, dependencies: [introReady] });
+  }, { scope: mainRef, dependencies: [introReady, skipIntroAnimation] });
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!introDone || window.innerWidth < 1024) return;

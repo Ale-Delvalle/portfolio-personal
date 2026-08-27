@@ -11,6 +11,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { usePerformanceTier } from './context/PerformanceContext';
 import { getDeviceHints } from './lib/performanceTier';
+import { isPhoneViewport, detectLowEndPhone, logMobileIntroDecision } from './lib/mobileIntroSkip';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -33,9 +34,22 @@ function App() {
   const [introReady, setIntroReady] = useState(!showLoadingGate);
   const [loaderExiting, setLoaderExiting] = useState(false);
   const [loaderMounted, setLoaderMounted] = useState(showLoadingGate);
+  // Se congela en el primer render, igual que showLoadingGate.
+  const [isPhone] = useState(() => isPhoneViewport());
+  const [skipMobileIntro, setSkipMobileIntro] = useState(false);
 
   useEffect(() => {
     if (!showLoadingGate) return;
+
+    // Solo celulares (no tablet ni PC): se corre un benchmark real de dibujo
+    // para decidir si el equipo aguanta la intro animada. No toca ni depende
+    // del sistema de tiers de performanceTier.ts, que sigue intacto para
+    // tablet/PC. Corre oculto detrás de la pantalla de carga.
+    if (isPhone) {
+      const decision = detectLowEndPhone();
+      logMobileIntroDecision(decision);
+      setSkipMobileIntro(decision.skipIntro);
+    }
 
     const start = performance.now();
     const fontsReady = document.fonts?.ready ?? Promise.resolve();
@@ -51,7 +65,7 @@ function App() {
         setTimeout(() => setLoaderMounted(false), LOADING_SCREEN_FADE_MS);
       }, remaining);
     });
-  }, [showLoadingGate]);
+  }, [showLoadingGate, isPhone]);
 
   useEffect(() => {
     const onLoad = () => ScrollTrigger.refresh();
@@ -221,7 +235,7 @@ function App() {
       {loaderMounted && <LoadingScreen exiting={loaderExiting} />}
       <GlowBackground />
       <Navbar />
-      <Hero introReady={introReady} />
+      <Hero introReady={introReady} skipIntroAnimation={skipMobileIntro} />
       <About />
       <Projects />
       <Stack />

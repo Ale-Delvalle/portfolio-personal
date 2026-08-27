@@ -64,6 +64,6 @@
 .label {
   font-family: var(--font-body);
   font-size: 0.85rem;
-  color: var(--color-on-surface);
+  color: #ffffff;
   letter-spacing: 0.03em;
 }

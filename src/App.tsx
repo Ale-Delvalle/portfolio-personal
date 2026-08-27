@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { usePerformanceTier } from './context/PerformanceContext';
+import { getDeviceHints } from './lib/performanceTier';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -26,7 +27,9 @@ function App() {
   // Se congela en el primer render: la pantalla de carga solo aplica a la
   // estimación inmediata (heurística de cores/memoria), no a la medición de
   // FPS que llega ~1.2s después y que no debe alterar esta decisión inicial.
-  const [showLoadingGate] = useState(() => tier === 'high');
+  // En desktop solo se activa para el tier 'high'; en mobile se activa siempre
+  // (isMobile hace que el tier nunca llegue a 'high', así que se chequea aparte).
+  const [showLoadingGate] = useState(() => tier === 'high' || getDeviceHints().isMobile);
   const [introReady, setIntroReady] = useState(!showLoadingGate);
   const [loaderExiting, setLoaderExiting] = useState(false);
   const [loaderMounted, setLoaderMounted] = useState(showLoadingGate);

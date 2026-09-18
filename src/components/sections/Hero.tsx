@@ -8,6 +8,7 @@ import profileImg from '../../assets/foto.png';
 import cvFile from '../../assets/Delvalle-Alexis-CV-full-stack-developer.docx?url';
 import cvPdfFile from '../../assets/Delvalle-Alexis-CV-full-stack-developer.pdf?url';
 import { usePerformanceTier } from '../../context/PerformanceContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { CvDownloadModal } from '../ui/CvDownloadModal';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -58,6 +59,7 @@ export function Hero({ introReady = true, skipIntroAnimation = false }: HeroProp
   const [introDone, setIntroDone] = useState(false);
   const [cvModalOpen, setCvModalOpen] = useState(false);
   const { tier } = usePerformanceTier();
+  const { t } = useLanguage();
 
   useGSAP(() => {
     // Mientras se espera la pantalla de carga (solo equipos de alta gama),
@@ -501,7 +503,7 @@ export function Hero({ introReady = true, skipIntroAnimation = false }: HeroProp
             <div className={styles.introSparksContainer}>
               <canvas ref={roleCanvasRef} className={styles.introSparksCanvas} />
             </div>
-            <div ref={roleRef} className={styles.role}>Full Stack Developer · Backend con NestJS y TypeScript · <span className={styles.roleHighlight}>Lo humano vale.</span></div>
+            <div ref={roleRef} className={styles.role}>{t.hero.roleBase} <span className={styles.roleHighlight}>{t.hero.roleHighlight}</span></div>
           </div>
           <div ref={mobileAccentRef} className={styles.mobileAccentLine} />
         </div>
@@ -522,7 +524,7 @@ export function Hero({ introReady = true, skipIntroAnimation = false }: HeroProp
                     window.dispatchEvent(new CustomEvent('navigate', { detail: { id: 'proyectos' } }));
                   }}
                 >
-                  Revisar proyectos
+                  {t.hero.reviewProjects}
                   <svg className={styles.btnIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
                   </svg>
@@ -532,7 +534,7 @@ export function Hero({ introReady = true, skipIntroAnimation = false }: HeroProp
                   onClick={() => setCvModalOpen(true)}
                   className={styles.primaryBtn}
                 >
-                  Descargar CV
+                  {t.hero.downloadCv}
                   <svg className={styles.btnIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
                   </svg>
@@ -545,7 +547,7 @@ export function Hero({ introReady = true, skipIntroAnimation = false }: HeroProp
                     <div key={i} className={styles.btnLayer} style={{ transform: `translateZ(${-i * 2}px)` }}></div>
                   ))}
                   <a href="mailto:alexisdelvalle137@gmail.com" className={styles.secondaryBtn}>
-                    Contáctame
+                    {t.hero.contactMe}
                     <span className={styles.emojiWrapper}>
                       <span className={styles.emojis}>👁️👁️</span>
                       <img src={pleaseImg} alt="Please" className={styles.pleaseImg} />
@@ -576,10 +578,10 @@ export function Hero({ introReady = true, skipIntroAnimation = false }: HeroProp
                     <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
                   </svg>
                 </span>
-                <h2 className={styles.sideTitle}>Mi perfil profesional</h2>
+                <h2 className={styles.sideTitle}>{t.hero.profileTitle}</h2>
               </div>
               <p className={styles.sideDesc}>
-                Estoy enfocado en el desarrollo backend, y desarrollo aplicaciones full stack de principio a fin: desde el diseño del modelo de datos y la API REST hasta la integración de servicios externos y el cliente web.
+                {t.hero.profileDesc}
               </p>
               <div className={styles.tagRow}>
                 <span className={styles.tag}>TypeScript</span>
@@ -602,11 +604,10 @@ export function Hero({ introReady = true, skipIntroAnimation = false }: HeroProp
                     <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
                   </svg>
                 </span>
-                <h2 className={styles.sideTitle}>¿Cómo trabajo?</h2>
+                <h2 className={styles.sideTitle}>{t.hero.howITitle}</h2>
               </div>
               <p className={styles.sideDesc}>
-
-                Comunicación directa y constante, empatía, SCRUM, documentación y código limpio para entregar proyectos mantenibles y escalables.
+                {t.hero.howIDesc}
               </p>
             </div>
 
@@ -624,7 +625,7 @@ export function Hero({ introReady = true, skipIntroAnimation = false }: HeroProp
                     window.dispatchEvent(new CustomEvent('navigate', { detail: { id: 'proyectos' } }));
                   }}
                 >
-                  Revisar proyectos
+                  {t.hero.reviewProjects}
                   <svg className={styles.btnIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
                   </svg>
@@ -634,7 +635,7 @@ export function Hero({ introReady = true, skipIntroAnimation = false }: HeroProp
                   onClick={() => setCvModalOpen(true)}
                   className={styles.primaryBtn}
                 >
-                  Descargar CV
+                  {t.hero.downloadCv}
                   <svg className={styles.btnIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
                   </svg>
@@ -644,7 +645,7 @@ export function Hero({ introReady = true, skipIntroAnimation = false }: HeroProp
               <div className={styles.buttonRow2}>
                 <div className={styles.btn3dContainer}>
                   <a href="mailto:alexisdelvalle137@gmail.com" className={styles.secondaryBtn}>
-                    Contáctame
+                    {t.hero.contactMe}
                   </a>
                 </div>
                 <div className={styles.socialGroup}>

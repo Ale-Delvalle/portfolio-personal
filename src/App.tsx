@@ -6,6 +6,7 @@ import { About } from './components/sections/About';
 import { Stack } from './components/sections/Stack';
 import { Projects } from './components/sections/Projects';
 import { LoadingScreen } from './components/ui/LoadingScreen';
+import { LanguageToggle } from './components/ui/LanguageToggle';
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -233,6 +234,7 @@ function App() {
   return (
     <>
       {loaderMounted && <LoadingScreen exiting={loaderExiting} />}
+      <LanguageToggle />
       <GlowBackground />
       <Navbar />
       <Hero introReady={introReady} skipIntroAnimation={skipMobileIntro} />

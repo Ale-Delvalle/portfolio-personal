@@ -1,0 +1,55 @@
+.toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1200;
+  display: flex;
+  gap: 0.2rem;
+  padding: 0.2rem;
+  background: rgba(12, 14, 17, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 167, 38, 0.3);
+  border-radius: 9999px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  animation: fadeInToggle 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+}
+
+.option {
+  border: none;
+  background: transparent;
+  color: rgba(232, 160, 96, 0.75);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 0.4rem 0.7rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.option:hover {
+  color: #FFD080;
+}
+
+.active {
+  background: linear-gradient(135deg, #FFD180 0%, #FFA726 50%, #FF6B00 100%);
+  color: #1a1006;
+}
+
+.active:hover {
+  color: #1a1006;
+}
+
+@keyframes fadeInToggle {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (min-width: 1024px) {
+  .toggle {
+    top: 1.5rem;
+    right: 1.5rem;
+  }
+}

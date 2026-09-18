@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import styles from './CvDownloadModal.module.css';
+import { useLanguage } from '../../context/LanguageContext';
+import type { Translation } from '../../i18n/translations';
 
 type CvFormat = 'docx' | 'pdf';
 type ModalStatus = 'choose' | 'done' | 'error';
@@ -12,20 +14,22 @@ interface CvDownloadModalProps {
   pdfUrl: string;
 }
 
-const FILE_INFO: Record<CvFormat, { filename: string; mime: string; description: string }> = {
-  docx: {
-    filename: 'Delvalle-Alexis-CV-full-stack-developer.docx',
-    mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    description: 'Documento Word',
-  },
-  pdf: {
-    filename: 'Delvalle-Alexis-CV-full-stack-developer.pdf',
-    mime: 'application/pdf',
-    description: 'Documento PDF',
-  },
-};
+function getFileInfo(t: Translation, format: CvFormat) {
+  return format === 'docx'
+    ? {
+        filename: 'Delvalle-Alexis-CV-full-stack-developer.docx',
+        mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        description: t.cvModal.docxDescription,
+      }
+    : {
+        filename: 'Delvalle-Alexis-CV-full-stack-developer.pdf',
+        mime: 'application/pdf',
+        description: t.cvModal.pdfDescription,
+      };
+}
 
 export function CvDownloadModal({ isOpen, onClose, docxUrl, pdfUrl }: CvDownloadModalProps) {
+  const { t } = useLanguage();
   const [status, setStatus] = useState<ModalStatus>('choose');
 
   useEffect(() => {
@@ -49,7 +53,7 @@ export function CvDownloadModal({ isOpen, onClose, docxUrl, pdfUrl }: CvDownload
 
   const handleDownload = async (format: CvFormat) => {
     const url = format === 'docx' ? docxUrl : pdfUrl;
-    const { filename, mime, description } = FILE_INFO[format];
+    const { filename, mime, description } = getFileInfo(t, format);
 
     if (window.showSaveFilePicker) {
       try {
@@ -84,7 +88,7 @@ export function CvDownloadModal({ isOpen, onClose, docxUrl, pdfUrl }: CvDownload
   return createPortal(
     <div className={styles.overlay} onClick={onClose}>
       <div className={`${styles.modal} ${status === 'done' ? styles.modalDone : ''}`} onClick={(e) => e.stopPropagation()}>
-        <button className={styles.closeBtn} onClick={onClose} aria-label="Cerrar">
+        <button className={styles.closeBtn} onClick={onClose} aria-label={t.cvModal.closeAria}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
             <line x1="18" y1="6" x2="6" y2="18" />
             <line x1="6" y1="6" x2="18" y2="18" />
@@ -93,14 +97,14 @@ export function CvDownloadModal({ isOpen, onClose, docxUrl, pdfUrl }: CvDownload
 
         {status === 'choose' && (
           <>
-            <h3 className={styles.title}>Estás por descargar el CV</h3>
-            <p className={styles.description}>A continuación elige el formato</p>
+            <h3 className={styles.title}>{t.cvModal.chooseTitle}</h3>
+            <p className={styles.description}>{t.cvModal.chooseDescription}</p>
             <div className={styles.formatRow}>
               <button className={styles.formatBtn} onClick={() => handleDownload('docx')}>
-                Word (.docx)
+                {t.cvModal.wordOption}
               </button>
               <button className={styles.formatBtn} onClick={() => handleDownload('pdf')}>
-                PDF
+                {t.cvModal.pdfOption}
               </button>
             </div>
           </>
@@ -109,9 +113,9 @@ export function CvDownloadModal({ isOpen, onClose, docxUrl, pdfUrl }: CvDownload
         {status === 'done' && (
           <div className={styles.statusBlock}>
             <p className={styles.statusText}>
-              CV descargado, ya puedes revisar el archivo en tu{' '}
-              <span className={styles.deviceWordDesktop}>PC</span>
-              <span className={styles.deviceWordMobile}>dispositivo</span>
+              {t.cvModal.successPrefix}{' '}
+              <span className={styles.deviceWordDesktop}>{t.cvModal.successDeviceDesktop}</span>
+              <span className={styles.deviceWordMobile}>{t.cvModal.successDeviceMobile}</span>
             </p>
             <div className={styles.checkCircle}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" width="24" height="24">
@@ -123,9 +127,9 @@ export function CvDownloadModal({ isOpen, onClose, docxUrl, pdfUrl }: CvDownload
 
         {status === 'error' && (
           <div className={styles.statusBlock}>
-            <p className={styles.statusText}>Ocurrió un error al descargar el CV. Intenta nuevamente.</p>
+            <p className={styles.statusText}>{t.cvModal.errorMessage}</p>
             <button className={styles.formatBtn} onClick={() => setStatus('choose')}>
-              Volver a intentar
+              {t.cvModal.retry}
             </button>
           </div>
         )}

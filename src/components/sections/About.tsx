@@ -2,8 +2,10 @@ import { useRef, useCallback, useEffect } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import styles from './About.module.css';
+import { useLanguage } from '../../context/LanguageContext';
 
 export function About() {
+  const { t } = useLanguage();
   const sectionRef         = useRef<HTMLElement>(null);
   const headingRef         = useRef<HTMLHeadingElement>(null);
   const p1Ref              = useRef<HTMLParagraphElement>(null);
@@ -129,27 +131,27 @@ export function About() {
   return (
     <section id="about" ref={sectionRef} className={styles.section} data-section-trigger>
       <h1 ref={headingRef} className={styles.heading}>
-        Acerca de mi
+        {t.about.heading}
       </h1>
 
       <div className={styles.paragraphsWrapper}>
         <p ref={p1Ref} className={styles.paragraph}>
-          Soy Full Stack Developer con orientación al backend, formado en Soy Henry y con una primer experiencia laboral real trabajando en remoto para Fresh & Dash, empresa con sede en Suiza, como Mobile Developer en su aplicación Vitality+.
+          {t.about.paragraphs[0]}
         </p>
         <p ref={p2Ref} className={styles.paragraph}>
-          Antes de dedicarme a la programación de forma profesional, cursé la Licenciatura en Sistemas en la Universidad Nacional del Nordeste (UNNE - Argentina) lo que me dio una base sólida en fundamentos de programación, algoritmos y pensamiento lógico que hoy aplico en cada proyecto.
+          {t.about.paragraphs[1]}
         </p>
         <p ref={p3Ref} className={styles.paragraph}>
-          Me especializo en backend porque es donde más disfruto: diseñar el modelo de datos, estudiar las entidades y sus relaciones, y definir la lógica de negocio antes de escribir código.
+          {t.about.paragraphs[2]}
         </p>
         <p ref={p4Ref} className={styles.paragraph}>
-          Creo que el buen software se construye con criterio técnico y buenas prácticas — no como un fin en sí mismo, sino porque un código mantenible y escalable es lo que le da valor real al producto. Es el estándar con el que trabajo y el que busco en el equipo donde me desempeñe.
+          {t.about.paragraphs[3]}
         </p>
         <p ref={p5Ref} className={styles.paragraph}>
-          Vivimos una transición tecnológica acelerada. Hay quienes creen que la IA reemplazará a los trabajadores — yo creo que nos potencia: nos hace más productivos y libera tiempo para lo que realmente importa.
+          {t.about.paragraphs[4]}
         </p>
         <p ref={p6Ref} className={styles.paragraph}>
-          El criterio para analizar, la capacidad de tomar decisiones y la calidez humana que potencia a los equipos de trabajo no se automatizan. Esto es lo que creo: lo humano vale y es determinante para el logro de los objetivos y la calidad del software.
+          {t.about.paragraphs[5]}
         </p>
       </div>
 

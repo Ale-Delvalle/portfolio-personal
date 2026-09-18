@@ -4,6 +4,8 @@ import { ProjectDetail } from './ProjectDetail';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useLanguage } from '../../context/LanguageContext';
+import type { ProjectText } from '../../i18n/translations';
 
 import ec1 from '../../assets/projects/screenshots/E-commerce/1.png';
 import ec2 from '../../assets/projects/screenshots/E-commerce/2.png';
@@ -47,12 +49,8 @@ gsap.registerPlugin(ScrollTrigger);
 
 export type Project = {
   id: number;
-  title: string;
-  listTitle?: string;
-  description: string;
-  year?: string;
   tags: string[];
-  features?: string[];
+  year?: string;
   image: string;
   screenshots: string[];
   repoUrl?: string;
@@ -60,20 +58,12 @@ export type Project = {
   repoBackUrl?: string;
 };
 
+export type ProjectWithText = Project & ProjectText;
+
 const projects: Project[] = [
   {
     id: 1,
-    title: 'Astro Tech',
-    description: 'Plataforma de e-commerce full stack con carrito de compras, panel de administración y autenticación JWT.',
     tags: ['NestJS', 'TypeScript', 'PostgreSQL', 'TypeORM', 'JWT', 'Next.js', 'Zustand', 'React Query', 'Zod', 'Docker', 'Swagger'],
-    features: [
-      'Backend con NestJS y TypeScript, organizado por módulos de negocio',
-      'Autenticación segura con JWT y permisos por rol de usuario',
-      'Base de datos relacional con PostgreSQL',
-      'Frontend en Next.js con manejo de estado (Zustand) y consumo de datos con React Query',
-      'Documentación de API con Swagger',
-      'Proyecto containerizado con Docker'
-    ],
     image: ec1,
     screenshots: [ec1, ec2, ec3, ec4, ec5, ec6, ec7, ec8],
     repoFrontUrl: 'https://github.com/Ale-Delvalle/pi4-e-commerce-front',
@@ -81,66 +71,27 @@ const projects: Project[] = [
   },
   {
     id: 2,
-    title: 'Hearts & Paws',
-    listTitle: 'Hearts & Paws',
-    description: 'Proyecto grupal · Educativo \nPlataforma para ONGs de rescate animal que conecta organizaciones protectoras con adoptantes. Gestiona adopciones, donaciones con pasarela de pago y mensajería en tiempo real. Trabajé en un grupo conformado por 6 personas, en donde participé del equipo de backend.',
     tags: ['NestJS', 'TypeScript', 'PostgreSQL', 'Prisma', 'JWT', 'Stripe', 'Socket.io', 'Cloudinary', 'Google Cloud Vision', 'Nodemailer', 'Jest'],
-    features: [
-      'Backend con NestJS y TypeScript, organizado por dominio de negocio',
-      'Base de datos relacional con PostgreSQL y Prisma',
-      'Autenticación segura con JWT y permisos por rol de usuario',
-      'Donaciones integradas con pasarela de pago Stripe',
-      'Moderación automática de imágenes sensibles con Sightengine, con Google Cloud Vision integrado en el backend',
-      'Chat en tiempo real entre organizaciones y adoptantes'
-    ],
     image: hnp1,
     screenshots: [hnp1, hnp2, hnp3, hnp4, hnp5, hnp6, hnp7, hnp8, hnp9, hnp10, hnp11, hnp12, hnp13],
     repoUrl: 'https://github.com/Ale-Delvalle/backend-hearts-and-paws',
   },
   {
     id: 3,
-    title: 'Punto de partida',
-    description: 'Primer proyecto personal desarrollado con tecnologías web fundamentales, sin frameworks ni librerías externas.',
     tags: ['HTML5', 'CSS3', 'JavaScript ES6+', 'Jasmine'],
-    features: [
-      'Página de perfil personal con gestor de actividades favoritas',
-      'Desarrollado con HTML5, CSS3 y JavaScript puro, sin frameworks',
-      'Diseño responsivo con CSS Grid',
-      'Tests unitarios con Jasmine'
-    ],
     image: pb1,
     screenshots: [pb1, pb2],
   },
   {
     id: 4,
-    title: 'Clínica San Sebastián',
-    description: 'Sistema de gestión de turnos médicos con autenticación, validaciones de negocio y panel de usuario.',
     tags: ['TypeScript', 'Node.js', 'Express', 'PostgreSQL', 'TypeORM', 'React', 'Vite', 'Formik'],
-    features: [
-      'Backend con Express y TypeScript, organizado en capas',
-      'Base de datos relacional con PostgreSQL',
-      'Sistema de turnos con reglas de negocio: anticipación mínima, días y horarios hábiles',
-      'Autenticación de usuarios con sesión persistida',
-      'Frontend en React con Vite y formularios gestionados con Formik',
-      'Rutas protegidas según sesión activa'
-    ],
     image: st1,
     screenshots: [st1, st2, st3, st4],
     repoUrl: 'https://github.com/Ale-Delvalle/pi3-turnos',
   },
   {
     id: 5,
-    title: 'Pelisplay',
-    description: 'Aplicación full stack de gestión de películas con carrusel 3D inmersivo, construida con Node.js y MongoDB.',
     tags: ['Node.js', 'Express', 'MongoDB', 'Mongoose', 'JavaScript', 'GSAP', 'Webpack', 'Jest'],
-    features: [
-      'Backend con Node.js y Express',
-      'Base de datos NoSQL con MongoDB',
-      'Catálogo de películas con carrusel 3D animado (GSAP) y vista en grilla',
-      'Gestión completa de películas: alta y baja con confirmación',
-      'Frontend empaquetado con Webpack',
-      'Tests unitarios con Jest'
-    ],
     image: wp1,
     screenshots: [wp1, wp2, wp3, wp4, wp5],
     repoUrl: 'https://github.com/Ale-Delvalle/pi2-movie-club',
@@ -148,6 +99,8 @@ const projects: Project[] = [
 ];
 
 export function Projects() {
+  const { t } = useLanguage();
+  const projectText = useCallback((id: number): ProjectText => t.projects.items[id], [t]);
   const sectionRef    = useRef<HTMLElement>(null);
   const mainRef       = useRef<HTMLDivElement>(null);
   const detailRef     = useRef<HTMLDivElement>(null);
@@ -717,7 +670,8 @@ export function Projects() {
   }, [selected, closeGallery]);
 
   const active   = projects.find(p => p.id === activeId)!;
-  const detail   = selected ?? lastRef.current;
+  const rawDetail = selected ?? lastRef.current;
+  const detail: ProjectWithText | null = rawDetail ? { ...rawDetail, ...projectText(rawDetail.id) } : null;
 
   return (
     <section id="proyectos" ref={sectionRef} className={styles.section} data-section-trigger>
@@ -732,7 +686,7 @@ export function Projects() {
           <div className={styles.mobileHdr}>
             <div className={styles.headerLeft}>
               <span className={styles.conceptDot} />
-              <span className={styles.sectionLabel}>Mis proyectos</span>
+              <span className={styles.sectionLabel}>{t.projects.sectionLabel}</span>
             </div>
           </div>
           <div className={styles.mobileHdrLine} />
@@ -745,11 +699,11 @@ export function Projects() {
                 ref={(el) => { mobileCardsRef.current[i] = el; }}
                 onClick={() => openProject(project)}
               >
-                <img src={project.image} alt={project.title} className={styles.mobileCardBg} />
+                <img src={project.image} alt={projectText(project.id).title} className={styles.mobileCardBg} />
                 <div className={styles.mobileCardOverlay} />
                 <div className={styles.mobileCardContent}>
                   <span className={styles.mobileCardNum}>0{project.id}</span>
-                  <h3 className={styles.mobileCardTitle}>{project.listTitle || project.title}</h3>
+                  <h3 className={styles.mobileCardTitle}>{projectText(project.id).listTitle || projectText(project.id).title}</h3>
                   <div className={styles.mobileCardTags}>
                     {project.tags.map(tag => <span key={tag}>{tag}</span>)}
                   </div>
@@ -768,7 +722,7 @@ export function Projects() {
             <div className={styles.header}>
               <div className={styles.headerLeft}>
                 <span className={styles.conceptDot} />
-                <span className={styles.sectionLabel}>Mis proyectos</span>
+                <span className={styles.sectionLabel}>{t.projects.sectionLabel}</span>
               </div>
             </div>
 
@@ -784,8 +738,8 @@ export function Projects() {
                 >
                   <span className={styles.rowNum}>0{project.id}</span>
                   <div className={styles.rowInfo}>
-                    <h3 className={styles.rowTitle}>{project.listTitle || project.title}</h3>
-                    <p className={styles.rowDesc}>{project.description}</p>
+                    <h3 className={styles.rowTitle}>{projectText(project.id).listTitle || projectText(project.id).title}</h3>
+                    <p className={styles.rowDesc}>{projectText(project.id).description}</p>
                   </div>
                   <span className={styles.rowArrow}>↗︎</span>
                 </div>
@@ -828,7 +782,7 @@ export function Projects() {
                 </div>
                 <div className={styles.browserUrl}>
                   <span className={styles.urlText}>
-                    {(active.listTitle || active.title)
+                    {(projectText(active.id).listTitle || projectText(active.id).title)
                       .toLowerCase()
                       .normalize("NFD")
                       .replace(/[\u0300-\u036f]/g, "")
@@ -843,7 +797,7 @@ export function Projects() {
                   <img
                     key={project.id}
                     src={project.image}
-                    alt={project.title}
+                    alt={projectText(project.id).title}
                     className={`${styles.previewImg} ${activeId === project.id ? styles.previewImgVisible : ''}`}
                   />
                 ))}
@@ -859,7 +813,7 @@ export function Projects() {
                     key={project.id}
                     className={`${styles.metaDot} ${activeId === project.id ? styles.metaDotActive : ''}`}
                     onClick={() => setActiveId(project.id)}
-                    aria-label={project.title}
+                    aria-label={projectText(project.id).title}
                   />
                 ))}
               </div>
@@ -869,7 +823,7 @@ export function Projects() {
                     key={project.id}
                     className={`${styles.metaTitle} ${activeId === project.id ? styles.metaTitleVisible : ''}`}
                   >
-                    {project.listTitle || project.title}
+                    {projectText(project.id).listTitle || projectText(project.id).title}
                   </span>
                 ))}
               </div>

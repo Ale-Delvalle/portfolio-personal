@@ -1,8 +1,9 @@
 import { useState, useCallback, useEffect } from 'react';
 import type { RefObject } from 'react';
 import styles from './ProjectDetail.module.css';
-import type { Project } from './Projects';
+import type { ProjectWithText } from './Projects';
 import { GlowBackground } from '../layout/GlowBackground';
+import { useLanguage } from '../../context/LanguageContext';
 
 function ArrowLeftIcon() {
   return (
@@ -22,7 +23,7 @@ function GithubIcon() {
 }
 
 type Props = {
-  detail: Project | null;
+  detail: ProjectWithText | null;
   active: boolean;
   goBack: () => void;
   outerRef: RefObject<HTMLDivElement | null>;
@@ -32,6 +33,7 @@ type Props = {
 };
 
 export function ProjectDetail({ detail, active, goBack, outerRef, scrollRef, firstScreenRef, detailHeaderRef }: Props) {
+  const { t } = useLanguage();
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const openLightbox = useCallback((i: number) => {
@@ -91,9 +93,9 @@ export function ProjectDetail({ detail, active, goBack, outerRef, scrollRef, fir
 
             {/* ── Header ── */}
             <div className={styles.detailHeader} ref={detailHeaderRef}>
-              <h2 className={`${styles.detailTitle} ${detail.id === 4 ? styles.detailTitleClinica : ''}`}>
-                {detail.id === 4
-                  ? <>Clínica<br className={styles.titleBreakMobile} /> San Sebastián</>
+              <h2 className={`${styles.detailTitle} ${detail.titleLines ? styles.detailTitleClinica : ''}`}>
+                {detail.titleLines
+                  ? <>{detail.titleLines[0]}<br className={styles.titleBreakMobile} /> {detail.titleLines[1]}</>
                   : detail.title}
               </h2>
               <p className={styles.detailDesc}>{detail.description}</p>
@@ -103,21 +105,21 @@ export function ProjectDetail({ detail, active, goBack, outerRef, scrollRef, fir
                   {detail.repoUrl && (
                     <a href={detail.repoUrl} target="_blank" rel="noopener noreferrer" className={styles.repoBtn}>
                       <GithubIcon />
-                      Ver repositorio
+                      {t.projectDetail.viewRepo}
                       <span className={styles.repoBtnArrow}>↗︎</span>
                     </a>
                   )}
                   {detail.repoFrontUrl && (
                     <a href={detail.repoFrontUrl} target="_blank" rel="noopener noreferrer" className={styles.repoBtn}>
                       <GithubIcon />
-                      Ver repositorio (Front)
+                      {t.projectDetail.viewRepoFront}
                       <span className={styles.repoBtnArrow}>↗︎</span>
                     </a>
                   )}
                   {detail.repoBackUrl && (
                     <a href={detail.repoBackUrl} target="_blank" rel="noopener noreferrer" className={styles.repoBtn}>
                       <GithubIcon />
-                      Ver repositorio (Back)
+                      {t.projectDetail.viewRepoBack}
                       <span className={styles.repoBtnArrow}>↗︎</span>
                     </a>
                   )}
@@ -126,7 +128,7 @@ export function ProjectDetail({ detail, active, goBack, outerRef, scrollRef, fir
 
               {detail.features && detail.features.length > 0 && (
                 <div className={styles.detailFeatures}>
-                  <h4 className={styles.featuresTitle}>Características principales</h4>
+                  <h4 className={styles.featuresTitle}>{t.projectDetail.featuresTitle}</h4>
                   <ul className={styles.featuresList}>
                     {detail.features.map((feature, i) => (
                       <li key={i} className={styles.featureItem}>
@@ -149,7 +151,7 @@ export function ProjectDetail({ detail, active, goBack, outerRef, scrollRef, fir
             {/* ── Gallery label ── */}
             <div className={styles.galleryLabel}>
               <span className={styles.galleryLabelLine} />
-              <span className={styles.galleryLabelText}>Capturas del proyecto</span>
+              <span className={styles.galleryLabelText}>{t.projectDetail.galleryLabel}</span>
               <span className={styles.galleryLabelLine} />
             </div>
 
@@ -164,11 +166,11 @@ export function ProjectDetail({ detail, active, goBack, outerRef, scrollRef, fir
                   key={i}
                   className={`${styles.collageItem} ${styles[`item${i}`] ?? ''}`}
                   onClick={() => openLightbox(i)}
-                  aria-label={`Ver captura ${i + 1}`}
+                  aria-label={t.projectDetail.viewScreenshot(i + 1)}
                 >
                   <img
                     src={src}
-                    alt={`${detail.title} — captura ${i + 1}`}
+                    alt={t.projectDetail.screenshotAlt(detail.title, i + 1)}
                     className={styles.collageImg}
                     loading={i > 1 ? 'lazy' : 'eager'}
                   />
@@ -184,7 +186,7 @@ export function ProjectDetail({ detail, active, goBack, outerRef, scrollRef, fir
           </div>
 
           {/* ── Mobile back button (top-left, only visible on mobile) ── */}
-          <button className={styles.mobileBackBtn} onClick={goBack} aria-label="Volver a proyectos">
+          <button className={styles.mobileBackBtn} onClick={goBack} aria-label={t.projectDetail.backToProjects}>
             <ArrowLeftIcon />
           </button>
 
@@ -192,7 +194,7 @@ export function ProjectDetail({ detail, active, goBack, outerRef, scrollRef, fir
           <div className={styles.backBtnWrapper}>
             <button className={styles.backBtn} onClick={goBack}>
               <ArrowLeftIcon />
-              Atrás
+              {t.projectDetail.back}
             </button>
           </div>
 
@@ -202,7 +204,7 @@ export function ProjectDetail({ detail, active, goBack, outerRef, scrollRef, fir
               <button
                 className={`${styles.lightboxNav} ${styles.lightboxPrev}`}
                 onClick={e => { e.stopPropagation(); goPrev(); }}
-                aria-label="Anterior"
+                aria-label={t.projectDetail.prev}
               >
                 ←
               </button>
@@ -210,7 +212,7 @@ export function ProjectDetail({ detail, active, goBack, outerRef, scrollRef, fir
               <div className={styles.lightboxImgWrapper} onClick={e => e.stopPropagation()}>
                 <img
                   src={detail.screenshots[lightboxIndex]}
-                  alt={`${detail.title} — captura ${lightboxIndex + 1}`}
+                  alt={t.projectDetail.screenshotAlt(detail.title, lightboxIndex + 1)}
                   className={styles.lightboxImg}
                 />
                 <div className={styles.lightboxCounter}>
@@ -221,12 +223,12 @@ export function ProjectDetail({ detail, active, goBack, outerRef, scrollRef, fir
               <button
                 className={`${styles.lightboxNav} ${styles.lightboxNext}`}
                 onClick={e => { e.stopPropagation(); goNext(); }}
-                aria-label="Siguiente"
+                aria-label={t.projectDetail.next}
               >
                 →
               </button>
 
-              <button className={styles.lightboxClose} onClick={closeLightbox} aria-label="Cerrar">
+              <button className={styles.lightboxClose} onClick={closeLightbox} aria-label={t.projectDetail.close}>
                 ✕
               </button>
 
@@ -237,7 +239,7 @@ export function ProjectDetail({ detail, active, goBack, outerRef, scrollRef, fir
                     key={i}
                     className={`${styles.lightboxThumb} ${i === lightboxIndex ? styles.lightboxThumbActive : ''}`}
                     onClick={() => setLightboxIndex(i)}
-                    aria-label={`Ir a captura ${i + 1}`}
+                    aria-label={t.projectDetail.goToScreenshot(i + 1)}
                   >
                     <img src={s} alt="" className={styles.lightboxThumbImg} />
                   </button>

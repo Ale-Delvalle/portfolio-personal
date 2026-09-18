@@ -2,15 +2,17 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Menu, X, Home, User, FolderKanban, Layers } from 'lucide-react';
 import gsap from 'gsap';
 import styles from './Navbar.module.css';
+import { useLanguage } from '../../context/LanguageContext';
 
 const NAV_ITEMS = [
-  { label: 'Home',          target: 'home',      icon: Home        },
-  { label: 'Acerca de mi',  target: 'about',     icon: User        },
-  { label: 'Proyectos',     target: 'proyectos', icon: FolderKanban },
-  { label: 'Stack',         target: 'stack',     icon: Layers      },
+  { key: 'home' as const,     target: 'home',      icon: Home        },
+  { key: 'about' as const,    target: 'about',     icon: User        },
+  { key: 'projects' as const, target: 'proyectos', icon: FolderKanban },
+  { key: 'stack' as const,    target: 'stack',     icon: Layers      },
 ] as const;
 
 export function Navbar() {
+  const { t } = useLanguage();
   const [isOpen, setIsOpen]         = useState(false);
   const [activeTarget, setActiveTarget] = useState('home');
   const itemsRef = useRef<(HTMLButtonElement | null)[]>([]);
@@ -73,13 +75,13 @@ export function Navbar() {
       {/* Desktop / tablet: pill de navegación de siempre */}
       <nav className={styles.navbar}>
         <ul className={styles.navList}>
-          {NAV_ITEMS.map(({ label, target }) => (
+          {NAV_ITEMS.map(({ key, target }) => (
             <li key={target}>
               <button
                 className={styles.link}
                 onClick={() => scrollTo(target)}
               >
-                {label}
+                {t.nav[key]}
               </button>
             </li>
           ))}
@@ -94,7 +96,7 @@ export function Navbar() {
 
         {isOpen && (
           <div className={styles.fabItems}>
-            {NAV_ITEMS.map(({ label, target, icon: Icon }, i) => (
+            {NAV_ITEMS.map(({ key, target, icon: Icon }, i) => (
               <button
                 key={target}
                 ref={(el) => { itemsRef.current[i] = el; }}
@@ -102,7 +104,7 @@ export function Navbar() {
                 onClick={() => selectItem(target)}
               >
                 <Icon size={18} strokeWidth={2.25} />
-                <span className={styles.fabLabel}>{label}</span>
+                <span className={styles.fabLabel}>{t.nav[key]}</span>
               </button>
             ))}
           </div>
@@ -111,7 +113,7 @@ export function Navbar() {
         <button
           className={styles.fabToggle}
           onClick={() => setIsOpen((v) => !v)}
-          aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
+          aria-label={isOpen ? t.nav.closeMenu : t.nav.openMenu}
           aria-expanded={isOpen}
         >
           {isOpen ? <X size={20} /> : <Menu size={20} />}
